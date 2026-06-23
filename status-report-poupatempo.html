@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Report Poupatempo — Squad de IA</title>
+<meta name="description" content="Status Report semanal — Squad de IA · Transformação de Jornadas Públicas · Poupatempo / Prodesp / OrangeDoor IT / Salesforce Partners">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#100a33; --ink-2:#1b1450;
+  --indigo:#3a1f9e; --indigo-2:#5b3fd6; --indigo-soft:#ece8fb;
+  --blue:#1798d6; --blue-soft:#bfe2f6; --blue-line:#7cc4ec;
+  --purple:#3d1f97; --purple-soft:#cfc2f3;
+  --lilac:#c9bdf0;
+  --red:#d62740; --red-soft:#f6c9d0;
+  --green:#13a06a; --green-soft:#bfe9d6;
+  --amber:#f4b223; --orange:#f2731c;
+  --paper:#ffffff; --bg:#eef2ff; --bg-2:#f7f1ff;
+  --txt:#241d4a; --muted:#6d6796; --hair:#e6e3f5;
+  --shadow:0 10px 30px -14px rgba(40,24,120,.32);
+  --shadow-sm:0 4px 14px -8px rgba(40,24,120,.4);
+  --r:16px;
+  --lc:188px; /* gantt label column */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:"Inter",system-ui,sans-serif; color:var(--txt);
+  background:
+    radial-gradient(1200px 600px at 85% -10%, #e7ecff 0%, transparent 60%),
+    radial-gradient(900px 500px at 0% 0%, #f3eafe 0%, transparent 55%),
+    linear-gradient(180deg,var(--bg) 0%, var(--bg-2) 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"Plus Jakarta Sans",sans-serif;margin:0;line-height:1.1}
+a{color:inherit}
+
+/* ---------- TOP BAR ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:saturate(140%) blur(10px);
+  background:rgba(255,255,255,.78);
+  border-bottom:1px solid var(--hair);
+}
+.topbar-inner{max-width:1240px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brandmark{display:flex;align-items:center;gap:10px;font-family:"Plus Jakarta Sans";font-weight:800;letter-spacing:-.02em;color:var(--indigo)}
+.brandmark .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));display:grid;place-items:center;color:#fff;font-size:14px}
+.brand-meta{font:600 12px/1.3 "Inter";color:var(--muted)}
+.partners{margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.chip-brand{font:700 12px/1 "Plus Jakarta Sans";padding:6px 10px;border-radius:999px;border:1px solid var(--hair);background:#fff;color:var(--ink-2)}
+.chip-brand .sq{display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--orange);margin-right:6px;vertical-align:middle}
+.chip-sf{color:#0a93d4}
+
+/* ---------- NAV ---------- */
+nav.tabs{max-width:1240px;margin:0 auto;padding:10px 16px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{
+  white-space:nowrap;border:1px solid var(--hair);background:#fff;color:var(--muted);
+  font:600 13px/1 "Inter";padding:9px 14px;border-radius:999px;cursor:pointer;transition:.18s;
+  display:flex;align-items:center;gap:8px;
+}
+nav.tabs button:hover{color:var(--indigo);border-color:var(--purple-soft)}
+nav.tabs button.active{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;border-color:transparent;box-shadow:var(--shadow-sm)}
+nav.tabs button .ledge{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.8}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:26px 22px 80px}
+.page{display:none;animation:fade .35s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- PROJECT HERO ---------- */
+.phero{
+  position:relative;overflow:hidden;border-radius:22px;color:#fff;padding:30px 30px 28px;margin-bottom:22px;
+  background:
+    radial-gradient(700px 240px at 80% -40%, rgba(120,180,255,.45) 0%, transparent 60%),
+    radial-gradient(500px 260px at 10% 130%, rgba(150,90,255,.5) 0%, transparent 60%),
+    linear-gradient(120deg,#160d4d 0%, #271263 55%, #3a1f9e 100%);
+  box-shadow:var(--shadow);
+}
+.phero::after{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.5),transparent),radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 45% 70%, rgba(255,255,255,.3),transparent);opacity:.5;pointer-events:none}
+.phero .eyebrow{font:700 12px/1 "Inter";letter-spacing:.18em;text-transform:uppercase;color:#b9c4ff;margin-bottom:10px}
+.phero h2{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-.02em}
+.phero .sub{color:#cdd4ff;margin-top:8px;max-width:60ch;font-size:14px}
+.phero .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;position:relative;z-index:2}
+.statuspill{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 "Plus Jakarta Sans";letter-spacing:.04em;text-transform:uppercase;padding:9px 14px;border-radius:999px;color:#fff}
+.statuspill .b{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+.metapill{display:inline-flex;align-items:center;gap:8px;font:600 12px/1.3 "Inter";padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#eef0ff}
+.metapill b{color:#fff;font-weight:700}
+
+/* ---------- SECTION SHELL ---------- */
+.panel{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow-sm);margin-bottom:22px}
+.panel-h{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--hair)}
+.panel-h .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:16px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2))}
+.panel-h h3{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.panel-h .h-note{margin-left:auto;font:600 12px/1 "Inter";color:var(--muted)}
+.panel-b{padding:18px 20px}
+
+/* ---------- GANTT ---------- */
+.gantt{--cols:15;font-size:12px}
+.gantt-scroll{overflow-x:auto;padding-bottom:6px}
+.gantt-inner{min-width:880px}
+.g-head{display:grid;grid-template-columns:var(--lc) 1fr;align-items:end;margin-bottom:6px}
+.g-head .spacer{}
+.g-weeks{display:grid;grid-template-columns:repeat(var(--cols),1fr)}
+.g-week{text-align:center;padding:0 2px 8px;border-left:1px dashed var(--hair);color:var(--muted)}
+.g-week:first-child{border-left:0}
+.g-week b{display:block;font:700 11px/1.2 "Plus Jakarta Sans";color:var(--ink-2)}
+.g-week span{font-size:10px}
+.g-week.is-today b{color:var(--red)}
+.g-row{display:grid;grid-template-columns:var(--lc) 1fr;align-items:center;min-height:34px}
+.g-row + .g-row{margin-top:7px}
+.g-label{font:600 12px/1.2 "Inter";color:var(--txt);padding-right:14px}
+.g-track{position:relative;height:24px;border-radius:8px;background:
+  repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/var(--cols) - 1px),var(--hair) calc(100%/var(--cols) - 1px),var(--hair) calc(100%/var(--cols)))}
+.bar{position:absolute;top:3px;height:18px;border-radius:6px;display:flex;align-items:center}
+.bar.done{background:linear-gradient(180deg,#74c2ec,var(--blue))}
+.bar.blue{background:linear-gradient(180deg,#9ad3f1,#5fb6e6)}
+.bar.active{background:linear-gradient(180deg,#5a39c9,var(--purple))}
+.bar.dark{background:linear-gradient(180deg,#3a1f9e,#2a1374)}
+.bar.late{background:linear-gradient(180deg,#e2596d,var(--red))}
+.bar.plan{background:repeating-linear-gradient(45deg,var(--lilac),var(--lilac) 6px,#d8cef5 6px,#d8cef5 12px)}
+.check{position:absolute;right:-18px;top:50%;transform:translateY(-50%);color:var(--green);font-weight:900;font-size:14px;text-shadow:0 1px 0 #fff}
+.ms{position:absolute;top:50%;width:15px;height:15px;transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));box-shadow:0 1px 4px rgba(0,0,0,.18);z-index:3}
+.ms.pin{background:var(--red);transform:translate(-50%,-50%);border-radius:50% 50% 50% 0;rotate:45deg;width:13px;height:13px}
+.today{position:absolute;top:-26px;bottom:-7px;width:2px;background:linear-gradient(180deg,var(--red),rgba(214,39,64,.15));z-index:4}
+.g-row:first-child .today::before{content:"HOJE 23/06";position:absolute;top:-14px;left:50%;transform:translateX(-50%);font:800 9px/1 "Plus Jakarta Sans";color:#fff;background:var(--red);padding:3px 6px;border-radius:5px;white-space:nowrap}
+.g-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;padding-top:14px;border-top:1px dashed var(--hair)}
+.mscard{display:flex;align-items:center;gap:9px;font:500 12px/1.3 "Inter";color:var(--txt)}
+.mscard .d{width:13px;height:13px;transform:rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));flex:none}
+.mscard small{color:var(--muted);display:block;font-size:11px}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font:500 11px/1 "Inter";color:var(--muted)}
+.swatches span{display:inline-flex;align-items:center;gap:6px}
+.swatches i{width:18px;height:9px;border-radius:3px;display:inline-block}
+
+/* ---------- INFOGRAPHIC GRID ---------- */
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:880px){.info-grid{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow-sm);overflow:hidden}
+.card-h{display:flex;align-items:center;gap:10px;padding:13px 16px;color:#fff;font:800 13px/1 "Plus Jakarta Sans";letter-spacing:.02em;text-transform:uppercase}
+.card-h .ci{font-size:15px}
+.h-indigo{background:linear-gradient(110deg,var(--ink-2),var(--indigo))}
+.h-blue{background:linear-gradient(110deg,#0e5fa6,var(--blue))}
+.h-amber{background:linear-gradient(110deg,#c97a09,var(--orange))}
+.h-red{background:linear-gradient(110deg,#9c1326,var(--red))}
+.card-b{padding:14px 16px}
+ul.lead{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+ul.lead li{position:relative;padding-left:18px;font:400 13.5px/1.45 "Inter";color:var(--txt)}
+ul.lead li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--indigo-2)}
+ul.lead.blue li::before{background:var(--blue)}
+ul.lead.red li::before{background:var(--red)}
+ul.lead.green li::before{background:var(--green)}
+ul.lead li b{font-weight:700}
+
+.timeline-list{display:flex;flex-direction:column;gap:10px}
+.tl-item{display:flex;align-items:center;gap:12px}
+.tl-item .tl-ic{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;color:#fff;font-size:13px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2))}
+.tl-item .tl-txt{font:500 13.5px/1.3 "Inter";flex:1}
+.statetag{font:800 10.5px/1 "Plus Jakarta Sans";letter-spacing:.03em;text-transform:uppercase;padding:6px 9px;border-radius:7px;white-space:nowrap}
+.s-done{background:var(--green-soft);color:#0b6e48}
+.s-prog{background:#cfe9fa;color:#0c5e92}
+.s-wait{background:#ffe2c4;color:#9a4e06}
+.s-prev{background:var(--indigo-soft);color:var(--indigo)}
+.s-plan{background:#e7e3f6;color:#5a5390}
+.s-block{background:var(--red-soft);color:#9c1326}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--hair);border-radius:12px;padding:14px;background:linear-gradient(180deg,#fff,#fafaff)}
+.kpi .v{font:800 22px/1 "Plus Jakarta Sans";color:var(--indigo)}
+.kpi .v.red{color:var(--red)} .kpi .v.green{color:var(--green)} .kpi .v.amber{color:var(--orange)} .kpi .v.blue{color:var(--blue)}
+.kpi .l{font:600 11px/1.3 "Inter";color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.03em}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.subhead{font:800 11px/1 "Plus Jakarta Sans";letter-spacing:.06em;text-transform:uppercase;color:var(--indigo);margin:2px 0 10px;display:flex;align-items:center;gap:7px}
+.subhead.amber{color:var(--orange)} .subhead.green{color:var(--green)}
+
+.deliv{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.deliv{grid-template-columns:1fr}}
+.deliv .d-item .d-t{font:700 13.5px/1.2 "Plus Jakarta Sans";color:var(--ink-2);display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.deliv .d-item .d-t .di{color:var(--indigo-2)}
+.deliv .d-item ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px;font:400 12.5px/1.4 "Inter";color:var(--muted)}
+
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:9px}
+.step{display:flex;gap:12px;align-items:flex-start;font:500 13.5px/1.4 "Inter"}
+.step::before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:7px;background:var(--ink-2);color:#fff;font:800 12px/24px "Plus Jakarta Sans";text-align:center}
+
+/* note / commitment */
+.commit{margin-top:6px;border-radius:var(--r);padding:18px 22px;color:#fff;font:600 14px/1.5 "Inter";
+  background:linear-gradient(110deg,var(--ink-2),var(--indigo) 70%, var(--indigo-2));box-shadow:var(--shadow-sm)}
+.commit b{color:#ffd766}
+
+/* ---------- OVERVIEW ---------- */
+.ov-hero{border-radius:22px;padding:34px 30px;color:#fff;margin-bottom:22px;position:relative;overflow:hidden;
+  background:radial-gradient(700px 260px at 88% -30%,rgba(120,180,255,.4),transparent 60%),linear-gradient(120deg,#140c47,#2a1568 60%,#3a1f9e)}
+.ov-hero .eyebrow{font:700 12px/1 "Inter";letter-spacing:.2em;text-transform:uppercase;color:#b9c4ff}
+.ov-hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;letter-spacing:-.02em;margin:12px 0 6px}
+.ov-hero p{color:#cdd4ff;max-width:65ch;font-size:14.5px}
+.ov-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin-top:22px}
+.ov-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:14px}
+.ov-stat .v{font:800 26px/1 "Plus Jakarta Sans"}
+.ov-stat .l{font:600 11px/1.3 "Inter";color:#c4cbff;margin-top:6px;text-transform:uppercase;letter-spacing:.04em}
+
+.proj-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.pc{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:18px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;gap:10px}
+.pc:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--purple-soft)}
+.pc .pc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pc .pc-n{font:800 16px/1.15 "Plus Jakarta Sans";color:var(--ink-2)}
+.pc .pc-status{font:800 9.5px/1 "Plus Jakarta Sans";letter-spacing:.04em;text-transform:uppercase;padding:6px 8px;border-radius:7px;white-space:nowrap}
+.pc .pc-meta{font:500 12.5px/1.45 "Inter";color:var(--muted)}
+.pc .pc-go{font:700 12px/1 "Inter";color:var(--indigo);display:flex;align-items:center;gap:6px}
+.pc .pc-bar{height:6px;border-radius:99px;background:var(--hair);overflow:hidden}
+.pc .pc-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--indigo),var(--indigo-2))}
+
+/* macro timeline */
+.macro{overflow-x:auto}
+.macro-inner{min-width:920px}
+.macro-axis{display:grid;grid-template-columns:200px 1fr;align-items:end;margin-bottom:10px}
+.macro-months{display:grid;position:relative}
+.macro-months .m{text-align:center;font:700 11px/1.2 "Plus Jakarta Sans";color:var(--ink-2);padding-bottom:8px;border-left:1px dashed var(--hair)}
+.macro-row{display:grid;grid-template-columns:200px 1fr;align-items:center;min-height:30px}
+.macro-row + .macro-row{margin-top:8px}
+.macro-row .ml{font:600 12.5px/1.2 "Inter"}
+.macro-track{position:relative;height:22px}
+.macro-bar{position:absolute;top:4px;height:14px;border-radius:7px;background:linear-gradient(180deg,#5a39c9,var(--purple))}
+.macro-bar.soft{background:repeating-linear-gradient(45deg,var(--lilac),var(--lilac) 6px,#dad0f6 6px,#dad0f6 12px)}
+.macro-bar.blue{background:linear-gradient(180deg,#9ad3f1,#5fb6e6)}
+.macro-ms{position:absolute;top:50%;width:14px;height:14px;transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.macro-today{position:absolute;top:-24px;bottom:0;width:0;border-left:2px dashed var(--red);z-index:4}
+.macro-row:first-child .macro-today::before{content:"HOJE";position:absolute;top:-12px;left:50%;transform:translateX(-50%);font:800 9px/1 "Plus Jakarta Sans";color:#fff;background:var(--red);padding:3px 6px;border-radius:5px}
+.macro-golives{display:grid;grid-template-columns:200px 1fr;margin-top:6px}
+.macro-gl{position:relative;height:46px}
+.macro-gl .gl{position:absolute;transform:translateX(-50%);text-align:center;font:700 10.5px/1.25 "Inter";color:var(--indigo);width:92px}
+
+/* footer */
+.foot{max-width:1240px;margin:30px auto 0;padding:22px;color:var(--muted);font:500 12px/1.6 "Inter";border-top:1px solid var(--hair);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+@media(max-width:680px){
+  :root{--lc:120px}
+  .wrap{padding:18px 14px 70px}
+  .phero{padding:24px 20px}
+  .panel-b{padding:14px}
+}
+/* print */
+@media print{
+  .topbar,nav.tabs,.pc .pc-go{display:none!important}
+  .page{display:block!important;page-break-after:always}
+  body{background:#fff}
+  .panel,.card,.pc{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brandmark"><span class="dot">P</span> Poupatempo · Squad de IA</div>
+    <div class="brand-meta">Status Report semanal &nbsp;·&nbsp; 18/Jun/2026</div>
+    <div class="partners">
+      <span class="chip-brand">Prodesp</span>
+      <span class="chip-brand"><span class="sq"></span>OrangeDoor IT</span>
+      <span class="chip-brand chip-sf">salesforce · PARTNERS</span>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer class="foot">
+  <div>Transformação de Jornadas Públicas · Squad de IA — Poupatempo / Prodesp / OrangeDoor IT / Salesforce Partners</div>
+  <div>Atualizado em 18/Jun/2026 · Documento de acompanhamento executivo</div>
+</footer>
+
+<script>
+/* ============ DATA ============ */
+const TODAY = "23/06";
+
+const DATA = {
+  overview: {
+    stats:[
+      {v:"7", l:"frentes acompanhadas"},
+      {v:"3", l:"go-lives previstos p/ jun-jul"},
+      {v:"26/06", l:"Buscador V2 + Check-in + CIN v1"},
+      {v:"1", l:"frente bloqueada (Detran)"},
+    ],
+    macro:{
+      months:["16/Mar","23/Mar","06/Abr","20/Abr","04/Mai","18/Mai","01/Jun","15/Jun","26/Jun","10/Jul","20/Jul","27/Jul"],
+      todayPct:60, // ~10/Jun marker as in PDF
+      rows:[
+        {l:"Plano de trabalho + kick-off", bars:[{s:0,e:8,c:"dark"}]},
+        {l:"Buscador Inteligente", bars:[{s:8,e:62}], ms:[{p:36,t:"V1"},{p:55,t:"V2"}]},
+        {l:"Check-in Online", bars:[{s:24,e:62}], ms:[{p:62}]},
+        {l:"Jornada CIN", bars:[{s:30,e:62}], ms:[{p:62}]},
+        {l:"Jornada Exames (Mamografia)", bars:[{s:38,e:44,c:"blue"},{s:44,e:90}], ms:[{p:90}]},
+        {l:"Detran SP", bars:[{s:46,e:100,c:"soft"}]},
+        {l:"Tabela SUS Paulista", bars:[{s:55,e:100}], ms:[{p:67},{p:100}]},
+      ],
+      golives:[
+        {p:62,t:"Go-Live Buscador V2 + Check-in & CIN v1s"},
+        {p:71,t:"Possível Early Delivery Tabela SUS"},
+        {p:90,t:"Go-Live Mamografia"},
+        {p:100,t:"Go-Live Tabela SUS"},
+      ]
+    }
+  },
+
+  projects:[
+    /* ============ BUSCADOR ============ */
+    {
+      id:"buscador", tab:"Buscador Inteligente", name:"Buscador Inteligente",
+      sub:"Busca da Carta de Serviços com IA — V2 em homologação e V3 conversational-first em definição.",
+      status:"EM HOMOLOGAÇÃO", statusColor:"var(--blue)",
+      meta:"Publicação da V2 com API de Eventos funcional",
+      progress:78,
+      gantt:{
+        cols:15,
+        weeks:["S1 23/03","S2 30/03","S3 06/04","S4 13/04","S5 20/04","S6 27/04","S7 04/05","S8 11/05","S9 18/05","S10 25/05","S11 01/06","S12 08/06","S13 15/06","S14 22/06","S15 29/06"],
+        today:13,
+        rows:[
+          {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+          {l:"Desenho solução", bars:[{s:0,e:3,c:"done",check:true}]},
+          {l:"Build", bars:[{s:2,e:6,c:"done",check:true}]},
+          {l:"Test", bars:[{s:4,e:6,c:"done",check:true}], ms:[{w:5}]},
+          {l:"UAT", bars:[{s:6,e:8,c:"done",check:true}], ms:[{w:6}]},
+          {l:"Deploy e Scale", bars:[{s:7,e:12,c:"blue",check:true}], ms:[{w:11}]},
+          {l:"Evolutivas (V2)", bars:[{s:5,e:13,c:"active"}], ms:[{w:12}], pin:12},
+          {l:"Evolutivas (V3)", bars:[{s:12,e:15,c:"dark"}], ms:[{w:14}]},
+        ],
+        milestones:[
+          {w:5, t:"Entrega para testes (UAT)"},
+          {w:6, t:"Finalização UAT e Release Produção (Prodesp)"},
+          {w:11, t:"+4 semanas de estabilização · Handover Sustentação"},
+          {w:12, t:"Go-Live Eventos em PROD"},
+          {w:14, t:"Go-Live idealizado (em estimativa)"},
+        ]
+      },
+      kpis:[
+        {v:"V2", l:"finalização técnica concluída", c:""},
+        {v:"13/06", l:"meta homologação API Eventos", c:"blue"},
+        {v:"V3", l:"abordagem conversational-first validada", c:"amber"},
+      ],
+      statusAtual:[
+        "A V2 teve a <b>finalização técnica concluída</b>; segue a homologação da API de Eventos, com expectativa de entrega funcional até sexta-feira.",
+        "Apoio à <b>homologação tardia da Red Hat</b> conduzida pela OrangeDoor nesta semana.",
+        "Na <b>V3</b>, validada a abordagem <b>conversational-first</b>, com o agente de IA como primeira opção de interação — alinhado a Poupatempo e SGGD.",
+        "E-mail enviado após a agenda; aguardando devolutiva do time Poupatempo.",
+        "Identificado problema de <b>resultados inadequados em buscas de saúde</b> (ex.: “receita” retornando Receita Federal). Análise técnica enviada à SGGD com a possível solução e trade-offs.",
+        "Proposta de evolução da <b>Carta de Serviços</b> (palavras-chave e descrição conversacional), beneficiando Buscador e Poupinha.",
+      ],
+      cronograma:[
+        {t:"Desenvolvimento V2 concluído", s:"Concluído", cls:"s-done"},
+        {t:"Homologação API de Eventos", s:"Até 13/06", cls:"s-prev"},
+        {t:"Homologação Red Hat", s:"Em andamento", cls:"s-prog"},
+        {t:"Apresentação da V3 (SGGD e Poupatempo)", s:"Concluído", cls:"s-done"},
+        {t:"Publicação da V2", s:"Jun/2026", cls:"s-prev"},
+      ],
+      entregas:[
+        {t:"API de Eventos", items:["Integração final em homologação","Expectativa de entrega funcional até sexta"]},
+        {t:"Homologação Red Hat", items:["Suporte técnico pela OrangeDoor","Apoio à validação da V2"]},
+        {t:"V3 Conversational-First", items:["Agente de IA como 1ª opção de interação","Alinhado com SGGD e Poupatempo"]},
+        {t:"Evolução da Busca", items:["Refinamentos contínuos de relevância","Aprimoramento da experiência conversacional"]},
+      ],
+      riscos:["Dependência da conclusão da homologação da API de Eventos.","Aguardando devolutiva do Poupatempo sobre direcionamentos da V3.","Resultados inadequados em buscas relacionadas à saúde."],
+      mitigacao:["Análise técnica enviada à SGGD.","Avaliação de alternativas e respectivos trade-offs.","Refinamentos planejados para melhoria da relevância."],
+      passos:["Concluir homologação da API de Eventos.","Publicar V2 em produção.","Receber devolutiva formal do Poupatempo sobre a V3.","Refinar experiência Conversational-First.","Evoluir modelo de dados da Carta de Serviços."],
+      commit:"Entregar um Buscador <b>inteligente, confiável</b> e cada vez mais alinhado às necessidades do cidadão paulista."
+    },
+
+    /* ============ CHECK-IN ============ */
+    {
+      id:"checkin", tab:"Check-in Online", name:"Check-in Online",
+      sub:"Check-in digital de agendamentos via agente do Poupatempo, Gov.br e Marketing Cloud. V1 em testes; V2 (API Fila) em evolução.",
+      status:"EM ANDAMENTO", statusColor:"var(--green)",
+      meta:"Homologar e colocar a V1 em produção ainda em junho/2026",
+      progress:70,
+      gantt:{
+        cols:15,
+        weeks:["S1 06/04","S2 13/04","S3 20/04","S4 27/04","S5 04/05","S6 11/05","S7 18/05","S8 25/05","S9 01/06","S10 08/06","S11 16/06","S12 22/06","S13 29/06","S14 06/07","S15 13/07"],
+        today:11,
+        rows:[
+          {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+          {l:"Desenho solução", bars:[{s:0,e:2,c:"blue"},{s:2,e:7,c:"late",check:true}]},
+          {l:"Build", bars:[{s:2,e:5,c:"blue"},{s:5,e:11,c:"late",check:true}]},
+          {l:"Test", bars:[{s:4,e:10,c:"dark"},{s:10,e:11,c:"late"}], ms:[{w:10}], pin:10},
+          {l:"UAT", bars:[{s:10,e:13,c:"active"}], ms:[{w:12}]},
+          {l:"Deploy e Scale", bars:[{s:12,e:15,c:"active"}], ms:[{w:14}]},
+          {l:"Evolutiva API Fila (V2)", bars:[{s:10,e:14,c:"dark"}], ms:[{w:13}]},
+        ],
+        milestones:[
+          {w:10, t:"Entrega para homologação (16/06)"},
+          {w:12, t:"Go-Live (Prodesp) · 29/06"},
+          {w:14, t:"+2 semanas de estabilização · Handover Sustentação"},
+        ]
+      },
+      kpis:[
+        {v:"V1", l:"aplicações prontas, jornada em testes", c:"green"},
+        {v:"16/06", l:"entrega para homologação", c:"blue"},
+        {v:"V2", l:"API Fila em desenvolvimento", c:"amber"},
+      ],
+      statusAtual:[
+        "Evolução alcançada na <b>arquitetura SOMA</b> em conjunto com o time da Journey.",
+        "As <b>aplicações da V1 estão prontas</b> e a jornada completa está em testes.",
+        "Em paralelo, avanço na arquitetura da V2 e no desenvolvimento dos componentes da <b>API Fila</b>.",
+        "Aguardando a <b>formalização da lógica de negócios</b> para utilização da API Fila na V2.",
+        "Aguardando a conclusão da <b>Jornada CIN</b> para disponibilização da API Fila na V1 (caso haja janela).",
+        "Previsão de homologação e entrada em produção da V1 mantida para <b>ainda em junho/2026</b>.",
+      ],
+      cronograma:[
+        {t:"Arquitetura SOMA com Journey evoluída", s:"Concluído", cls:"s-done"},
+        {t:"Aplicações da V1 prontas", s:"Concluído", cls:"s-done"},
+        {t:"Jornada completa em testes", s:"Concluído", cls:"s-done"},
+        {t:"Desenvolvimento da API Fila (V2)", s:"Em andamento", cls:"s-prog"},
+        {t:"Formalização da lógica de negócios (API Fila V2)", s:"Aguardando", cls:"s-wait"},
+        {t:"Homologação da V1", s:"Jun/2026", cls:"s-prev"},
+        {t:"Entrada em produção da V1", s:"Jun/2026", cls:"s-prev"},
+      ],
+      entregas:[
+        {t:"V1 — Check-in Online", items:["Aplicações desenvolvidas e prontas","Jornada completa em testes","Foco na estabilização e homologação"]},
+        {t:"V2 — API Fila", items:["Arquitetura em evolução","Desenvolvimento dos componentes","Aguardando lógica de negócios"]},
+        {t:"Integração com Jornada CIN", items:["Dependência da conclusão da CIN","API Fila da CIN usável na V1 (se houver janela)"]},
+        {t:"Próximos passos da V1", items:["Testes finais e ajustes","Homologação com o Poupatempo","Entrada em produção ainda em junho"]},
+      ],
+      riscos:["Dependência da formalização da lógica de negócios da API Fila para início da V2.","Aguardando devolutiva do Poupatempo sobre URLs/domínios, Git, branches e fluxo de publicação.","Possível impacto no cronograma da V1 caso a Jornada CIN sofra novos atrasos.","Integração da API Fila na V1 pode aumentar complexidade e risco de retrabalho."],
+      mitigacao:["Acompanhamento constante com SGGD, Poupatempo e equipes técnicas.","Solicitação formal de acessos, URLs e informações de deploy.","Planejamento conjunto para priorização e redução de dependências.","Validação técnica contínua da arquitetura SOMA."],
+      passos:["Concluir testes e ajustes finais da V1.","Realizar homologação com o Poupatempo.","Validar integração com a API Fila da CIN (se houver janela).","Dar continuidade ao desenvolvimento da API Fila (V2).","Colocar a V1 em produção ainda em junho/2026."],
+      commit:"Entregar uma experiência de check-in <b>simples, ágil e confiável</b>, com foco no cidadão, qualidade e segurança."
+    },
+
+    /* ============ MAMOGRAFIA ============ */
+    {
+      id:"mamografia", tab:"Mamografia", name:"Jornada de Exames — Mamografia",
+      sub:"Agendamento e confirmação de mamografia com fluxo SIRESP. Em desenvolvimento, entrando em estágio de testes.",
+      status:"EM DESENVOLVIMENTO", statusColor:"var(--indigo-2)",
+      meta:"UAT previsto para a 1ª ou 2ª semana de julho",
+      progress:55,
+      gantt:{
+        cols:16,
+        weeks:["S1 27/04","S2 04/05","S3 11/05","S4 18/05","S5 25/05","S6 01/06","S7 08/06","S8 15/06","S9 22/06","S10 29/06","S11 06/07","S12 13/07","S13 20/07","S14 27/07","S15 03/08","S16 10/08"],
+        today:8,
+        rows:[
+          {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+          {l:"Desenho solução", bars:[{s:0,e:5,c:"blue",check:true}], pin:7},
+          {l:"Build", bars:[{s:3,e:7,c:"blue"},{s:7,e:9,c:"dark"},{s:9,e:10,c:"active"}]},
+          {l:"Test", bars:[{s:4,e:7,c:"blue"},{s:7,e:8,c:"dark"},{s:8,e:10,c:"active"}], ms:[{w:10}]},
+          {l:"UAT", bars:[{s:10,e:13,c:"active"}], ms:[{w:12}]},
+          {l:"Deploy e Scale", bars:[{s:12,e:16,c:"active"}], ms:[{w:15}]},
+        ],
+        milestones:[
+          {w:10, t:"Entrega para homologação (06/07)"},
+          {w:12, t:"Go-Live (Prodesp) · 20/07"},
+          {w:14, t:"+4 semanas de estabilização · Handover Sustentação"},
+        ]
+      },
+      kpis:[
+        {v:"jul", l:"UAT previsto (1ª/2ª semana)", c:"amber"},
+        {v:"2ª", l:"prioridade (atrás de Check-in, CIN, SUS)", c:""},
+        {v:"SIRESP", l:"botões Confirmar/Corrigir implementados", c:"blue"},
+      ],
+      statusAtual:[
+        "O projeto segue em desenvolvimento com bom avanço e está <b>entrando em estágio de testes</b>.",
+        "Refinamentos de conteúdo no protótipo, incluindo a implementação dos botões de confirmação <b>“Confirmar” / “Corrigir”</b> no fluxo SIRESP, conforme feedback.",
+        "Projeto em <b>prioridade secundária</b> em relação a Check-in, Jornada CIN e Tabela SUS.",
+        "Previsão de <b>UAT mantida para a 1ª ou 2ª semana de julho</b>.",
+        "Foco atual em estabilização do fluxo, testes e melhorias de experiência.",
+      ],
+      cronograma:[
+        {t:"Desenvolvimento em andamento", s:"Em andamento", cls:"s-prog"},
+        {t:"Refinamentos de conteúdo e UX (protótipo)", s:"Concluído", cls:"s-done"},
+        {t:"Botões de confirmação no fluxo SIRESP", s:"Concluído", cls:"s-done"},
+        {t:"Início da fase de testes internos", s:"Em andamento", cls:"s-prog"},
+        {t:"Preparação para UAT", s:"Planejado", cls:"s-plan"},
+        {t:"UAT (1ª ou 2ª semana de julho)", s:"Jul/2026", cls:"s-prev"},
+        {t:"Go-Live", s:"Planejado", cls:"s-plan"},
+      ],
+      entregas:[
+        {t:"Desenvolvimento e avanços", items:["Bom avanço no desenvolvimento da jornada","Entrada na fase de testes internos"]},
+        {t:"Refinamentos no protótipo", items:["Ajustes de conteúdo realizados","Botões “Confirmar”/“Corrigir” no fluxo SIRESP"]},
+        {t:"Priorização do projeto", items:["Projeto em prioridade secundária","Prioridade atual: Check-in, CIN e Tabela SUS"]},
+        {t:"Previsão de UAT", items:["UAT mantido para 1ª/2ª semana de julho","Planejamento alinhado com demais frentes"]},
+      ],
+      riscos:["Dependência de recursos devido à prioridade secundária do projeto.","Possíveis ajustes adicionais de conteúdo mediante novos feedbacks.","Risco de impacto no prazo de UAT em caso de imprevistos nos testes.","Possível impacto de escopo devido ao WhatsApp ativo bloqueado."],
+      mitigacao:["Planejamento detalhado das atividades e janelas de testes.","Alinhamento contínuo com as áreas envolvidas.","Execução de testes antecipados para reduzir riscos."],
+      passos:["Concluir desenvolvimento e ajustes pendentes.","Executar testes internos e validar correções.","Realizar testes integrados com SIRESP.","Preparar e disponibilizar ambiente para UAT.","Realizar UAT e planejar Go-Live para julho."],
+      commit:"Entregar uma experiência <b>clara e acessível</b> para agendamento de mamografia, com qualidade, segurança e empatia."
+    },
+
+    /* ============ TABELA SUS ============ */
+    {
+      id:"sus", tab:"Tabela SUS", name:"Tabela SUS Paulista",
+      sub:"Pesquisa + mensuração via Tableau (V1) e, depois, automação via API (V2). Em setup estratégico no Marketing Cloud.",
+      status:"EM SETUP ESTRATÉGICO", statusColor:"var(--indigo-2)",
+      meta:"Entregar a V1 (pesquisa + mensuração via Tableau) ainda em junho/2026",
+      progress:35,
+      gantt:{
+        cols:12,
+        weeks:["S1 25/05","S2 01/06","S3 08/06","S4 15/06","S5 24/06","S6 29/06","S7 06/07","S8 13/07","S9 20/07","S10 27/07","S11 03/08","S12 10/08"],
+        today:4,
+        rows:[
+          {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+          {l:"Desenho solução", bars:[{s:1,e:3,c:"blue",check:true}], pin:3},
+          {l:"Build", bars:[{s:2,e:6,c:"active"}]},
+          {l:"Test", bars:[{s:3,e:7,c:"active"}], ms:[{w:4},{w:7}]},
+          {l:"UAT", bars:[{s:7,e:9,c:"active"}], ms:[{w:9}]},
+          {l:"Deploy e Scale", bars:[{s:9,e:11,c:"active"}], ms:[{w:11}]},
+        ],
+        milestones:[
+          {w:4, t:"Early-delivery para homologação (24/06)"},
+          {w:7, t:"Entrega original para homologação (13/07)"},
+          {w:9, t:"Go-Live (Prodesp) · 27/07"},
+          {w:11, t:"+2 semanas de estabilização · Handover Sustentação"},
+        ]
+      },
+      kpis:[
+        {v:"V1", l:"pesquisa + mensuração via Tableau", c:"blue"},
+        {v:"2868", l:"bloqueador: WhatsApp Business", c:"red"},
+        {v:"Alpha", l:"protótipo do dashboard disponível", c:"green"},
+      ],
+      statusAtual:[
+        "Devido à urgência, iniciamos nesta semana o <b>setup inicial no Marketing Cloud</b> (templates, jornada de pesquisa e estrutura de dados).",
+        "O <b>protótipo Alpha do dashboard no Tableau</b> já está disponível.",
+        "Principal <b>bloqueador</b>: liberação de acesso à conta de produção do <b>WhatsApp Business (número 2868)</b> por parte da cliente.",
+        "Enquanto isso, seguimos com as configurações em <b>ambiente de teste</b>.",
+        "Estratégia definida: entregar primeiro a <b>V1</b> (pesquisa + mensuração via Tableau) e, depois, evoluir para a <b>V2</b> com automação via API.",
+      ],
+      cronograma:[
+        {t:"Setup inicial no Marketing Cloud", s:"Concluído", cls:"s-done"},
+        {t:"Protótipo Alpha do dashboard (Tableau)", s:"Concluído", cls:"s-done"},
+        {t:"Acesso à conta de produção WhatsApp (2868)", s:"Bloqueador", cls:"s-block"},
+        {t:"Configurações e testes em ambiente de teste", s:"Em andamento", cls:"s-prog"},
+        {t:"Entrega da V1 (pesquisa + mensuração via Tableau)", s:"Jun/2026", cls:"s-prev"},
+        {t:"Evolução para V2 com automação via API", s:"Planejado", cls:"s-plan"},
+      ],
+      entregas:[
+        {t:"Marketing Cloud", items:["Setup inicial concluído nesta semana","Templates e jornada de pesquisa em construção","Estrutura de dados definida"]},
+        {t:"Dashboard (Tableau)", items:["Protótipo Alpha disponível","Visão inicial de indicadores e métricas","Base para mensuração da pesquisa"]},
+        {t:"WhatsApp Business", items:["Bloqueador: liberação da conta de produção (nº 2868)","Configurações avançando em ambiente de teste"]},
+        {t:"Estratégia de entrega", items:["Foco inicial na entrega da V1","Pesquisa + mensuração via Tableau","Evolução para V2 com automação via API"]},
+      ],
+      riscos:["Dependência da liberação da conta de produção do WhatsApp Business (2868).","Atrasos na liberação podem impactar a automação futura (V2).","Escopo pode crescer devido à urgência e novas demandas."],
+      mitigacao:["Avançar em ambiente de teste para não impactar o cronograma da V1.","Entrega da V1 focada em pesquisa e mensuração (sem dependência da API/WhatsApp em produção).","Alinhamento constante com a cliente sobre priorização e prazos."],
+      passos:["Concluir setup e configuração no Marketing Cloud.","Finalizar ajustes no dashboard do Tableau.","Acompanhar liberação da conta do WhatsApp Business (2868).","Executar testes e validar jornada de pesquisa.","Entregar V1 e planejar evolução para V2 com API."],
+      commit:"Entregar soluções que geram valor para a <b>saúde pública</b>, com foco no cidadão, dados de qualidade e evolução contínua."
+    },
+
+    /* ============ JORNADA CIN ============ */
+    {
+      id:"cin", tab:"Jornada CIN", name:"Jornada CIN",
+      sub:"Carteira de Identidade Nacional — versão Alpha em fase final. Fundação arquitetural (SOMA) para as próximas jornadas.",
+      status:"FASE FINAL DE DESENVOLVIMENTO", statusColor:"var(--indigo-2)",
+      meta:"Disponibilização para UAT em 16/06 (segunda-feira)",
+      progress:72,
+      gantt:{
+        cols:15,
+        weeks:["S1 18/05","S2 25/05","S3 01/06","S4 08/06","S5 15/06","S6 22/06","S7 29/06","S8 06/07","S9 13/07","S10 20/07","S11 27/07","S12 03/08","S13 10/08","S14 17/08","S15 24/08"],
+        today:5,
+        rows:[
+          {l:"Discovery / Refinamento", bars:[{s:0,e:1,c:"blue"},{s:1,e:4,c:"late",check:true}]},
+          {l:"Desenho solução", bars:[{s:1,e:3,c:"blue"},{s:3,e:5,c:"dark",check:true}]},
+          {l:"Build", bars:[{s:2,e:4,c:"blue"},{s:4,e:6,c:"dark",check:true}], pin:5},
+          {l:"Test", bars:[{s:4,e:6,c:"dark"},{s:6,e:7,c:"late"}], ms:[{w:6}]},
+          {l:"UAT", bars:[{s:5,e:7,c:"active"}], ms:[{w:6}]},
+          {l:"Deploy e Scale", bars:[{s:6,e:9,c:"active"}], ms:[{w:8}]},
+        ],
+        milestones:[
+          {w:5, t:"Entrega para homologação (15/06)"},
+          {w:6, t:"Go-Live (Prodesp) · 29/06"},
+          {w:8, t:"+2 semanas de estabilização · Handover Sustentação"},
+        ]
+      },
+      kpis:[
+        {v:"16/06", l:"disponibilização para UAT", c:"blue"},
+        {v:"Poupinha", l:"mesma API de eventos e payload", c:"green"},
+        {v:"D7", l:"notificações em construção interna", c:"amber"},
+      ],
+      statusAtual:[
+        "Confirmado que a <b>API de eventos e o payload</b> são os mesmos do Poupinha, permitindo reaproveitamento de componentes.",
+        "A solução de disparo de <b>notificações (D7)</b> está sendo construída internamente pela equipe (Erik + Igor).",
+        "Desenvolvimento da versão <b>Alpha</b> em fase final.",
+        "A Jornada CIN precisa subir <b>antes do Check-in</b> por questões de arquitetura e dependência de componentes.",
+        "Será entregue para <b>UAT na segunda-feira</b>, garantindo a priorização da esteira.",
+      ],
+      cronograma:[
+        {t:"Validação do protótipo", s:"Concluído", cls:"s-done"},
+        {t:"Arquitetura de eventos compartilhada com Poupinha", s:"Concluído", cls:"s-done"},
+        {t:"Payload de eventos (mesmo do Poupinha)", s:"Concluído", cls:"s-done"},
+        {t:"Definição da estratégia de notificações D7", s:"Em andamento", cls:"s-prog"},
+        {t:"Desenvolvimento Alpha", s:"Em andamento", cls:"s-prog"},
+        {t:"Disponibilização para UAT (16/06)", s:"16/06", cls:"s-prev"},
+        {t:"Go-Live", s:"Jun/2026", cls:"s-prev"},
+      ],
+      entregas:[
+        {t:"Reaproveitamento arquitetural", items:["API de Eventos compartilhada com o Poupinha","Mesmo payload validado","Redução de complexidade técnica"]},
+        {t:"Notificações D7", items:["Solução desenvolvida internamente","Construção conduzida por Erik e Igor","Maior autonomia da plataforma"]},
+        {t:"Arquitetura SOMA", items:["Componentes reutilizáveis","Padronização entre jornadas","Melhor manutenção futura"]},
+        {t:"Preparação para UAT", items:["Versão Alpha em conclusão","Ambiente sendo preparado","Entrega prevista para segunda-feira"]},
+      ],
+      riscos:["Dependência de publicação da CIN antes do Check-in.","Necessidade de concluir e validar o mecanismo D7.","Janela reduzida entre UAT e Go-Live."],
+      mitigacao:["Reaproveitamento de componentes existentes.","Arquitetura compartilhada com o Poupinha.","Desenvolvimento interno da solução D7.","Priorização da CIN na esteira de entrega."],
+      passos:["Finalizar desenvolvimento Alpha.","Concluir construção das notificações D7.","Disponibilizar ambiente para UAT.","Executar homologação com o Poupatempo.","Preparar publicação em produção."],
+      commit:"Entregar jornadas digitais <b>inteligentes, escaláveis e centradas no cidadão</b>, com agilidade e colaboração entre times."
+    },
+
+    /* ============ POUPINHA & ZELADORIA ============ */
+    {
+      id:"poupinha", tab:"Poupinha & Zeladoria", name:"Poupinha & Zeladoria",
+      sub:"Duas frentes conversacionais em preparação: Poupinha V2 (sondagem + áudio) e Zeladoria (arquitetura multiagente).",
+      status:"EM PREPARAÇÃO", statusColor:"var(--amber)",
+      meta:"Iniciar a V2 do Poupinha em paralelo e retomar a Zeladoria após as frentes prioritárias",
+      progress:25,
+      twin:true,
+      kpis:[
+        {v:"Sondagem", l:"abordagem principal da Poupinha V2", c:"amber"},
+        {v:"Áudio", l:"integração via WhatsApp iniciada", c:"blue"},
+        {v:"Zeladoria", l:"aguardando priorização", c:""},
+      ],
+      twinA:{
+        name:"Poupinha V2", status:"EM DEFINIÇÃO DE ESCOPO", cls:"s-wait",
+        meta:"Iniciar desenvolvimento da V2 em paralelo aos projetos prioritários",
+        statusAtual:[
+          "Integração de <b>áudio via WhatsApp</b> já está sendo implementada em uma versão apartada.",
+          "Validada a solução de <b>“Sondagem”</b> como abordagem principal da V2: o agente faz perguntas direcionadas para entregar informações da Carta de Serviços de forma mais relevante e segmentada.",
+          "Escopo preliminar da V2 sendo fechado nesta semana, para iniciar o desenvolvimento em paralelo.",
+          "Aguardando devolutiva da Marina (SGGD) e do time Poupatempo.",
+          "A evolução da Carta de Serviços (proposta também para o Buscador V3) beneficiará diretamente o Poupinha.",
+        ],
+        cronograma:[
+          {t:"Validação da estratégia de Sondagem", s:"Concluído", cls:"s-done"},
+          {t:"Definição inicial da arquitetura da V2", s:"Concluído", cls:"s-done"},
+          {t:"Funcionalidade de áudio via WhatsApp", s:"Em andamento", cls:"s-prog"},
+          {t:"Consolidação do escopo da V2", s:"Em andamento", cls:"s-prog"},
+          {t:"Aprovação da SGGD e Poupatempo", s:"Aguardando", cls:"s-wait"},
+          {t:"Início do desenvolvimento da V2", s:"Planejado", cls:"s-plan"},
+        ],
+        riscos:["Dependência de devolutiva da SGGD e Poupatempo.","Priorização concorrente com projetos de junho.","Escopo da V2 ainda em consolidação."],
+        mitigacao:["Definição antecipada da arquitetura.","Evolução paralela da Carta de Serviços.","Planejamento de desenvolvimento incremental."],
+      },
+      twinB:{
+        name:"Zeladoria", status:"AGUARDANDO PRIORIZAÇÃO", cls:"s-wait",
+        meta:"Retomar a evolução da V2 após conclusão das frentes prioritárias",
+        statusAtual:[
+          "Projeto permanece em <b>baixa prioridade</b> no momento.",
+          "Equipe concentrada nas entregas de Check-in, Jornada CIN e Tabela SUS.",
+          "Evolução da V2 <b>temporariamente postergada</b>; arquitetura alvo já definida.",
+          "Estratégia <b>multiagente</b> (SOMA + Agentforce) permanece válida.",
+          "Funcionalidade de <b>áudio via WhatsApp</b> continua no roadmap.",
+        ],
+        cronograma:[
+          {t:"Conceito da V2 definido", s:"Concluído", cls:"s-done"},
+          {t:"Demonstração executiva realizada", s:"Concluído", cls:"s-done"},
+          {t:"Estratégia multiagente validada", s:"Concluído", cls:"s-done"},
+          {t:"Definição de priorização", s:"Aguardando", cls:"s-wait"},
+          {t:"Retomada do desenvolvimento", s:"Aguardando", cls:"s-wait"},
+          {t:"Go-Live V2 (dependendo da priorização)", s:"Jul/2026", cls:"s-prev"},
+        ],
+        riscos:["Dependência de priorização frente aos demais projetos.","Possível deslocamento do cronograma da V2.","Recursos alocados temporariamente em outras iniciativas."],
+        mitigacao:["Arquitetura previamente definida.","Planejamento já estruturado.","Possibilidade de retomada rápida após liberação de capacidade."],
+      },
+      commit:"Entregar experiências conversacionais mais <b>inteligentes, personalizadas e centradas no cidadão</b>, com inovação e evolução contínua."
+    },
+
+    /* ============ DETRAN ============ */
+    {
+      id:"detran", tab:"Detran SP", name:"Detran SP",
+      sub:"Transformação digital com IA dos serviços do Detran SP. Frente bloqueada, aguardando retorno do time técnico.",
+      status:"BLOQUEADO", statusColor:"var(--red)",
+      meta:"Retomar a definição de escopo e roadmap com o Detran",
+      progress:15,
+      kpis:[
+        {v:"Bloqueado", l:"aguardando retorno do time técnico", c:"red"},
+        {v:"Workshop", l:"executivo realizado", c:"green"},
+        {v:"Casos de uso", l:"iniciais identificados e priorizados", c:""},
+      ],
+      statusAtual:[
+        "Projeto permanece <b>bloqueado</b>.",
+        "Aguardando retorno do <b>time técnico do Detran</b>.",
+        "Não houve avanços relevantes desde a última atualização.",
+        "Dependência de definição dos próximos casos de uso prioritários.",
+        "SGGD informou estar conduzindo <b>alinhamentos internos</b> com o Detran.",
+        "Roadmap segue aguardando direcionamento oficial.",
+      ],
+      cronograma:[
+        {t:"Workshop Executivo realizado", s:"Concluído", cls:"s-done"},
+        {t:"Casos de uso iniciais identificados", s:"Concluído", cls:"s-done"},
+        {t:"Oportunidades de IA mapeadas", s:"Concluído", cls:"s-done"},
+        {t:"Definição de escopo detalhado", s:"Aguardando", cls:"s-wait"},
+        {t:"Validação técnica Detran", s:"Aguardando", cls:"s-wait"},
+        {t:"Planejamento da próxima fase", s:"Aguardando", cls:"s-wait"},
+      ],
+      entregas:[
+        {t:"Workshop Executivo", items:["Conduzido com Detran, Poupatempo, Prodesp e SGGD","Levantamento inicial realizado"]},
+        {t:"Casos de uso", items:["Oportunidades já identificadas","Priorização preliminar construída"]},
+        {t:"Roadmap inicial", items:["Estrutura preliminar elaborada","Dependente de validação do Detran"]},
+        {t:"Arquitetura conceitual", items:["Direcionadores técnicos definidos","Evolução aguardando escopo final"]},
+      ],
+      riscos:["Ausência de devolutiva do time técnico do Detran.","Indefinição do escopo da próxima fase.","Impacto potencial no cronograma global."],
+      mitigacao:["Acompanhamento contínuo junto à SGGD.","Material executivo já consolidado.","Casos de uso previamente identificados.","Prontidão para retomada imediata após direcionamento."],
+      passos:["Receber posicionamento do Detran.","Validar casos de uso prioritários.","Refinar escopo detalhado.","Construir roadmap executivo.","Iniciar fase de detalhamento técnico."],
+      commit:"Apoiar a <b>transformação digital dos serviços públicos</b> com foco em eficiência, inovação e melhor experiência para o cidadão."
+    },
+  ]
+};
+
+/* ============ RENDER HELPERS ============ */
+const pct = (n,cols)=> (n/cols*100);
+const esc = s=>s;
+
+function ganttHTML(g){
+  const cols=g.cols;
+  let weeks = g.weeks.map((w,i)=>{
+    const [s,d]=w.split(" ");
+    return `<div class="g-week${i===g.today?' is-today':''}"><b>${s}</b><span>${d||''}</span></div>`;
+  }).join("");
+
+  let rows = g.rows.map(r=>{
+    let bars=(r.bars||[]).map(b=>{
+      const left=pct(b.s,cols), width=pct(b.e-b.s,cols);
+      return `<div class="bar ${b.c}" style="left:${left}%;width:${width}%">${b.check?'<span class="check">✓</span>':''}</div>`;
+    }).join("");
+    let ms=(r.ms||[]).map(m=>`<span class="ms" style="left:${pct(m.w+0.5,cols)}%"></span>`).join("");
+    let pin = (r.pin!=null)?`<span class="ms pin" style="left:${pct(r.pin+0.5,cols)}%"></span>`:'';
+    let today=`<span class="today" style="left:${pct(g.today+0.5,cols)}%"></span>`;
+    return `<div class="g-row"><div class="g-label">${r.l}</div><div class="g-track">${bars}${ms}${pin}${today}</div></div>`;
+  }).join("");
+
+  let legend = g.milestones.map(m=>{
+    const wk=g.weeks[m.w]?g.weeks[m.w].split(" ")[0]:'';
+    return `<div class="mscard"><span class="d"></span><div>${m.t}<small>${wk}</small></div></div>`;
+  }).join("");
+
+  return `
+  <div class="panel">
+    <div class="panel-h"><span class="ic">📊</span><h3>Cronograma por semanas (Gantt)</h3><span class="h-note">Marco ◆ · Hoje ${TODAY}</span></div>
+    <div class="panel-b">
+      <div class="gantt" style="--cols:${cols}">
+        <div class="gantt-scroll"><div class="gantt-inner">
+          <div class="g-head"><div class="spacer"></div><div class="g-weeks">${weeks}</div></div>
+          ${rows}
+        </div></div>
+        <div class="swatches">
+          <span><i style="background:linear-gradient(180deg,#74c2ec,var(--blue))"></i>Concluído</span>
+          <span><i style="background:linear-gradient(180deg,#5a39c9,var(--purple))"></i>Em execução</span>
+          <span><i style="background:linear-gradient(180deg,#e2596d,var(--red))"></i>Replanejado</span>
+          <span><i style="background:repeating-linear-gradient(45deg,var(--lilac),var(--lilac) 5px,#d8cef5 5px,#d8cef5 10px)"></i>Planejado</span>
+          <span><i style="background:var(--amber);transform:rotate(45deg);width:11px;height:11px"></i>Marco</span>
+        </div>
+        <div class="g-legend">${legend}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function leadList(arr,cls=""){return `<ul class="lead ${cls}">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>`;}
+function cronoList(arr){return `<div class="timeline-list">${arr.map(c=>`<div class="tl-item"><span class="tl-ic">●</span><div class="tl-txt">${c.t}</div><span class="statetag ${c.cls}">${c.s}</span></div>`).join("")}</div>`;}
+function delivGrid(arr){return `<div class="deliv">${arr.map(d=>`<div class="d-item"><div class="d-t"><span class="di">★</span>${d.t}</div><ul>${d.items.map(i=>`<li>${i}</li>`).join("")}</ul></div>`).join("")}</div>`;}
+function kpiRow(arr){return `<div class="kpis">${arr.map(k=>`<div class="kpi"><div class="v ${k.c||''}">${k.v}</div><div class="l">${k.l}</div></div>`).join("")}</div>`;}
+function steps(arr){return `<div class="steps">${arr.map(s=>`<div class="step">${s}</div>`).join("")}</div>`;}
+
+function infoCards(p){
+  return `
+  <div class="info-grid">
+    <div class="card">
+      <div class="card-h h-indigo"><span class="ci">📋</span>Status atual</div>
+      <div class="card-b">${leadList(p.statusAtual)}</div>
+    </div>
+    <div class="card">
+      <div class="card-h h-blue"><span class="ci">🗓️</span>Cronograma e marcos</div>
+      <div class="card-b">${cronoList(p.cronograma)}</div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-h h-indigo"><span class="ci">⭐</span>Principais entregas e evoluções</div>
+      <div class="card-b">${delivGrid(p.entregas)}</div>
+    </div>
+    <div class="card">
+      <div class="card-h h-red"><span class="ci">⚠️</span>Riscos / pontos de atenção</div>
+      <div class="card-b">
+        <div class="two-col">
+          <div><div class="subhead">Riscos</div>${leadList(p.riscos,'red')}</div>
+          <div><div class="subhead green">Mitigação</div>${leadList(p.mitigacao,'green')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h h-amber"><span class="ci">🚀</span>Próximos passos</div>
+      <div class="card-b">${steps(p.passos)}</div>
+    </div>
+  </div>`;
+}
+
+function twinCards(p){
+  const block=(t)=>`
+    <div class="card">
+      <div class="card-h h-indigo"><span class="ci">🤖</span>${t.name}
+        <span class="statetag ${t.cls}" style="margin-left:auto">${t.status}</span></div>
+      <div class="card-b">
+        <div class="metapill" style="background:var(--indigo-soft);color:var(--indigo);border:none;margin-bottom:12px"><b>Meta:</b> ${t.meta}</div>
+        <div class="subhead">Status atual</div>${leadList(t.statusAtual)}
+        <div class="subhead" style="margin-top:16px">Cronograma e marcos</div>${cronoList(t.cronograma)}
+        <div class="two-col" style="margin-top:16px">
+          <div><div class="subhead">Riscos</div>${leadList(t.riscos,'red')}</div>
+          <div><div class="subhead green">Mitigação</div>${leadList(t.mitigacao,'green')}</div>
+        </div>
+      </div>
+    </div>`;
+  return `<div class="info-grid">${block(p.twinA)}${block(p.twinB)}</div>`;
+}
+
+function projectPage(p){
+  return `
+  <section class="page" id="page-${p.id}" data-page="${p.id}">
+    <div class="phero">
+      <div class="eyebrow">Status Executivo · Junho/2026</div>
+      <h2>${p.name}</h2>
+      <p class="sub">${p.sub}</p>
+      <div class="pills">
+        <span class="statuspill" style="background:${p.statusColor}"><span class="b"></span>${p.status}</span>
+        <span class="metapill"><b>Meta:</b> ${p.meta}</span>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:22px">
+      <div class="panel-b">${kpiRow(p.kpis)}</div>
+    </div>
+    ${p.gantt?ganttHTML(p.gantt):''}
+    ${p.twin?twinCards(p):infoCards(p)}
+    <div class="commit"><b>Nosso compromisso:</b> ${p.commit}</div>
+  </section>`;
+}
+
+/* ----- overview / macro ----- */
+function macroHTML(m){
+  const months=m.months.map(x=>`<div class="m">${x}</div>`).join("");
+  const colW=`grid-template-columns:repeat(${m.months.length},1fr)`;
+  const rows=m.rows.map(r=>{
+    const bars=r.bars.map(b=>`<div class="macro-bar ${b.c||''}" style="left:${b.s}%;width:${b.e-b.s}%"></div>`).join("");
+    const ms=(r.ms||[]).map(x=>`<div class="macro-ms" style="left:${x.p}%"></div>${x.t?`<div style="position:absolute;left:${x.p}%;top:-16px;transform:translateX(-50%);font:800 9px/1 'Plus Jakarta Sans';color:var(--indigo)">${x.t}</div>`:''}`).join("");
+    return `<div class="macro-row"><div class="ml">${r.l}</div><div class="macro-track">${bars}${ms}<div class="macro-today" style="left:${m.todayPct}%"></div></div></div>`;
+  }).join("");
+  const gl=m.golives.map(g=>{
+    const tx = g.p>=95 ? '-82%' : (g.p<=5 ? '-18%' : '-50%');
+    return `<div class="gl" style="left:${g.p}%;transform:translateX(${tx})">◆ ${g.t}</div>`;
+  }).join("");
+  return `
+  <div class="panel macro">
+    <div class="panel-h"><span class="ic">🗺️</span><h3>Macro plano de Go-Live</h3><span class="h-note">Marco ◆ · linha tracejada = hoje</span></div>
+    <div class="panel-b"><div class="macro-inner">
+      <div class="macro-axis"><div></div><div class="macro-months" style="${colW}">${months}</div></div>
+      ${rows}
+      <div class="macro-golives"><div></div><div class="macro-gl">${gl}</div></div>
+    </div></div>
+  </div>`;
+}
+
+function overviewPage(){
+  const o=DATA.overview;
+  const stats=o.stats.map(s=>`<div class="ov-stat"><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`).join("");
+  const cards=DATA.projects.map(p=>`
+    <div class="pc" data-goto="${p.id}">
+      <div class="pc-top"><div class="pc-n">${p.name}</div>
+        <span class="pc-status" style="background:${p.statusColor}22;color:${p.statusColor}">${p.status}</span></div>
+      <div class="pc-meta">${p.meta}</div>
+      <div class="pc-bar"><i style="width:${p.progress}%"></i></div>
+      <div class="pc-go">Abrir página →</div>
+    </div>`).join("");
+  return `
+  <section class="page" id="page-overview" data-page="overview">
+    <div class="ov-hero">
+      <div class="eyebrow">Status Report Poupatempo · Weekly Meeting</div>
+      <h1>Squad de IA — Transformação de Jornadas Públicas</h1>
+      <p>Acompanhamento executivo das 7 frentes de IA do Poupatempo. Selecione um projeto na navegação para ver o cronograma por semanas e o painel de status. Reunião de 18/Jun/2026.</p>
+      <div class="ov-stats">${stats}</div>
+    </div>
+    ${macroHTML(o.macro)}
+    <div class="panel" style="background:transparent;border:none;box-shadow:none;margin-bottom:14px">
+      <div class="panel-h" style="padding-left:0;border:none"><span class="ic">🧭</span><h3>Frentes em acompanhamento</h3></div>
+    </div>
+    <div class="proj-cards">${cards}</div>
+  </section>`;
+}
+
+/* ============ MOUNT ============ */
+const app=document.getElementById("app");
+const tabsEl=document.getElementById("tabs");
+
+app.innerHTML = overviewPage() + DATA.projects.map(projectPage).join("");
+
+const tabs=[{id:"overview",tab:"Visão Geral"}, ...DATA.projects.map(p=>({id:p.id,tab:p.tab}))];
+tabsEl.innerHTML=tabs.map(t=>`<button data-tab="${t.id}"><span class="ledge"></span>${t.tab}</button>`).join("");
+
+function show(id){
+  document.querySelectorAll(".page").forEach(s=>s.classList.toggle("active", s.dataset.page===id));
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+  window.scrollTo({top:0,behavior:"instant"in window?"instant":"auto"});
+  if(location.hash.slice(1)!==id) history.replaceState(null,"","#"+id);
+}
+tabsEl.addEventListener("click",e=>{const b=e.target.closest("button");if(b)show(b.dataset.tab);});
+app.addEventListener("click",e=>{const c=e.target.closest("[data-goto]");if(c)show(c.dataset.goto);});
+
+const init=location.hash.slice(1);
+show(tabs.some(t=>t.id===init)?init:"overview");
+</script>
+</body>
+</html>
