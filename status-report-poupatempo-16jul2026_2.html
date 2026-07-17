@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Report Poupatempo — Squad de IA</title>
+<meta name="description" content="Status Report semanal — Squad de IA · Transformação de Jornadas Públicas · Poupatempo / Prodesp / OrangeDoor IT / Salesforce Partners">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --ink:#100a33; --ink-2:#1b1450;
+ --indigo:#3a1f9e; --indigo-2:#5b3fd6; --indigo-soft:#ece8fb;
+ --blue:#1798d6; --blue-soft:#bfe2f6; --blue-line:#7cc4ec;
+ --purple:#3d1f97; --purple-soft:#cfc2f3;
+ --lilac:#c9bdf0;
+ --red:#d62740; --red-soft:#f6c9d0;
+ --green:#13a06a; --green-soft:#bfe9d6;
+ --amber:#f4b223; --orange:#f2731c;
+ --paper:#ffffff; --bg:#eef2ff; --bg-2:#f7f1ff;
+ --txt:#241d4a; --muted:#6d6796; --hair:#e6e3f5;
+ --shadow:0 10px 30px -14px rgba(40,24,120,.32);
+ --shadow-sm:0 4px 14px -8px rgba(40,24,120,.4);
+ --r:16px;
+ --lc:188px; /* gantt label column */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0; font-family:"Inter",system-ui,sans-serif; color:var(--txt);
+ background:
+ radial-gradient(1200px 600px at 85% -10%, #e7ecff 0%, transparent 60%),
+ radial-gradient(900px 500px at 0% 0%, #f3eafe 0%, transparent 55%),
+ linear-gradient(180deg,var(--bg) 0%, var(--bg-2) 100%);
+ background-attachment:fixed;
+ -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"Plus Jakarta Sans",sans-serif;margin:0;line-height:1.1}
+a{color:inherit}
+
+/* ---------- TOP BAR ---------- */
+.topbar{
+ position:sticky;top:0;z-index:50;
+ backdrop-filter:saturate(140%) blur(10px);
+ background:rgba(255,255,255,.78);
+ border-bottom:1px solid var(--hair);
+}
+.topbar-inner{max-width:1240px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brandmark{display:flex;align-items:center;gap:10px;font-family:"Plus Jakarta Sans";font-weight:800;letter-spacing:-.02em;color:var(--indigo)}
+.brandmark .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2));display:grid;place-items:center;color:#fff;font-size:14px}
+.brand-meta{font:600 12px/1.3 "Inter";color:var(--muted)}
+.partners{margin-left:auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.partner-logo{display:flex;align-items:center;height:28px;opacity:.9;transition:opacity .2s}
+.partner-logo:hover{opacity:1}
+.partner-logo svg{height:100%;width:auto}
+
+/* ---------- NAV ---------- */
+nav.tabs{max-width:1240px;margin:0 auto;padding:10px 16px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{
+ white-space:nowrap;border:1px solid var(--hair);background:#fff;color:var(--muted);
+ font:600 13px/1 "Inter";padding:9px 14px;border-radius:999px;cursor:pointer;transition:.18s;
+ display:flex;align-items:center;gap:8px;
+}
+nav.tabs button:hover{color:var(--indigo);border-color:var(--purple-soft)}
+nav.tabs button.active{background:linear-gradient(135deg,var(--indigo),var(--indigo-2));color:#fff;border-color:transparent;box-shadow:var(--shadow-sm)}
+nav.tabs button .ledge{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.8}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:26px 22px 80px}
+.page{display:none;animation:fade .35s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- PROJECT HERO ---------- */
+.phero{
+ position:relative;overflow:hidden;border-radius:22px;color:#fff;padding:30px 30px 28px;margin-bottom:22px;
+ background:
+ radial-gradient(700px 240px at 80% -40%, rgba(120,180,255,.45) 0%, transparent 60%),
+ radial-gradient(500px 260px at 10% 130%, rgba(150,90,255,.5) 0%, transparent 60%),
+ linear-gradient(120deg,#160d4d 0%, #271263 55%, #3a1f9e 100%);
+ box-shadow:var(--shadow);
+}
+.phero::after{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.5),transparent),radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 45% 70%, rgba(255,255,255,.3),transparent);opacity:.5;pointer-events:none}
+.phero .eyebrow{font:700 12px/1 "Inter";letter-spacing:.18em;text-transform:uppercase;color:#b9c4ff;margin-bottom:10px}
+.phero h2{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-.02em}
+.phero .sub{color:#cdd4ff;margin-top:8px;max-width:60ch;font-size:14px}
+.phero .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;position:relative;z-index:2}
+.statuspill{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 "Plus Jakarta Sans";letter-spacing:.04em;text-transform:uppercase;padding:9px 14px;border-radius:999px;color:#fff}
+.statuspill .b{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+.metapill{display:inline-flex;align-items:center;gap:8px;font:600 12px/1.3 "Inter";padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#eef0ff}
+.metapill b{color:#fff;font-weight:700}
+
+/* ---------- SECTION SHELL ---------- */
+.panel{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow-sm);margin-bottom:22px}
+.panel-h{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--hair)}
+.panel-h .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:16px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2))}
+.panel-h h3{font-size:16px;font-weight:800;letter-spacing:-.01em}
+.panel-h .h-note{margin-left:auto;font:600 12px/1 "Inter";color:var(--muted)}
+.panel-b{padding:18px 20px}
+
+/* ---------- GANTT ---------- */
+.gantt{--cols:15;font-size:12px}
+.gantt-scroll{overflow-x:auto;padding-bottom:6px}
+.gantt-inner{min-width:880px}
+.g-head{display:grid;grid-template-columns:var(--lc) 1fr;align-items:end;margin-bottom:6px}
+.g-head .spacer{}
+.g-weeks{display:grid;grid-template-columns:repeat(var(--cols),1fr)}
+.g-week{text-align:center;padding:0 2px 8px;border-left:1px dashed var(--hair);color:var(--muted)}
+.g-week:first-child{border-left:0}
+.g-week b{display:block;font:700 11px/1.2 "Plus Jakarta Sans";color:var(--ink-2)}
+.g-week span{font-size:10px}
+.g-week.is-today b{color:var(--red)}
+.g-row{display:grid;grid-template-columns:var(--lc) 1fr;align-items:center;min-height:34px}
+.g-row + .g-row{margin-top:7px}
+.g-label{font:600 12px/1.2 "Inter";color:var(--txt);padding-right:14px}
+.g-track{position:relative;height:24px;border-radius:8px;background:
+ repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/var(--cols) - 1px),var(--hair) calc(100%/var(--cols) - 1px),var(--hair) calc(100%/var(--cols)))}
+.bar{position:absolute;top:3px;height:18px;border-radius:6px;display:flex;align-items:center}
+.bar.done{background:linear-gradient(180deg,#74c2ec,var(--blue))}
+.bar.blue{background:linear-gradient(180deg,#9ad3f1,#5fb6e6)}
+.bar.active{background:linear-gradient(180deg,#5a39c9,var(--purple))}
+.bar.dark{background:linear-gradient(180deg,#3a1f9e,#2a1374)}
+.bar.late{background:linear-gradient(180deg,#e2596d,var(--red))}
+.bar.plan{background:repeating-linear-gradient(45deg,var(--lilac),var(--lilac) 6px,#d8cef5 6px,#d8cef5 12px)}
+.bar.wait{background:repeating-linear-gradient(45deg,#d4d0e0,#d4d0e0 6px,#e8e6f0 6px,#e8e6f0 12px);opacity:.65}
+.check{position:absolute;right:-18px;top:50%;transform:translateY(-50%);color:var(--green);font-weight:900;font-size:14px;text-shadow:0 1px 0 #fff}
+.ms{position:absolute;top:50%;width:15px;height:15px;transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));box-shadow:0 1px 4px rgba(0,0,0,.18);z-index:3}
+.ms.pin{background:var(--red);transform:translate(-50%,-50%);border-radius:50% 50% 50% 0;rotate:45deg;width:13px;height:13px}
+.today{position:absolute;top:-26px;bottom:-7px;width:2px;background:linear-gradient(180deg,var(--red),rgba(214,39,64,.15));z-index:4}
+.g-row:first-child .today::before{content:"HOJE 16/07";position:absolute;top:-14px;left:50%;transform:translateX(-50%);font:800 9px/1 "Plus Jakarta Sans";color:#fff;background:var(--red);padding:3px 6px;border-radius:5px;white-space:nowrap}
+.g-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;padding-top:14px;border-top:1px dashed var(--hair)}
+.mscard{display:flex;align-items:center;gap:9px;font:500 12px/1.3 "Inter";color:var(--txt)}
+.mscard .d{width:13px;height:13px;transform:rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));flex:none}
+.mscard small{color:var(--muted);display:block;font-size:11px}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font:500 11px/1 "Inter";color:var(--muted)}
+.swatches span{display:inline-flex;align-items:center;gap:6px}
+.swatches i{width:18px;height:9px;border-radius:3px;display:inline-block}
+
+/* ---------- INFOGRAPHIC GRID ---------- */
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:880px){.info-grid{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow-sm);overflow:hidden}
+.card-h{display:flex;align-items:center;gap:10px;padding:13px 16px;color:#fff;font:800 13px/1 "Plus Jakarta Sans";letter-spacing:.02em;text-transform:uppercase}
+.card-h .ci{font-size:15px}
+.h-indigo{background:linear-gradient(110deg,var(--ink-2),var(--indigo))}
+.h-blue{background:linear-gradient(110deg,#0e5fa6,var(--blue))}
+.h-amber{background:linear-gradient(110deg,#c97a09,var(--orange))}
+.h-red{background:linear-gradient(110deg,#9c1326,var(--red))}
+.card-b{padding:14px 16px}
+ul.lead{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+ul.lead li{position:relative;padding-left:18px;font:400 13.5px/1.45 "Inter";color:var(--txt)}
+ul.lead li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--indigo-2)}
+ul.lead.blue li::before{background:var(--blue)}
+ul.lead.red li::before{background:var(--red)}
+ul.lead.green li::before{background:var(--green)}
+ul.lead li b{font-weight:700}
+
+.timeline-list{display:flex;flex-direction:column;gap:10px}
+.tl-item{display:flex;align-items:center;gap:12px}
+.tl-item .tl-ic{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;color:#fff;font-size:13px;background:linear-gradient(135deg,var(--indigo),var(--indigo-2))}
+.tl-item .tl-txt{font:500 13.5px/1.3 "Inter";flex:1}
+.statetag{font:800 10.5px/1 "Plus Jakarta Sans";letter-spacing:.03em;text-transform:uppercase;padding:6px 9px;border-radius:7px;white-space:nowrap}
+.s-done{background:var(--green-soft);color:#0b6e48}
+.s-prog{background:#cfe9fa;color:#0c5e92}
+.s-wait{background:#ffe2c4;color:#9a4e06}
+.s-prev{background:var(--indigo-soft);color:var(--indigo)}
+.s-plan{background:#e7e3f6;color:#5a5390}
+.s-block{background:var(--red-soft);color:#9c1326}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--hair);border-radius:12px;padding:14px;background:linear-gradient(180deg,#fff,#fafaff)}
+.kpi .v{font:800 22px/1 "Plus Jakarta Sans";color:var(--indigo)}
+.kpi .v.red{color:var(--red)} .kpi .v.green{color:var(--green)} .kpi .v.amber{color:var(--orange)} .kpi .v.blue{color:var(--blue)}
+.kpi .l{font:600 11px/1.3 "Inter";color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.03em}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.subhead{font:800 11px/1 "Plus Jakarta Sans";letter-spacing:.06em;text-transform:uppercase;color:var(--indigo);margin:2px 0 10px;display:flex;align-items:center;gap:7px}
+.subhead.amber{color:var(--orange)} .subhead.green{color:var(--green)}
+
+.deliv{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.deliv{grid-template-columns:1fr}}
+.deliv .d-item .d-t{font:700 13.5px/1.2 "Plus Jakarta Sans";color:var(--ink-2);display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.deliv .d-item .d-t .di{color:var(--indigo-2)}
+.deliv .d-item ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px;font:400 12.5px/1.4 "Inter";color:var(--muted)}
+
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:9px}
+.step{display:flex;gap:12px;align-items:flex-start;font:500 13.5px/1.4 "Inter"}
+.step::before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:7px;background:var(--ink-2);color:#fff;font:800 12px/24px "Plus Jakarta Sans";text-align:center}
+
+/* note / commitment */
+.commit{margin-top:6px;border-radius:var(--r);padding:18px 22px;color:#fff;font:600 14px/1.5 "Inter";
+ background:linear-gradient(110deg,var(--ink-2),var(--indigo) 70%, var(--indigo-2));box-shadow:var(--shadow-sm)}
+.commit b{color:#ffd766}
+
+/* ---------- OVERVIEW ---------- */
+.ov-hero{border-radius:22px;padding:34px 30px;color:#fff;margin-bottom:22px;position:relative;overflow:hidden;
+ background:radial-gradient(700px 260px at 88% -30%,rgba(120,180,255,.4),transparent 60%),linear-gradient(120deg,#140c47,#2a1568 60%,#3a1f9e)}
+.ov-hero .eyebrow{font:700 12px/1 "Inter";letter-spacing:.2em;text-transform:uppercase;color:#b9c4ff}
+.ov-hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;letter-spacing:-.02em;margin:12px 0 6px}
+.ov-hero p{color:#cdd4ff;max-width:65ch;font-size:14.5px}
+.ov-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin-top:22px}
+.ov-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:14px}
+.ov-stat .v{font:800 26px/1 "Plus Jakarta Sans"}
+.ov-stat .l{font:600 11px/1.3 "Inter";color:#c4cbff;margin-top:6px;text-transform:uppercase;letter-spacing:.04em}
+
+.proj-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.pc{background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:18px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;gap:10px}
+.pc:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--purple-soft)}
+.pc .pc-top{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.pc .pc-n{font:800 16px/1.15 "Plus Jakarta Sans";color:var(--ink-2)}
+.pc .pc-status{font:800 9.5px/1.2 "Plus Jakarta Sans";letter-spacing:.04em;text-transform:uppercase;padding:5px 8px;border-radius:7px;white-space:normal;display:inline-block;max-width:100%}
+.pc .pc-meta{font:500 12.5px/1.45 "Inter";color:var(--muted)}
+.pc .pc-go{font:700 12px/1 "Inter";color:var(--indigo);display:flex;align-items:center;gap:6px}
+.pc .pc-bar{height:6px;border-radius:99px;background:var(--hair);overflow:hidden}
+.pc .pc-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--indigo),var(--indigo-2))}
+
+/* macro timeline */
+.macro{overflow-x:auto}
+.macro-inner{min-width:920px}
+.macro-axis{display:grid;grid-template-columns:200px 1fr;align-items:end;margin-bottom:10px}
+.macro-months{display:grid;position:relative}
+.macro-months .m{text-align:center;font:700 11px/1.2 "Plus Jakarta Sans";color:var(--ink-2);padding-bottom:8px;border-left:1px dashed var(--hair)}
+.macro-row{display:grid;grid-template-columns:200px 1fr;align-items:center;min-height:30px}
+.macro-row + .macro-row{margin-top:8px}
+.macro-row .ml{font:600 12.5px/1.2 "Inter"}
+.macro-track{position:relative;height:22px}
+.macro-bar{position:absolute;top:4px;height:14px;border-radius:7px;background:linear-gradient(180deg,#5a39c9,var(--purple))}
+.macro-bar.soft{background:repeating-linear-gradient(45deg,var(--lilac),var(--lilac) 6px,#dad0f6 6px,#dad0f6 12px)}
+.macro-bar.blue{background:linear-gradient(180deg,#9ad3f1,#5fb6e6)}
+.macro-bar.late{background:linear-gradient(180deg,#e2596d,var(--red))}
+.macro-ms{position:absolute;top:50%;width:14px;height:14px;transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.macro-today{position:absolute;top:-24px;bottom:0;width:0;border-left:2px dashed var(--red);z-index:4}
+.macro-row:first-child .macro-today::before{content:"HOJE";position:absolute;top:-12px;left:50%;transform:translateX(-50%);font:800 9px/1 "Plus Jakarta Sans";color:#fff;background:var(--red);padding:3px 6px;border-radius:5px}
+.macro-golives{display:grid;grid-template-columns:200px 1fr;margin-top:6px}
+.macro-gl{position:relative;height:32px}
+.macro-gl .gl{position:absolute;transform:translateX(-50%);cursor:default}
+.macro-gl .gl .diamond{display:inline-block;width:16px;height:16px;border-radius:3px;background:linear-gradient(135deg,#ffd766,var(--amber));transform:rotate(45deg);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.macro-gl .gl .gl-tip{display:none;position:absolute;bottom:26px;left:50%;transform:translateX(-50%);background:var(--ink-2);color:#fff;font:600 11px/1.4 "Inter";padding:5px 9px;border-radius:7px;white-space:nowrap;z-index:10;pointer-events:none}
+.macro-gl .gl .gl-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink-2)}
+.macro-gl .gl:hover .gl-tip{display:block}
+
+/* ideação */
+.idea-card{grid-column:1/-1;padding:0;overflow:hidden}
+.idea-header{display:flex;align-items:flex-start;gap:16px;padding:22px 24px 18px;border-bottom:1px solid var(--hair);background:linear-gradient(110deg,var(--indigo-soft),#f0f7ff)}
+.idea-icon{font-size:36px;line-height:1;flex-shrink:0;margin-top:2px}
+.idea-title-block{flex:1}
+.idea-name{font:700 17px/1.2 "Plus Jakarta Sans";color:var(--ink-2);margin-bottom:4px}
+.idea-tagline{font:500 13px/1.4 "Inter";color:var(--muted);margin-bottom:8px}
+.idea-stack{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.idea-chip{background:var(--indigo);color:#fff;font:700 11px/1 "Inter";padding:4px 10px;border-radius:20px}
+.idea-ex{font:500 11px/1.4 "Inter";color:var(--muted);font-style:italic}
+.idea-badge{flex-shrink:0;background:var(--amber);color:var(--ink);font:700 11px/1 "Plus Jakarta Sans";padding:5px 12px;border-radius:20px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.idea-body{padding:22px 24px}
+.idea-desc{font:400 13.5px/1.65 "Inter";color:var(--txt);margin:0 0 20px;border-left:3px solid var(--indigo-2);padding-left:14px}
+.idea-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.idea-cols{grid-template-columns:1fr}}
+.idea-section-title{font:700 12px/1 "Plus Jakarta Sans";color:var(--indigo);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+
+/* footer */
+.foot{max-width:1240px;margin:30px auto 0;padding:22px;color:var(--muted);font:500 12px/1.6 "Inter";border-top:1px solid var(--hair);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+
+/* ── Indicadores Operacionais (medição) ── */
+.med{margin-top:12px}
+.med .panel-h{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);color:#fff}
+.med .panel-h h3{color:#fff}
+.med .panel-h .h-note{color:rgba(255,255,255,.55)}
+.med .panel-h .ic{background:linear-gradient(135deg,#6366f1,#818cf8)}
+.med-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:18px}
+.med-kpi{background:var(--surface-2);border:1px solid var(--hair);border-radius:8px;padding:13px 15px}
+.med-v{font:700 22px/1 'Plus Jakarta Sans';margin-bottom:5px}
+.med-v.green{color:var(--green)} .med-v.blue{color:var(--blue)} .med-v.amber{color:var(--amber)} .med-v.red{color:#ef4444}
+.med-l{font:500 11px/1.3 'Inter';color:var(--muted)}
+.med-sec-title{font:700 10px/1 'Inter';color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+.med-bars{display:flex;align-items:flex-end;gap:5px;height:92px;margin-bottom:18px;padding-bottom:2px}
+.med-bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.med-bar{width:100%;background:linear-gradient(180deg,var(--blue),#3b82f6);border-radius:3px 3px 0 0}
+.med-bv{font:600 9.5px/1 'Inter';color:var(--text);white-space:nowrap}
+.med-bd{font:500 9px/1 'Inter';color:var(--muted);white-space:nowrap}
+.med-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.med-table th{background:var(--surface-2);padding:7px 10px;text-align:left;font:600 10px/1 'Inter';color:var(--muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--hair)}
+.med-table td{padding:7px 10px;border-bottom:1px solid var(--hair);color:var(--text)}
+.med-tv{font:600 13px/1 'Plus Jakarta Sans';text-align:right;white-space:nowrap}
+.med-tp{text-align:right;color:var(--muted);font-size:11px;min-width:48px}
+.med-table tr:last-child td{border-bottom:none}
+
+
+/* ── metricsSection (Buscador V3 — Caio Achcar) ── */
+.metric-board{display:flex;flex-direction:column;gap:16px}
+.metric-summary{font:400 13.5px/1.65 "Inter";color:var(--txt)}
+.metric-summary p{margin:0 0 10px}
+.metric-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.metric-tile{border:1px solid var(--hair);border-radius:12px;padding:12px 14px;background:linear-gradient(180deg,#fff,#fafaff)}
+.metric-tile .mt-l{font:700 10.5px/1.3 "Plus Jakarta Sans";letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.metric-tile .mt-v{font:800 20px/1.05 "Plus Jakarta Sans";color:var(--indigo)}
+.metric-tile .mt-s{font:600 11px/1.35 "Inter";color:var(--muted);margin-top:5px}
+.bar-wrap{display:flex;align-items:flex-end;gap:10px;height:250px;padding:18px 12px 8px;border:1px solid var(--hair);border-radius:12px;background:linear-gradient(180deg,#fff,#fafaff)}
+.bar-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;height:100%}
+.bar-box{height:190px;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.bar-fill{width:100%;max-width:56px;border-radius:10px 10px 6px 6px;background:linear-gradient(180deg,#8bc7ec,var(--blue));position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.bar-fill.green{background:linear-gradient(180deg,#6fd0a5,var(--green))}
+.bar-fill.orange{background:linear-gradient(180deg,#ffb86a,var(--orange,#f59e0b))}
+.bar-fill.purple{background:linear-gradient(180deg,#9c87ee,var(--indigo-2))}
+.bar-fill.red{background:linear-gradient(180deg,#ef8897,var(--red))}
+.bar-val{font:800 10px/1.15 "Plus Jakarta Sans";color:var(--ink-2);text-align:center;min-height:24px}
+.bar-lab{font:700 10px/1.2 "Inter";color:var(--muted);text-align:center;word-break:break-word}
+.subhead{font:700 12px/1 "Inter";color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+
+/* ── GP Badge ── */
+.gp-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--hair);border-radius:20px;padding:5px 13px;font:600 12px/1 'Inter';color:var(--ink-2);margin-top:10px}
+.gp-pill .gp-ic{font-size:13px;flex-shrink:0}
+.gp-pill .gp-role{font:500 10px/1 'Inter';color:var(--muted);margin-left:2px}
+@media(max-width:680px){
+ :root{--lc:120px}
+ .wrap{padding:18px 14px 70px}
+ .phero{padding:24px 20px}
+ .panel-b{padding:14px}
+}
+/* print */
+@media print{
+ .topbar,nav.tabs,.pc .pc-go{display:none!important}
+ .page{display:block!important;page-break-after:always}
+ body{background:#fff}
+ .panel,.card,.pc{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+ <div class="topbar-inner">
+ <div class="brandmark"><span class="dot">P</span> SGGD - Poupatempo e Secretarias</div>
+ <div class="brand-meta">Status Report semanal &nbsp;·&nbsp; 16/Jul/2026</div>
+ <div class="partners">
+ <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAkAI0DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDq55FhhkmkzsjQu2BngDJ/lXm//C8Ph9/z+6h/4BN/jXoOrf8AIJvf+vaX/wBANfB5r87yHKqGPU3Vvpbbzufe51mdbAuCppa338rH1f8A8Lw+H3/P7qH/AIBN/jWl4Y+Kvg7xHrlvoul3V495clhGslqUU4UscnPHANfHtd9+z5/yV7Q/96b/ANEvXsYvhvCUcPOpFu6Te66L0PJwvEGKq14U5JWbS2fV+p9eVpWOg61fWv2qz0q8ng7SJGSD9PX8Kzk27huBK5G4DuO9eleK7TxJqer2N54XlnfSzDGLRraYLHEQOdwyMfj9K+UweEjXjKTTdraR316+i/VH0+LxMqMoxTSvfV7adPV/ozzZ1ZHZHVlZTgqRgg+hFNr0/wARx+H7m58QatPZx6hJYpaq5jkKq8pJDDI7H5QfoaraL4fsdT0x530GCFLu1mntfJM0kikH5cvnavUAJgk4rplk83U5ITT3tvsm12tuu5zxzaCp884tbdt2k+99n2POaWvRP7E0bz7TSn0ZEmn0L7XJP5jh1lC9hnA5zmoH07w9Z+HYr2fT7cxXGnxvbzSGYzNOxwxYD5Ao6j6d6h5TUV25rT16W8vNFrNKbtaL19P8/I4IAsQACSTge9atx4a8QW8LTTaLfJGoyzeSSAPXius8T6Fo9hDPFa6dcgwCF7e7SCQq/K5LyltjA54wBg1tatYeIR8Tl1G1NxBpiGJppml2w7Ao3ggnH6da6KeTtNxqXbTS93W176vTpby9TCebJpOnZKzfvaXtbRa9b/8AAPI/pRXov9maTeTi/wBM0ePV477V5IZsb8W0WeqhSNueW3HjFMh8P6XBj+z9LGuCTVWtZSzO32eIHj7hGD/tHjiuf+yKvSSa+f8Alr8r26m39qU+sXf5f56fO1+h57Vi0sby7jnktbaSZIF3ysgyEX1P5V2eo6f4c0XSJrw6aNT2arLbRFpmUMgXOGI645HHU1T8B/8AIC8VkD/mHfl96ojl/LWjSnJXab06WTfa2pbx3NSdSEdmlr5tLvcyv+EU8S/9AK+/791k3ME1tcSW9xE8U0bbXRhgqfQ12Gj3NyfhlrshuZy63kIDmRsgZToc8VxjszuWdizE5JY5J/GssXRpU4wcL+8r6td2uy7GuFq1akpqdvddtL9k+/mVdW/5BN7/ANe0v/oBr4PNfe1xEs9vLA5IWVGQkdcEEH+deSf8M++D/wDoKa5/39i/+Ir1+H8zoYFVPbN626drnlZ5ltfGuHsul/0PnDQ9Ol1fWrLSoHRJby4SBGc4UFmCgn25r2Hwh4FufAXx48N6dcX8N8txDLMkiIUOPLkUgqenIrr1/Z/8Io4ZdV11WByCJYwQf++K3/D3ws0nSPFlr4mOua9qOoWwIRr24WUEFSuCducAMcc16WOz7D1oSjTm7OMla27a01PPwWSV6UoynBXUk732Seuh31SRzTRoyRzSorfeVXIB+oHWo6K+JTa2PsGr7jg7KhRXYK3VQcA/UU9Li4RQqXEyqucBZCAM9cc1FRTTaCyY8yy5z5smQu0Hecgen09q6efxrdSWEtstlHG0tr9lbbO/khcYysP3Q3vXK0VtRxNWjdQdrmNXD0qtnNXsSGaYwrCZpTGvKoXO0fQdKv2en6tqdsZYS8sPm+UWluAq79pbHzMB0BrMrSTUIx4Ym0gxMZJL1LkPxtAVCuPrzSouLb9o9Lf8Muo6qkkuRa3/AKfQkvNG1vS7qOzkikiuLlvLWKKdWZzx8pCt7jrVe+s9R0eQRTkwNIpH7qdSGAOCCUJHB7Gres6vDfeLZNZijuIY2mSQBHCyLtCjhuQDxwa3P+Ev00XLTJp0hneEK940UYmdg+75lXCkY4POT3z0rsVLCylNKbVnpfXT7lv8l38+R1cTFRbgnda9Nfve3z8vLi97bBHvO0HIXdxn6VKyTw28c2/ZFOGC7ZB8wU4OQD/Oui/4SpRcWEQtT/Z0UJiurXaoEwJcNjHT5WAHPGKm/wCEtgl3NLbTwTukyi4tggeHdIGXZnjAUbTnt0rONDDu/wC919PTz+XT5FyrV9P3f4+v9dTkxIwQoJGCE8qG4P4U38a69PFdmq2ASzdPs23I8lHGQrAsCSOW3ZOMc854Fc1q1xFd6nc3UCSRxSyl0WR9zAH1Pc1lWpU4RTjPm+RrRq1JyalC3zKtFFFcx0hRRRQAUUUUAFHaiigBaSiigQUUUUAFFFFAAaO9FFAw70UUUCP/2Q==" alt="OrangeDoor IT" style="height:32px;width:auto;object-fit:contain">
+ <div style="width:1px;height:22px;background:var(--hair)"></div>
+ <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjE3NTAiIHZpZXdCb3g9IjAuNSAwLjUgOTk5IDY5OS4yNDIiPjxwYXRoIGZpbGw9IiMwMEExRTAiIGQ9Ik00MTYuMjI0IDc2Ljc2M2MzMi4yMTktMzMuNTcgNzcuMDc0LTU0LjM5MSAxMjYuNjgyLTU0LjM5MSA2NS45NDYgMCAxMjMuNDggMzYuNzcyIDE1NC4xMiA5MS4zNjEgMjYuNjI2LTExLjg5NiA1Ni4wOTgtMTguNTE0IDg3LjEwNi0xOC41MTQgMTE4Ljk0IDAgMjE1LjM2OCA5Ny4yNjggMjE1LjM2OCAyMTcuMjQ3IDAgMTE5Ljk5My05Ni40MjggMjE3LjI2MS0yMTUuMzY4IDIxNy4yNjFhMjEzLjczNSAyMTMuNzM1IDAgMCAxLTQyLjQyMi00LjIyN2MtMjYuOTgxIDQ4LjEyOC03OC4zOTcgODAuNjQ2LTEzNy40MTIgODAuNjQ2LTI0LjcwNSAwLTQ4LjA3Mi01LjcwNi02OC44NzctMTUuODUzLTI3LjM1MiA2NC4zMzctOTEuMDc3IDEwOS40NDgtMTY1LjM0OCAxMDkuNDQ4LTc3LjM0NCAwLTE0My4yNjEtNDguOTM5LTE2OC41NjMtMTE3LjU3NC0xMS4wNTcgMi4zNDgtMjIuNTEzIDMuNTcyLTM0LjI2OCAzLjU3MkM3NS4xNTUgNTg1Ljc0LjUgNTEwLjMxNy41IDQxNy4yNjJjMC02Mi4zNTkgMzMuNTQyLTExNi44MDcgODMuMzc4LTE0NS45MzctMTAuMjYtMjMuNjA4LTE1Ljk2Ny00OS42NjUtMTUuOTY3LTc3LjA2QzY3LjkxMSA4Ny4yNSAxNTQuNzkuNSAyNjEuOTQ4LjVjNjIuOTE0IDAgMTE4LjgyNyAyOS45MTMgMTU0LjI3NiA3Ni4yNjMiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMTQ1LjE5NiAzNjMuMTFjLS42MjYgMS42MzcuMjI4IDEuOTc5LjQyNyAyLjI2MyAxLjg3OCAxLjM2NiAzLjc4NiAyLjM0OSA1LjcwNyAzLjQ0NCAxMC4xODkgNS40MDcgMTkuODEgNi45ODYgMjkuODcxIDYuOTg2IDIwLjQ5MiAwIDMzLjIxNC0xMC45IDMzLjIxNC0yOC40NDd2LS4zNDFjMC0xNi4yMjQtMTQuMzU4LTIyLjExNS0yNy44MzUtMjYuMzdsLTEuNzUtLjU2OWMtMTAuMTYxLTMuMzAyLTE4LjkyNy02LjE0Ny0xOC45MjctMTIuODM2di0uMzU1YzAtNS43MjEgNS4xMjMtOS45MzQgMTMuMDY0LTkuOTM0IDguODIzIDAgMTkuMjk3IDIuOTMyIDI2LjA0MiA2LjY2IDAgMCAxLjk3OCAxLjI4MSAyLjcwNC0uNjQuMzk4LTEuMDI1IDMuODE0LTEwLjIxOCA0LjE3LTExLjIxNC4zODQtMS4wODItLjI5OS0xLjg3OS0uOTk2LTIuMzA2LTcuNjk5LTQuNjgyLTE4LjM0NC03Ljg4NC0yOS4zNTgtNy44ODRsLTIuMDQ5LjAxNGMtMTguNzU2IDAtMzEuODQ4IDExLjMyOC0zMS44NDggMjcuNTY1di4zNDJjMCAxNy4xMTkgMTQuNDQ0IDIyLjY2OSAyNy45NzggMjYuNTRsMi4xNzcuNjY5YzkuODYyIDMuMDMxIDE4LjM1OCA1LjYzNSAxOC4zNTggMTIuNTh2LjM0MmMwIDYuMzQ3LTUuNTIxIDExLjA3MS0xNC40MyAxMS4wNzEtMy40NTggMC0xNC40ODctLjA3MS0yNi4zOTgtNy42LTEuNDM4LS44NC0yLjI3Ny0xLjQ1MS0zLjM4Ny0yLjEyLS41ODMtLjM3LTIuMDQ5LTEuMDExLTIuNjg5LjkyNWwtNC4wNDUgMTEuMjE1ek00NDUuMTk0IDM2My4xMWMtLjYyNiAxLjYzNy4yMjggMS45NzkuNDI3IDIuMjYzIDEuODc4IDEuMzY2IDMuNzg2IDIuMzQ5IDUuNzA2IDMuNDQ0IDEwLjE4OSA1LjQwNyAxOS44MTEgNi45ODYgMjkuODcxIDYuOTg2IDIwLjQ5MiAwIDMzLjIxNS0xMC45IDMzLjIxNS0yOC40NDd2LS4zNDFjMC0xNi4yMjQtMTQuMzU5LTIyLjExNS0yNy44MzYtMjYuMzdsLTEuNzUtLjU2OWMtMTAuMTYxLTMuMzAyLTE4LjkyOC02LjE0Ny0xOC45MjgtMTIuODM2di0uMzU1YzAtNS43MjEgNS4xMjMtOS45MzQgMTMuMDY0LTkuOTM0IDguODIzIDAgMTkuMjk3IDIuOTMyIDI2LjA0MyA2LjY2IDAgMCAxLjk3OCAxLjI4MSAyLjcwMy0uNjQuMzk4LTEuMDI1IDMuODE0LTEwLjIxOCA0LjE3LTExLjIxNC4zODUtMS4wODItLjI5OS0xLjg3OS0uOTk2LTIuMzA2LTcuNjk5LTQuNjgyLTE4LjM0NC03Ljg4NC0yOS4zNTgtNy44ODRsLTIuMDUuMDE0Yy0xOC43NTYgMC0zMS44NDggMTEuMzI4LTMxLjg0OCAyNy41NjV2LjM0MmMwIDE3LjExOSAxNC40NDQgMjIuNjY5IDI3Ljk3OCAyNi41NGwyLjE3Ny42NjljOS44NjIgMy4wMzEgMTguMzczIDUuNjM1IDE4LjM3MyAxMi41OHYuMzQyYzAgNi4zNDctNS41MzYgMTEuMDcxLTE0LjQ0NSAxMS4wNzEtMy40NTcgMC0xNC40ODYtLjA3MS0yNi4zOTctNy42LTEuNDM4LS44NC0yLjI5MS0xLjQyMy0zLjM3Mi0yLjEyLS4zNzEtLjI0Mi0yLjEwNy0uOTExLTIuNzA1LjkyNWwtNC4wNDIgMTEuMjE1ek02NDkuOTk1IDMyOC43NGMwIDkuOTE5LTEuODUgMTcuNzMxLTUuNDkzIDIzLjI1My0zLjYwMSA1LjQ2NS05LjA1MSA4LjEyNi0xNi42NDkgOC4xMjYtNy42MTMgMC0xMy4wMzUtMi42NDctMTYuNTc5LTguMTI2LTMuNTg3LTUuNTA3LTUuNDA3LTEzLjMzNC01LjQwNy0yMy4yNTMgMC05LjkwNCAxLjgyLTE3LjcwMyA1LjQwNy0yMy4xNjggMy41NDQtNS40MDcgOC45NjYtOC4wNCAxNi41NzktOC4wNCA3LjU5OSAwIDEzLjA0OSAyLjYzMyAxNi42NjQgOC4wNCAzLjYyOSA1LjQ2NCA1LjQ3OCAxMy4yNjMgNS40NzggMjMuMTY4bTE3LjEwNi0xOC4zODZjLTEuNjgtNS42NzktNC4yOTgtMTAuNjg4LTcuNzg0LTE0Ljg1Ny0zLjQ4Ny00LjE4NC03Ljg5OC03LjU0Mi0xMy4xMzYtOS45OS01LjIyMy0yLjQzMy0xMS4zOTgtMy42NzEtMTguMzI4LTMuNjcxLTYuOTQ1IDAtMTMuMTIxIDEuMjM4LTE4LjM0NCAzLjY3MS01LjIzNyAyLjQ0OC05LjY0OCA1LjgwNy0xMy4xNDkgOS45OS0zLjQ3MiA0LjE4NC02LjA5MSA5LjE5My03Ljc4NCAxNC44NTctMS42NjUgNS42NDktMi41MDUgMTEuODI1LTIuNTA1IDE4LjM4NnMuODQgMTIuNzUxIDIuNTA1IDE4LjM4NmMxLjY5MyA1LjY2NCA0LjI5OCAxMC42NzQgNy43OTkgMTQuODU3IDMuNDg2IDQuMTg0IDcuOTEyIDcuNTI4IDEzLjEzNSA5LjkwNCA1LjIzNiAyLjM3NyAxMS4zOTggMy41ODYgMTguMzQ0IDMuNTg2IDYuOTMgMCAxMy4wOTItMS4yMDkgMTguMzI4LTMuNTg2IDUuMjIzLTIuMzc2IDkuNjQ4LTUuNzIxIDEzLjEzNi05LjkwNCAzLjQ4Ni00LjE3IDYuMTA0LTkuMTc5IDcuNzg0LTE0Ljg1NyAxLjY4LTUuNjQ5IDIuNTE5LTExLjg0IDIuNTE5LTE4LjM4NnMtLjg0MS0xMi43MzctMi41Mi0xOC4zODZNODA3LjU2OCAzNTcuNDdjLS41NjktMS42NjUtMi4xNzctMS4wMzktMi4xNzctMS4wMzktMi40OS45NTQtNS4xMzggMS44MzYtNy45NTUgMi4yNzctMi44NjEuNDQtNi4wMDYuNjY5LTkuMzc5LjY2OS04LjI4MSAwLTE0Ljg1Ni0yLjQ2Mi0xOS41NjYtNy4zMjktNC43MjUtNC44NjctNy4zNzItMTIuNzM2LTcuMzQ0LTIzLjM4MS4wMjktOS42OTEgMi4zNjItMTYuOTc4IDYuNTYxLTIyLjUyNyA0LjE3LTUuNTIxIDEwLjUxNy04LjM1NCAxOC45ODQtOC4zNTQgNy4wNTkgMCAxMi40MzguODExIDE4LjA3MiAyLjU5IDAgMCAxLjM1Mi41ODMgMS45OTItMS4xODEgMS40OTQtNC4xNTYgMi42MDQtNy4xMyA0LjE5OC0xMS42OTguNDU2LTEuMjk1LS42NTQtMS44NS0xLjA1My0yLjAwNy0yLjIyLS44NjgtNy40NTctMi4yNzYtMTEuNDEzLTIuODc0LTMuNy0uNTY5LTguMDI2LS44NjgtMTIuODM2LS44NjgtNy4xODggMC0xMy41OTEgMS4yMjQtMTkuMDY5IDMuNjcyLTUuNDY1IDIuNDMzLTEwLjEwNCA1Ljc5MS0xMy43NzUgOS45NzYtMy42NzIgNC4xODQtNi40NjEgOS4xOTItOC4zMjUgMTQuODU2LTEuODUgNS42NDktMi43ODkgMTEuODU0LTIuNzg5IDE4LjQxNSAwIDE0LjE4OCAzLjgyOCAyNS42NTcgMTEuMzg1IDM0LjA1NCA3LjU3IDguNDI1IDE4Ljk0MSAxMi43MDggMzMuNzcgMTIuNzA4IDguNzY2IDAgMTcuNzYtMS43NzggMjQuMjIxLTQuMzI2IDAgMCAxLjIzOC0uNTk4LjY5Ny0yLjAzNGwtNC4xOTktMTEuNTk5ek04MzcuNDk3IDMxOS4yMzhjLjgxMS01LjUwNyAyLjMzNC0xMC4wOSA0LjY4Mi0xMy42NjEgMy41NDQtNS40MjIgOC45NTEtOC4zOTYgMTYuNTUxLTguMzk2czEyLjYyMyAyLjk4OCAxNi4yMjMgOC4zOTZjMi4zOTEgMy41NzEgMy40MyA4LjM1NCAzLjg0MyAxMy42NjFoLTQxLjI5OXptNTcuNTkyLTEyLjExMWMtMS40NTEtNS40NzktNS4wNTItMTEuMDE1LTcuNDE0LTEzLjU0OC0zLjcyOS00LjAxMy03LjM3MS02LjgxNi0xMC45ODYtOC4zODItNC43MjUtMi4wMjEtMTAuMzg5LTMuMzU4LTE2LjU5My0zLjM1OC03LjIyOSAwLTEzLjc5IDEuMjEtMTkuMTEyIDMuNzE0LTUuMzM2IDIuNTA1LTkuODE4IDUuOTIxLTEzLjMzNCAxMC4xNzYtMy41MTYgNC4yNC02LjE2MiA5LjI5Mi03Ljg0MiAxNS4wMjctMS42OTMgNS43MDctMi41NDcgMTEuOTI2LTIuNTQ3IDE4LjQ4NSAwIDYuNjc1Ljg4MyAxMi44OTQgMi42MzMgMTguNDg2IDEuNzY1IDUuNjM2IDQuNTgyIDEwLjYwMiA4LjM5NiAxNC43MTQgMy43OTkgNC4xNDIgOC42OTUgNy4zODcgMTQuNTU4IDkuNjQ4IDUuODIxIDIuMjQ5IDEyLjg5NCAzLjQxNiAyMS4wMTkgMy40MDEgMTYuNzIyLS4wNTcgMjUuNTMtMy43ODUgMjkuMTU5LTUuNzkyLjY0MS0uMzU1IDEuMjUzLS45ODEuNDgzLTIuNzc0bC0zLjc4NS0xMC42MDNjLS41NjgtMS41NzktMi4xNzctLjk5Ni0yLjE3Ny0uOTk2LTQuMTQyIDEuNTM3LTEwLjAzMiA0LjI5OC0yMy43NjYgNC4yNy04Ljk3OS0uMDE0LTE1LjY0LTIuNjYxLTE5LjgxLTYuODAzLTQuMjgzLTQuMjQtNi4zNzUtMTAuNDc0LTYuNzQ1LTE5LjI2OGw1Ny45MDUuMDU3czEuNTIyLS4wMjggMS42OC0xLjUwOWMuMDU3LS42MjQgMS45OTMtMTEuODk1LTEuNzIyLTI0Ljk0NU0zNzMuNzYyIDMxOS4yMzhjLjgyNS01LjUwNyAyLjMzNC0xMC4wOSA0LjY4Mi0xMy42NjEgMy41NDMtNS40MjIgOC45NTEtOC4zOTYgMTYuNTUtOC4zOTZzMTIuNjIzIDIuOTg4IDE2LjIzNyA4LjM5NmMyLjM3NiAzLjU3MSAzLjQxNSA4LjM1NCAzLjgyOCAxMy42NjFoLTQxLjI5N3ptNTcuNTc3LTEyLjExMWMtMS40NTEtNS40NzktNS4wMzctMTEuMDE1LTcuMzk5LTEzLjU0OC0zLjcyOS00LjAxMy03LjM3Mi02LjgxNi0xMC45ODYtOC4zODItNC43MjUtMi4wMjEtMTAuMzg4LTMuMzU4LTE2LjU5My0zLjM1OC03LjIxNSAwLTEzLjc5IDEuMjEtMTkuMTEyIDMuNzE0LTUuMzM2IDIuNTA1LTkuODE5IDUuOTIxLTEzLjMzNCAxMC4xNzYtMy41MTUgNC4yNC02LjE2MiA5LjI5Mi03Ljg0MSAxNS4wMjctMS42NzkgNS43MDctMi41NDcgMTEuOTI2LTIuNTQ3IDE4LjQ4NSAwIDYuNjc1Ljg4MiAxMi44OTQgMi42MzMgMTguNDg2IDEuNzY1IDUuNjM2IDQuNTgzIDEwLjYwMiA4LjM5NiAxNC43MTQgMy44IDQuMTQyIDguNjk1IDcuMzg3IDE0LjU1OCA5LjY0OCA1LjgyMSAyLjI0OSAxMi44OTMgMy40MTYgMjEuMDE5IDMuNDAxIDE2LjcyMS0uMDU3IDI1LjUzLTMuNzg1IDI5LjE1OS01Ljc5Mi42NDEtLjM1NSAxLjI1Mi0uOTgxLjQ4NC0yLjc3NGwtMy43NzEtMTAuNjAzYy0uNTg0LTEuNTc5LTIuMTkxLS45OTYtMi4xOTEtLjk5Ni00LjE0MSAxLjUzNy0xMC4wMTkgNC4yOTgtMjMuNzggNC4yNy04Ljk2NS0uMDE0LTE1LjYyNS0yLjY2MS0xOS43OTUtNi44MDMtNC4yODQtNC4yNC02LjM3NS0xMC40NzQtNi43NDYtMTkuMjY4bDU3LjkwNS4wNTdzMS41MjItLjAyOCAxLjY3OS0xLjUwOWMuMDU1LS42MjQgMS45OS0xMS44OTUtMS43MzgtMjQuOTQ1TTI0OC42MDEgMzU3LjE1M2MtMi4yNjMtMS44MDgtMi41NzYtMi4yNjMtMy4zNDQtMy40My0xLjEzOS0xLjc3OS0xLjcyMi00LjMxMi0xLjcyMi03LjUyOCAwLTUuMDk1IDEuNjc5LTguNzUyIDUuMTY2LTExLjIxNC0uMDQyLjAxNSA0Ljk4MS00LjM0IDE2Ljc5Mi00LjE4NCA4LjI5Ni4xMTQgMTUuNzEgMS4zMzggMTUuNzEgMS4zMzh2MjYuMzI3aC4wMTRzLTcuMzU3IDEuNTc5LTE1LjYzOSAyLjA3N2MtMTEuNzgzLjcxMi0xNy4wMi0zLjQtMTYuOTc3LTMuMzg2bTIzLjAzOS00MC42ODZjLTIuMzQ4LS4xNzEtNS4zOTQtLjI3MS05LjAzNy0uMjcxLTQuOTY2IDAtOS43NjIuNjI2LTE0LjI1OSAxLjgzNi00LjUyNSAxLjIwOS04LjU5NSAzLjEwMy0xMi4wOTYgNS42MDZhMjcuOTI3IDI3LjkyNyAwIDAgMC04LjM5NiA5LjU0OWMtMi4wNDkgMy44MTQtMy4wODggOC4zMTEtMy4wODggMTMuMzQ5IDAgNS4xMjMuODgyIDkuNTc3IDIuNjQ3IDEzLjIyMSAxLjc2NSAzLjY1NyA0LjMxMiA2LjcwMiA3LjU1NiA5LjA1MSAzLjIxNiAyLjM0OCA3LjE4NyA0LjA2OSAxMS43OTcgNS4xMDggNC41NCAxLjAzOSA5LjY5MSAxLjU2NSAxNS4zMjcgMS41NjUgNS45MzQgMCAxMS44NTQtLjQ4MyAxNy41ODktMS40NjYgNS42NzgtLjk2OCAxMi42NTEtMi4zNzcgMTQuNTg2LTIuODE3YTE0Ni4yNSAxNDYuMjUgMCAwIDAgNC4wNTYtMS4wMzljMS40MzgtLjM1NSAxLjMyNC0xLjg5MyAxLjMyNC0xLjg5M2wtLjAyOS01Mi45NTJjMC0xMS42MTMtMy4xMDItMjAuMjIzLTkuMjA3LTI1LjU1OS02LjA3Ny01LjMyMi0xNS4wMjgtOC4wMTMtMjYuNTk3LTguMDEzLTQuMzQxIDAtMTEuMzI4LjU5OS0xNS41MTIgMS40MzggMCAwLTEyLjY1MSAyLjQ0OC0xNy44NiA2LjUxOCAwIDAtMS4xMzguNzEyLS41MTIgMi4zMDZsNC4wOTkgMTEuMDE1Yy41MTIgMS40MjMgMS44OTMuOTM5IDEuODkzLjkzOXMuNDQxLS4xNzEuOTU0LS40N2MxMS4xNDMtNi4wNjIgMjUuMjMxLTUuODc3IDI1LjIzMS01Ljg3NyA2LjI2MiAwIDExLjA3MiAxLjI1MiAxNC4zMTYgMy43NDIgMy4xNTkgMi40MTkgNC43NjcgNi4wNzYgNC43NjcgMTMuNzg5djIuNDQ4Yy00Ljk4MS0uNzExLTkuNTQ5LTEuMTIzLTkuNTQ5LTEuMTIzTTczOC42NjkgMjg2LjYzMWMuNDQtMS4zMS0uNDg0LTEuOTM2LS44NjktMi4wNzgtLjk4MS0uMzg0LTUuOTA1LTEuNDIzLTkuNzA1LTEuNjY1LTcuMjcxLS40NDEtMTEuMzEyLjc4My0xNC45MjggMi40MDUtMy41ODYgMS42MjItNy41NyA0LjI0LTkuNzkxIDcuMjE1di03LjA0NGMwLS45ODItLjY5Ny0xLjc2NS0xLjY2NS0xLjc2NWgtMTQuODQzYy0uOTY3IDAtMS42NjQuNzgyLTEuNjY0IDEuNzY1djg2LjM2NmMwIC45NjguNzk3IDEuNzY1IDEuNzY0IDEuNzY1aDE1LjIxM2ExLjc2IDEuNzYgMCAwIDAgMS43NS0xLjc2NXYtNDMuMTQ3YzAtNS43OTIuNjQxLTExLjU2OSAxLjkyMi0xNS4xOTggMS4yNTItMy41ODcgMi45Ni02LjQ2MSA1LjA2Ni04LjUyNSAyLjEyLTIuMDQ5IDQuNTI1LTMuNDg2IDcuMTU4LTQuMjk3IDIuNjg5LS44MjYgNS42NjMtMS4wOTYgNy43Ny0xLjA5NiAzLjAzMSAwIDYuMzYxLjc4MiA2LjM2MS43ODIgMS4xMDkuMTI4IDEuNzM2LS41NTUgMi4xMDUtMS41NjUuOTk3LTIuNjQ3IDMuODE1LTEwLjU3NCA0LjM1Ni0xMi4xNTMiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNNTk1Ljg3NCAyNDYuNjAzYy0xLjg1LS41NjktMy41MjktLjk1NC01LjcyMS0xLjM2Ni0yLjIyMS0uMzk4LTQuODY3LS41OTgtNy44NjktLjU5OC0xMC40NzUgMC0xOC43MjkgMi45Ni0yNC41MiA4Ljc5NC01Ljc2NCA1LjgwNy05LjY3OCAxNC42NDQtMTEuNjQyIDI2LjI3MWwtLjcxMiAzLjkxM2gtMTMuMTQ4cy0xLjU5NC0uMDU3LTEuOTM2IDEuNjhsLTIuMTQ4IDEyLjA1M2MtLjE1NyAxLjEzOS4zNDIgMS44NjQgMS44NzggMS44NjRoMTIuNzk0bC0xMi45NzkgNzIuNDYzYy0xLjAxMSA1LjgzNS0yLjE3OCAxMC42MzEtMy40NzMgMTQuMjczLTEuMjY3IDMuNTg3LTIuNTA0IDYuMjc2LTQuMDQxIDguMjQtMS40OCAxLjg3OS0yLjg3NSAzLjI3My01LjI5NSA0LjA4NC0xLjk5Mi42NjktNC4yOTcuOTgyLTYuODE2Ljk4Mi0xLjM5NSAwLTMuMjU4LS4yMjktNC42MzktLjUxMy0xLjM2Ni0uMjcxLTIuMDkyLS41NjktMy4xMzEtMS4wMTEgMCAwLTEuNDk0LS41NjgtMi4wOTIuOTI2LS40NyAxLjIzOC0zLjg4NSAxMC42MTUtNC4yOTggMTEuNzY5LS4zOTggMS4xNTIuMTcxIDIuMDQ5Ljg5NiAyLjMxOSAxLjcwOC41OTggMi45NzQuOTk2IDUuMjk0IDEuNTUxIDMuMjE3Ljc1NSA1LjkzNC43OTcgOC40ODEuNzk3IDUuMzIyIDAgMTAuMTg5LS43NTQgMTQuMjE3LTIuMjA1IDQuMDQyLTEuNDY2IDcuNTctNC4wMTQgMTAuNzAxLTcuNDU3IDMuMzczLTMuNzI5IDUuNDkzLTcuNjI4IDcuNTE1LTEyLjk2NCAyLjAwNi01LjI2NiAzLjcyOS0xMS44MTIgNS4wOTQtMTkuNDM5bDEzLjA1LTczLjgxNWgxOS4wNjlzMS42MDcuMDU3IDEuOTM2LTEuNjkzbDIuMTYyLTEyLjAzOWMuMTQzLTEuMTUyLS4zNDEtMS44NjQtMS44OTMtMS44NjRoLTE4LjUxNGMuMS0uNDEyLjkzOS02LjkzMSAzLjA2LTEzLjA2My45MTEtMi42MDQgMi42MTgtNC43MjUgNC4wNTYtNi4xNzcgMS40MjQtMS40MjMgMy4wNi0yLjQzMyA0Ljg1NC0zLjAxNyAxLjgzNS0uNTk4IDMuOTI4LS44ODIgNi4yMTktLjg4MiAxLjczNiAwIDMuNDU3LjE5OSA0Ljc1Mi40NjkgMS43OTMuMzg1IDIuNDkuNTg0IDIuOTYxLjcyNyAxLjg5My41NjkgMi4xNDguMDE0IDIuNTE5LS44OTZsNC40MjYtMTIuMTUzYy40NTUtMS4zMTItLjY2OS0xLjg2Ny0xLjA2Ny0yLjAyM00zMzcuMTk0IDM3MS44MzRjMCAuOTY4LS42OTcgMS43NTEtMS42NjUgMS43NTFoLTE1LjM1NWMtLjk2OCAwLTEuNjUxLS43ODMtMS42NTEtMS43NTF2LTEyMy41OGMwLS45NjcuNjgzLTEuNzUgMS42NTEtMS43NWgxNS4zNTVjLjk2OCAwIDEuNjY1Ljc4MyAxLjY2NSAxLjc1djEyMy41OHoiLz48L3N2Zz4=" alt="Salesforce" style="height:36px;width:auto;object-fit:contain">
+ </div>
+ </div>
+ <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer class="foot">
+ <div>Transformação de Jornadas Públicas · Squad de IA — Poupatempo / Prodesp / OrangeDoor IT / Salesforce Partners</div>
+ <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+ <span style="color:var(--muted);font-size:11px">Status de referência: 16/Jul/2026 · Documento de acompanhamento executivo &nbsp;·&nbsp; ⏱ Gerado em 16/07/2026 às 15:16 (Horário de Brasília)</span>
+ <div style="width:1px;height:16px;background:var(--hair)"></div>
+ <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAkAI0DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDq55FhhkmkzsjQu2BngDJ/lXm//C8Ph9/z+6h/4BN/jXoOrf8AIJvf+vaX/wBANfB5r87yHKqGPU3Vvpbbzufe51mdbAuCppa338rH1f8A8Lw+H3/P7qH/AIBN/jWl4Y+Kvg7xHrlvoul3V495clhGslqUU4UscnPHANfHtd9+z5/yV7Q/96b/ANEvXsYvhvCUcPOpFu6Te66L0PJwvEGKq14U5JWbS2fV+p9eVpWOg61fWv2qz0q8ng7SJGSD9PX8Kzk27huBK5G4DuO9eleK7TxJqer2N54XlnfSzDGLRraYLHEQOdwyMfj9K+UweEjXjKTTdraR316+i/VH0+LxMqMoxTSvfV7adPV/ozzZ1ZHZHVlZTgqRgg+hFNr0/wARx+H7m58QatPZx6hJYpaq5jkKq8pJDDI7H5QfoaraL4fsdT0x530GCFLu1mntfJM0kikH5cvnavUAJgk4rplk83U5ITT3tvsm12tuu5zxzaCp884tbdt2k+99n2POaWvRP7E0bz7TSn0ZEmn0L7XJP5jh1lC9hnA5zmoH07w9Z+HYr2fT7cxXGnxvbzSGYzNOxwxYD5Ao6j6d6h5TUV25rT16W8vNFrNKbtaL19P8/I4IAsQACSTge9atx4a8QW8LTTaLfJGoyzeSSAPXius8T6Fo9hDPFa6dcgwCF7e7SCQq/K5LyltjA54wBg1tatYeIR8Tl1G1NxBpiGJppml2w7Ao3ggnH6da6KeTtNxqXbTS93W176vTpby9TCebJpOnZKzfvaXtbRa9b/8AAPI/pRXov9maTeTi/wBM0ePV477V5IZsb8W0WeqhSNueW3HjFMh8P6XBj+z9LGuCTVWtZSzO32eIHj7hGD/tHjiuf+yKvSSa+f8Alr8r26m39qU+sXf5f56fO1+h57Vi0sby7jnktbaSZIF3ysgyEX1P5V2eo6f4c0XSJrw6aNT2arLbRFpmUMgXOGI645HHU1T8B/8AIC8VkD/mHfl96ojl/LWjSnJXab06WTfa2pbx3NSdSEdmlr5tLvcyv+EU8S/9AK+/791k3ME1tcSW9xE8U0bbXRhgqfQ12Gj3NyfhlrshuZy63kIDmRsgZToc8VxjszuWdizE5JY5J/GssXRpU4wcL+8r6td2uy7GuFq1akpqdvddtL9k+/mVdW/5BN7/ANe0v/oBr4PNfe1xEs9vLA5IWVGQkdcEEH+deSf8M++D/wDoKa5/39i/+Ir1+H8zoYFVPbN626drnlZ5ltfGuHsul/0PnDQ9Ol1fWrLSoHRJby4SBGc4UFmCgn25r2Hwh4FufAXx48N6dcX8N8txDLMkiIUOPLkUgqenIrr1/Z/8Io4ZdV11WByCJYwQf++K3/D3ws0nSPFlr4mOua9qOoWwIRr24WUEFSuCducAMcc16WOz7D1oSjTm7OMla27a01PPwWSV6UoynBXUk732Seuh31SRzTRoyRzSorfeVXIB+oHWo6K+JTa2PsGr7jg7KhRXYK3VQcA/UU9Li4RQqXEyqucBZCAM9cc1FRTTaCyY8yy5z5smQu0Hecgen09q6efxrdSWEtstlHG0tr9lbbO/khcYysP3Q3vXK0VtRxNWjdQdrmNXD0qtnNXsSGaYwrCZpTGvKoXO0fQdKv2en6tqdsZYS8sPm+UWluAq79pbHzMB0BrMrSTUIx4Ym0gxMZJL1LkPxtAVCuPrzSouLb9o9Lf8Muo6qkkuRa3/AKfQkvNG1vS7qOzkikiuLlvLWKKdWZzx8pCt7jrVe+s9R0eQRTkwNIpH7qdSGAOCCUJHB7Gres6vDfeLZNZijuIY2mSQBHCyLtCjhuQDxwa3P+Ev00XLTJp0hneEK940UYmdg+75lXCkY4POT3z0rsVLCylNKbVnpfXT7lv8l38+R1cTFRbgnda9Nfve3z8vLi97bBHvO0HIXdxn6VKyTw28c2/ZFOGC7ZB8wU4OQD/Oui/4SpRcWEQtT/Z0UJiurXaoEwJcNjHT5WAHPGKm/wCEtgl3NLbTwTukyi4tggeHdIGXZnjAUbTnt0rONDDu/wC919PTz+XT5FyrV9P3f4+v9dTkxIwQoJGCE8qG4P4U38a69PFdmq2ASzdPs23I8lHGQrAsCSOW3ZOMc854Fc1q1xFd6nc3UCSRxSyl0WR9zAH1Pc1lWpU4RTjPm+RrRq1JyalC3zKtFFFcx0hRRRQAUUUUAFHaiigBaSiigQUUUUAFFFFAAaO9FFAw70UUUCP/2Q==" alt="OrangeDoor IT" style="height:24px;width:auto;object-fit:contain;opacity:.85">
+ <div style="width:1px;height:16px;background:var(--hair)"></div>
+ <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjE3NTAiIHZpZXdCb3g9IjAuNSAwLjUgOTk5IDY5OS4yNDIiPjxwYXRoIGZpbGw9IiMwMEExRTAiIGQ9Ik00MTYuMjI0IDc2Ljc2M2MzMi4yMTktMzMuNTcgNzcuMDc0LTU0LjM5MSAxMjYuNjgyLTU0LjM5MSA2NS45NDYgMCAxMjMuNDggMzYuNzcyIDE1NC4xMiA5MS4zNjEgMjYuNjI2LTExLjg5NiA1Ni4wOTgtMTguNTE0IDg3LjEwNi0xOC41MTQgMTE4Ljk0IDAgMjE1LjM2OCA5Ny4yNjggMjE1LjM2OCAyMTcuMjQ3IDAgMTE5Ljk5My05Ni40MjggMjE3LjI2MS0yMTUuMzY4IDIxNy4yNjFhMjEzLjczNSAyMTMuNzM1IDAgMCAxLTQyLjQyMi00LjIyN2MtMjYuOTgxIDQ4LjEyOC03OC4zOTcgODAuNjQ2LTEzNy40MTIgODAuNjQ2LTI0LjcwNSAwLTQ4LjA3Mi01LjcwNi02OC44NzctMTUuODUzLTI3LjM1MiA2NC4zMzctOTEuMDc3IDEwOS40NDgtMTY1LjM0OCAxMDkuNDQ4LTc3LjM0NCAwLTE0My4yNjEtNDguOTM5LTE2OC41NjMtMTE3LjU3NC0xMS4wNTcgMi4zNDgtMjIuNTEzIDMuNTcyLTM0LjI2OCAzLjU3MkM3NS4xNTUgNTg1Ljc0LjUgNTEwLjMxNy41IDQxNy4yNjJjMC02Mi4zNTkgMzMuNTQyLTExNi44MDcgODMuMzc4LTE0NS45MzctMTAuMjYtMjMuNjA4LTE1Ljk2Ny00OS42NjUtMTUuOTY3LTc3LjA2QzY3LjkxMSA4Ny4yNSAxNTQuNzkuNSAyNjEuOTQ4LjVjNjIuOTE0IDAgMTE4LjgyNyAyOS45MTMgMTU0LjI3NiA3Ni4yNjMiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMTQ1LjE5NiAzNjMuMTFjLS42MjYgMS42MzcuMjI4IDEuOTc5LjQyNyAyLjI2MyAxLjg3OCAxLjM2NiAzLjc4NiAyLjM0OSA1LjcwNyAzLjQ0NCAxMC4xODkgNS40MDcgMTkuODEgNi45ODYgMjkuODcxIDYuOTg2IDIwLjQ5MiAwIDMzLjIxNC0xMC45IDMzLjIxNC0yOC40NDd2LS4zNDFjMC0xNi4yMjQtMTQuMzU4LTIyLjExNS0yNy44MzUtMjYuMzdsLTEuNzUtLjU2OWMtMTAuMTYxLTMuMzAyLTE4LjkyNy02LjE0Ny0xOC45MjctMTIuODM2di0uMzU1YzAtNS43MjEgNS4xMjMtOS45MzQgMTMuMDY0LTkuOTM0IDguODIzIDAgMTkuMjk3IDIuOTMyIDI2LjA0MiA2LjY2IDAgMCAxLjk3OCAxLjI4MSAyLjcwNC0uNjQuMzk4LTEuMDI1IDMuODE0LTEwLjIxOCA0LjE3LTExLjIxNC4zODQtMS4wODItLjI5OS0xLjg3OS0uOTk2LTIuMzA2LTcuNjk5LTQuNjgyLTE4LjM0NC03Ljg4NC0yOS4zNTgtNy44ODRsLTIuMDQ5LjAxNGMtMTguNzU2IDAtMzEuODQ4IDExLjMyOC0zMS44NDggMjcuNTY1di4zNDJjMCAxNy4xMTkgMTQuNDQ0IDIyLjY2OSAyNy45NzggMjYuNTRsMi4xNzcuNjY5YzkuODYyIDMuMDMxIDE4LjM1OCA1LjYzNSAxOC4zNTggMTIuNTh2LjM0MmMwIDYuMzQ3LTUuNTIxIDExLjA3MS0xNC40MyAxMS4wNzEtMy40NTggMC0xNC40ODctLjA3MS0yNi4zOTgtNy42LTEuNDM4LS44NC0yLjI3Ny0xLjQ1MS0zLjM4Ny0yLjEyLS41ODMtLjM3LTIuMDQ5LTEuMDExLTIuNjg5LjkyNWwtNC4wNDUgMTEuMjE1ek00NDUuMTk0IDM2My4xMWMtLjYyNiAxLjYzNy4yMjggMS45NzkuNDI3IDIuMjYzIDEuODc4IDEuMzY2IDMuNzg2IDIuMzQ5IDUuNzA2IDMuNDQ0IDEwLjE4OSA1LjQwNyAxOS44MTEgNi45ODYgMjkuODcxIDYuOTg2IDIwLjQ5MiAwIDMzLjIxNS0xMC45IDMzLjIxNS0yOC40NDd2LS4zNDFjMC0xNi4yMjQtMTQuMzU5LTIyLjExNS0yNy44MzYtMjYuMzdsLTEuNzUtLjU2OWMtMTAuMTYxLTMuMzAyLTE4LjkyOC02LjE0Ny0xOC45MjgtMTIuODM2di0uMzU1YzAtNS43MjEgNS4xMjMtOS45MzQgMTMuMDY0LTkuOTM0IDguODIzIDAgMTkuMjk3IDIuOTMyIDI2LjA0MyA2LjY2IDAgMCAxLjk3OCAxLjI4MSAyLjcwMy0uNjQuMzk4LTEuMDI1IDMuODE0LTEwLjIxOCA0LjE3LTExLjIxNC4zODUtMS4wODItLjI5OS0xLjg3OS0uOTk2LTIuMzA2LTcuNjk5LTQuNjgyLTE4LjM0NC03Ljg4NC0yOS4zNTgtNy44ODRsLTIuMDUuMDE0Yy0xOC43NTYgMC0zMS44NDggMTEuMzI4LTMxLjg0OCAyNy41NjV2LjM0MmMwIDE3LjExOSAxNC40NDQgMjIuNjY5IDI3Ljk3OCAyNi41NGwyLjE3Ny42NjljOS44NjIgMy4wMzEgMTguMzczIDUuNjM1IDE4LjM3MyAxMi41OHYuMzQyYzAgNi4zNDctNS41MzYgMTEuMDcxLTE0LjQ0NSAxMS4wNzEtMy40NTcgMC0xNC40ODYtLjA3MS0yNi4zOTctNy42LTEuNDM4LS44NC0yLjI5MS0xLjQyMy0zLjM3Mi0yLjEyLS4zNzEtLjI0Mi0yLjEwNy0uOTExLTIuNzA1LjkyNWwtNC4wNDIgMTEuMjE1ek02NDkuOTk1IDMyOC43NGMwIDkuOTE5LTEuODUgMTcuNzMxLTUuNDkzIDIzLjI1My0zLjYwMSA1LjQ2NS05LjA1MSA4LjEyNi0xNi42NDkgOC4xMjYtNy42MTMgMC0xMy4wMzUtMi42NDctMTYuNTc5LTguMTI2LTMuNTg3LTUuNTA3LTUuNDA3LTEzLjMzNC01LjQwNy0yMy4yNTMgMC05LjkwNCAxLjgyLTE3LjcwMyA1LjQwNy0yMy4xNjggMy41NDQtNS40MDcgOC45NjYtOC4wNCAxNi41NzktOC4wNCA3LjU5OSAwIDEzLjA0OSAyLjYzMyAxNi42NjQgOC4wNCAzLjYyOSA1LjQ2NCA1LjQ3OCAxMy4yNjMgNS40NzggMjMuMTY4bTE3LjEwNi0xOC4zODZjLTEuNjgtNS42NzktNC4yOTgtMTAuNjg4LTcuNzg0LTE0Ljg1Ny0zLjQ4Ny00LjE4NC03Ljg5OC03LjU0Mi0xMy4xMzYtOS45OS01LjIyMy0yLjQzMy0xMS4zOTgtMy42NzEtMTguMzI4LTMuNjcxLTYuOTQ1IDAtMTMuMTIxIDEuMjM4LTE4LjM0NCAzLjY3MS01LjIzNyAyLjQ0OC05LjY0OCA1LjgwNy0xMy4xNDkgOS45OS0zLjQ3MiA0LjE4NC02LjA5MSA5LjE5My03Ljc4NCAxNC44NTctMS42NjUgNS42NDktMi41MDUgMTEuODI1LTIuNTA1IDE4LjM4NnMuODQgMTIuNzUxIDIuNTA1IDE4LjM4NmMxLjY5MyA1LjY2NCA0LjI5OCAxMC42NzQgNy43OTkgMTQuODU3IDMuNDg2IDQuMTg0IDcuOTEyIDcuNTI4IDEzLjEzNSA5LjkwNCA1LjIzNiAyLjM3NyAxMS4zOTggMy41ODYgMTguMzQ0IDMuNTg2IDYuOTMgMCAxMy4wOTItMS4yMDkgMTguMzI4LTMuNTg2IDUuMjIzLTIuMzc2IDkuNjQ4LTUuNzIxIDEzLjEzNi05LjkwNCAzLjQ4Ni00LjE3IDYuMTA0LTkuMTc5IDcuNzg0LTE0Ljg1NyAxLjY4LTUuNjQ5IDIuNTE5LTExLjg0IDIuNTE5LTE4LjM4NnMtLjg0MS0xMi43MzctMi41Mi0xOC4zODZNODA3LjU2OCAzNTcuNDdjLS41NjktMS42NjUtMi4xNzctMS4wMzktMi4xNzctMS4wMzktMi40OS45NTQtNS4xMzggMS44MzYtNy45NTUgMi4yNzctMi44NjEuNDQtNi4wMDYuNjY5LTkuMzc5LjY2OS04LjI4MSAwLTE0Ljg1Ni0yLjQ2Mi0xOS41NjYtNy4zMjktNC43MjUtNC44NjctNy4zNzItMTIuNzM2LTcuMzQ0LTIzLjM4MS4wMjktOS42OTEgMi4zNjItMTYuOTc4IDYuNTYxLTIyLjUyNyA0LjE3LTUuNTIxIDEwLjUxNy04LjM1NCAxOC45ODQtOC4zNTQgNy4wNTkgMCAxMi40MzguODExIDE4LjA3MiAyLjU5IDAgMCAxLjM1Mi41ODMgMS45OTItMS4xODEgMS40OTQtNC4xNTYgMi42MDQtNy4xMyA0LjE5OC0xMS42OTguNDU2LTEuMjk1LS42NTQtMS44NS0xLjA1My0yLjAwNy0yLjIyLS44NjgtNy40NTctMi4yNzYtMTEuNDEzLTIuODc0LTMuNy0uNTY5LTguMDI2LS44NjgtMTIuODM2LS44NjgtNy4xODggMC0xMy41OTEgMS4yMjQtMTkuMDY5IDMuNjcyLTUuNDY1IDIuNDMzLTEwLjEwNCA1Ljc5MS0xMy43NzUgOS45NzYtMy42NzIgNC4xODQtNi40NjEgOS4xOTItOC4zMjUgMTQuODU2LTEuODUgNS42NDktMi43ODkgMTEuODU0LTIuNzg5IDE4LjQxNSAwIDE0LjE4OCAzLjgyOCAyNS42NTcgMTEuMzg1IDM0LjA1NCA3LjU3IDguNDI1IDE4Ljk0MSAxMi43MDggMzMuNzcgMTIuNzA4IDguNzY2IDAgMTcuNzYtMS43NzggMjQuMjIxLTQuMzI2IDAgMCAxLjIzOC0uNTk4LjY5Ny0yLjAzNGwtNC4xOTktMTEuNTk5ek04MzcuNDk3IDMxOS4yMzhjLjgxMS01LjUwNyAyLjMzNC0xMC4wOSA0LjY4Mi0xMy42NjEgMy41NDQtNS40MjIgOC45NTEtOC4zOTYgMTYuNTUxLTguMzk2czEyLjYyMyAyLjk4OCAxNi4yMjMgOC4zOTZjMi4zOTEgMy41NzEgMy40MyA4LjM1NCAzLjg0MyAxMy42NjFoLTQxLjI5OXptNTcuNTkyLTEyLjExMWMtMS40NTEtNS40NzktNS4wNTItMTEuMDE1LTcuNDE0LTEzLjU0OC0zLjcyOS00LjAxMy03LjM3MS02LjgxNi0xMC45ODYtOC4zODItNC43MjUtMi4wMjEtMTAuMzg5LTMuMzU4LTE2LjU5My0zLjM1OC03LjIyOSAwLTEzLjc5IDEuMjEtMTkuMTEyIDMuNzE0LTUuMzM2IDIuNTA1LTkuODE4IDUuOTIxLTEzLjMzNCAxMC4xNzYtMy41MTYgNC4yNC02LjE2MiA5LjI5Mi03Ljg0MiAxNS4wMjctMS42OTMgNS43MDctMi41NDcgMTEuOTI2LTIuNTQ3IDE4LjQ4NSAwIDYuNjc1Ljg4MyAxMi44OTQgMi42MzMgMTguNDg2IDEuNzY1IDUuNjM2IDQuNTgyIDEwLjYwMiA4LjM5NiAxNC43MTQgMy43OTkgNC4xNDIgOC42OTUgNy4zODcgMTQuNTU4IDkuNjQ4IDUuODIxIDIuMjQ5IDEyLjg5NCAzLjQxNiAyMS4wMTkgMy40MDEgMTYuNzIyLS4wNTcgMjUuNTMtMy43ODUgMjkuMTU5LTUuNzkyLjY0MS0uMzU1IDEuMjUzLS45ODEuNDgzLTIuNzc0bC0zLjc4NS0xMC42MDNjLS41NjgtMS41NzktMi4xNzctLjk5Ni0yLjE3Ny0uOTk2LTQuMTQyIDEuNTM3LTEwLjAzMiA0LjI5OC0yMy43NjYgNC4yNy04Ljk3OS0uMDE0LTE1LjY0LTIuNjYxLTE5LjgxLTYuODAzLTQuMjgzLTQuMjQtNi4zNzUtMTAuNDc0LTYuNzQ1LTE5LjI2OGw1Ny45MDUuMDU3czEuNTIyLS4wMjggMS42OC0xLjUwOWMuMDU3LS42MjQgMS45OTMtMTEuODk1LTEuNzIyLTI0Ljk0NU0zNzMuNzYyIDMxOS4yMzhjLjgyNS01LjUwNyAyLjMzNC0xMC4wOSA0LjY4Mi0xMy42NjEgMy41NDMtNS40MjIgOC45NTEtOC4zOTYgMTYuNTUtOC4zOTZzMTIuNjIzIDIuOTg4IDE2LjIzNyA4LjM5NmMyLjM3NiAzLjU3MSAzLjQxNSA4LjM1NCAzLjgyOCAxMy42NjFoLTQxLjI5N3ptNTcuNTc3LTEyLjExMWMtMS40NTEtNS40NzktNS4wMzctMTEuMDE1LTcuMzk5LTEzLjU0OC0zLjcyOS00LjAxMy03LjM3Mi02LjgxNi0xMC45ODYtOC4zODItNC43MjUtMi4wMjEtMTAuMzg4LTMuMzU4LTE2LjU5My0zLjM1OC03LjIxNSAwLTEzLjc5IDEuMjEtMTkuMTEyIDMuNzE0LTUuMzM2IDIuNTA1LTkuODE5IDUuOTIxLTEzLjMzNCAxMC4xNzYtMy41MTUgNC4yNC02LjE2MiA5LjI5Mi03Ljg0MSAxNS4wMjctMS42NzkgNS43MDctMi41NDcgMTEuOTI2LTIuNTQ3IDE4LjQ4NSAwIDYuNjc1Ljg4MiAxMi44OTQgMi42MzMgMTguNDg2IDEuNzY1IDUuNjM2IDQuNTgzIDEwLjYwMiA4LjM5NiAxNC43MTQgMy44IDQuMTQyIDguNjk1IDcuMzg3IDE0LjU1OCA5LjY0OCA1LjgyMSAyLjI0OSAxMi44OTMgMy40MTYgMjEuMDE5IDMuNDAxIDE2LjcyMS0uMDU3IDI1LjUzLTMuNzg1IDI5LjE1OS01Ljc5Mi42NDEtLjM1NSAxLjI1Mi0uOTgxLjQ4NC0yLjc3NGwtMy43NzEtMTAuNjAzYy0uNTg0LTEuNTc5LTIuMTkxLS45OTYtMi4xOTEtLjk5Ni00LjE0MSAxLjUzNy0xMC4wMTkgNC4yOTgtMjMuNzggNC4yNy04Ljk2NS0uMDE0LTE1LjYyNS0yLjY2MS0xOS43OTUtNi44MDMtNC4yODQtNC4yNC02LjM3NS0xMC40NzQtNi43NDYtMTkuMjY4bDU3LjkwNS4wNTdzMS41MjItLjAyOCAxLjY3OS0xLjUwOWMuMDU1LS42MjQgMS45OS0xMS44OTUtMS43MzgtMjQuOTQ1TTI0OC42MDEgMzU3LjE1M2MtMi4yNjMtMS44MDgtMi41NzYtMi4yNjMtMy4zNDQtMy40My0xLjEzOS0xLjc3OS0xLjcyMi00LjMxMi0xLjcyMi03LjUyOCAwLTUuMDk1IDEuNjc5LTguNzUyIDUuMTY2LTExLjIxNC0uMDQyLjAxNSA0Ljk4MS00LjM0IDE2Ljc5Mi00LjE4NCA4LjI5Ni4xMTQgMTUuNzEgMS4zMzggMTUuNzEgMS4zMzh2MjYuMzI3aC4wMTRzLTcuMzU3IDEuNTc5LTE1LjYzOSAyLjA3N2MtMTEuNzgzLjcxMi0xNy4wMi0zLjQtMTYuOTc3LTMuMzg2bTIzLjAzOS00MC42ODZjLTIuMzQ4LS4xNzEtNS4zOTQtLjI3MS05LjAzNy0uMjcxLTQuOTY2IDAtOS43NjIuNjI2LTE0LjI1OSAxLjgzNi00LjUyNSAxLjIwOS04LjU5NSAzLjEwMy0xMi4wOTYgNS42MDZhMjcuOTI3IDI3LjkyNyAwIDAgMC04LjM5NiA5LjU0OWMtMi4wNDkgMy44MTQtMy4wODggOC4zMTEtMy4wODggMTMuMzQ5IDAgNS4xMjMuODgyIDkuNTc3IDIuNjQ3IDEzLjIyMSAxLjc2NSAzLjY1NyA0LjMxMiA2LjcwMiA3LjU1NiA5LjA1MSAzLjIxNiAyLjM0OCA3LjE4NyA0LjA2OSAxMS43OTcgNS4xMDggNC41NCAxLjAzOSA5LjY5MSAxLjU2NSAxNS4zMjcgMS41NjUgNS45MzQgMCAxMS44NTQtLjQ4MyAxNy41ODktMS40NjYgNS42NzgtLjk2OCAxMi42NTEtMi4zNzcgMTQuNTg2LTIuODE3YTE0Ni4yNSAxNDYuMjUgMCAwIDAgNC4wNTYtMS4wMzljMS40MzgtLjM1NSAxLjMyNC0xLjg5MyAxLjMyNC0xLjg5M2wtLjAyOS01Mi45NTJjMC0xMS42MTMtMy4xMDItMjAuMjIzLTkuMjA3LTI1LjU1OS02LjA3Ny01LjMyMi0xNS4wMjgtOC4wMTMtMjYuNTk3LTguMDEzLTQuMzQxIDAtMTEuMzI4LjU5OS0xNS41MTIgMS40MzggMCAwLTEyLjY1MSAyLjQ0OC0xNy44NiA2LjUxOCAwIDAtMS4xMzguNzEyLS41MTIgMi4zMDZsNC4wOTkgMTEuMDE1Yy41MTIgMS40MjMgMS44OTMuOTM5IDEuODkzLjkzOXMuNDQxLS4xNzEuOTU0LS40N2MxMS4xNDMtNi4wNjIgMjUuMjMxLTUuODc3IDI1LjIzMS01Ljg3NyA2LjI2MiAwIDExLjA3MiAxLjI1MiAxNC4zMTYgMy43NDIgMy4xNTkgMi40MTkgNC43NjcgNi4wNzYgNC43NjcgMTMuNzg5djIuNDQ4Yy00Ljk4MS0uNzExLTkuNTQ5LTEuMTIzLTkuNTQ5LTEuMTIzTTczOC42NjkgMjg2LjYzMWMuNDQtMS4zMS0uNDg0LTEuOTM2LS44NjktMi4wNzgtLjk4MS0uMzg0LTUuOTA1LTEuNDIzLTkuNzA1LTEuNjY1LTcuMjcxLS40NDEtMTEuMzEyLjc4My0xNC45MjggMi40MDUtMy41ODYgMS42MjItNy41NyA0LjI0LTkuNzkxIDcuMjE1di03LjA0NGMwLS45ODItLjY5Ny0xLjc2NS0xLjY2NS0xLjc2NWgtMTQuODQzYy0uOTY3IDAtMS42NjQuNzgyLTEuNjY0IDEuNzY1djg2LjM2NmMwIC45NjguNzk3IDEuNzY1IDEuNzY0IDEuNzY1aDE1LjIxM2ExLjc2IDEuNzYgMCAwIDAgMS43NS0xLjc2NXYtNDMuMTQ3YzAtNS43OTIuNjQxLTExLjU2OSAxLjkyMi0xNS4xOTggMS4yNTItMy41ODcgMi45Ni02LjQ2MSA1LjA2Ni04LjUyNSAyLjEyLTIuMDQ5IDQuNTI1LTMuNDg2IDcuMTU4LTQuMjk3IDIuNjg5LS44MjYgNS42NjMtMS4wOTYgNy43Ny0xLjA5NiAzLjAzMSAwIDYuMzYxLjc4MiA2LjM2MS43ODIgMS4xMDkuMTI4IDEuNzM2LS41NTUgMi4xMDUtMS41NjUuOTk3LTIuNjQ3IDMuODE1LTEwLjU3NCA0LjM1Ni0xMi4xNTMiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNNTk1Ljg3NCAyNDYuNjAzYy0xLjg1LS41NjktMy41MjktLjk1NC01LjcyMS0xLjM2Ni0yLjIyMS0uMzk4LTQuODY3LS41OTgtNy44NjktLjU5OC0xMC40NzUgMC0xOC43MjkgMi45Ni0yNC41MiA4Ljc5NC01Ljc2NCA1LjgwNy05LjY3OCAxNC42NDQtMTEuNjQyIDI2LjI3MWwtLjcxMiAzLjkxM2gtMTMuMTQ4cy0xLjU5NC0uMDU3LTEuOTM2IDEuNjhsLTIuMTQ4IDEyLjA1M2MtLjE1NyAxLjEzOS4zNDIgMS44NjQgMS44NzggMS44NjRoMTIuNzk0bC0xMi45NzkgNzIuNDYzYy0xLjAxMSA1LjgzNS0yLjE3OCAxMC42MzEtMy40NzMgMTQuMjczLTEuMjY3IDMuNTg3LTIuNTA0IDYuMjc2LTQuMDQxIDguMjQtMS40OCAxLjg3OS0yLjg3NSAzLjI3My01LjI5NSA0LjA4NC0xLjk5Mi42NjktNC4yOTcuOTgyLTYuODE2Ljk4Mi0xLjM5NSAwLTMuMjU4LS4yMjktNC42MzktLjUxMy0xLjM2Ni0uMjcxLTIuMDkyLS41NjktMy4xMzEtMS4wMTEgMCAwLTEuNDk0LS41NjgtMi4wOTIuOTI2LS40NyAxLjIzOC0zLjg4NSAxMC42MTUtNC4yOTggMTEuNzY5LS4zOTggMS4xNTIuMTcxIDIuMDQ5Ljg5NiAyLjMxOSAxLjcwOC41OTggMi45NzQuOTk2IDUuMjk0IDEuNTUxIDMuMjE3Ljc1NSA1LjkzNC43OTcgOC40ODEuNzk3IDUuMzIyIDAgMTAuMTg5LS43NTQgMTQuMjE3LTIuMjA1IDQuMDQyLTEuNDY2IDcuNTctNC4wMTQgMTAuNzAxLTcuNDU3IDMuMzczLTMuNzI5IDUuNDkzLTcuNjI4IDcuNTE1LTEyLjk2NCAyLjAwNi01LjI2NiAzLjcyOS0xMS44MTIgNS4wOTQtMTkuNDM5bDEzLjA1LTczLjgxNWgxOS4wNjlzMS42MDcuMDU3IDEuOTM2LTEuNjkzbDIuMTYyLTEyLjAzOWMuMTQzLTEuMTUyLS4zNDEtMS44NjQtMS44OTMtMS44NjRoLTE4LjUxNGMuMS0uNDEyLjkzOS02LjkzMSAzLjA2LTEzLjA2My45MTEtMi42MDQgMi42MTgtNC43MjUgNC4wNTYtNi4xNzcgMS40MjQtMS40MjMgMy4wNi0yLjQzMyA0Ljg1NC0zLjAxNyAxLjgzNS0uNTk4IDMuOTI4LS44ODIgNi4yMTktLjg4MiAxLjczNiAwIDMuNDU3LjE5OSA0Ljc1Mi40NjkgMS43OTMuMzg1IDIuNDkuNTg0IDIuOTYxLjcyNyAxLjg5My41NjkgMi4xNDguMDE0IDIuNTE5LS44OTZsNC40MjYtMTIuMTUzYy40NTUtMS4zMTItLjY2OS0xLjg2Ny0xLjA2Ny0yLjAyM00zMzcuMTk0IDM3MS44MzRjMCAuOTY4LS42OTcgMS43NTEtMS42NjUgMS43NTFoLTE1LjM1NWMtLjk2OCAwLTEuNjUxLS43ODMtMS42NTEtMS43NTF2LTEyMy41OGMwLS45NjcuNjgzLTEuNzUgMS42NTEtMS43NWgxNS4zNTVjLjk2OCAwIDEuNjY1Ljc4MyAxLjY2NSAxLjc1djEyMy41OHoiLz48L3N2Zz4=" alt="Salesforce" style="height:26px;width:auto;object-fit:contain;opacity:.85">
+ </div>
+</footer>
+
+<script>
+/* ============ DATA ============ */
+const TODAY = "16/07";
+
+const DATA = {
+ overview: {
+ stats:[
+ {v:"09/Jul/2026", l:"data de referência · período de atualização: 03/07 – 09/07"},
+ {v:"11", l:"frentes acompanhadas"},
+ {v:"4", l:"go-lives em julho · Poupinha Áudio (16/Jul) · Check-in V1 · CIN · Mamografia"},
+ {v:"HML Conjunta", l:"Poupinha + Check-in + CIN + Mamografia · semana de 15/07"},
+ ],
+ macro:{
+ months:["16/Mar","30/Mar","13/Abr","27/Abr","11/Mai","25/Mai","08/Jun","22/Jun","06/Jul","20/Jul","03/Ago","17/Ago"],
+ todayPct:86,
+ rows:[
+ {l:"Plano de trabalho + kick-off", bars:[{s:0,e:12,c:"dark"}]},
+ {l:"Buscador Inteligente", bars:[{s:12,e:59},{s:59,e:100,c:"soft"}], ms:[{p:20,t:"V1"},{p:59,t:"V2 ✓"}]},
+ {l:"Check-in Online", bars:[{s:12,e:67},{s:67,e:76,c:"late"}], ms:[{p:76}]},
+ {l:"Jornada CIN", bars:[{s:20,e:67},{s:67,e:76,c:"late"}], ms:[{p:76}]},
+ {l:"Jornada Exames (Mamografia)", bars:[{s:28,e:46,c:"blue"},{s:46,e:79}], ms:[{p:71},{p:79}]},
+ {l:"Detran SP", bars:[{s:35,e:100,c:"soft"}]},
+ {l:"Tabela SUS Paulista", bars:[{s:42,e:63},{s:63,e:100,c:"soft"}]},
+ {l:"Observabilidade Global", bars:[{s:58,e:100,c:"soft"}]},
+ {l:"Agente de Satisfação", bars:[{s:61,e:100,c:"soft"}]},
+ {l:"Mensagens de Contingência", bars:[{s:65,e:100,c:"soft"}]},
+ {l:"Poupinha & Zeladoria", bars:[{s:55,e:67},{s:67,e:77,c:"late"},{s:77,e:94,c:"soft"}], ms:[{p:76},{p:77},{p:94}]},
+ {l:"Monitoramento de Canais", bars:[{s:72,e:100,c:"soft"}]},
+ ],
+ golives:[
+ {p:73,t:"Mamografia · aguardando fechamento CIN V1 + Check-in V1 · bloqueada"},
+ {p:79,t:"Go-Live Mamografia · semana 20/Jul"},
+ {p:63,t:"Tabela SUS · UAT 22/Jun ✓ · go-live aguarda Prodesp"},
+ {p:76,t:"CIN V1 + Check-in V1 · tecnicamente liberados 15/Jul · aguardando publicação LWC Prodesp"},
+ {p:92,t:"Mensagens de Contingência · ~11/Ago (estimado)"},
+ {p:96,t:"Agente de Satisfação · ~18/Ago (estimado)"},
+ {p:77,t:"Poupinha V1.8 (Áudio) · HML em andamento · liberação após CIN+Check-in"},{p:78,t:"Homologação assistida com o cliente · 17–18/Jul"},{p:94,t:"Go-Live Poupinha V2 · 1ª quinzena Ago"},
+ ]
+ }
+ },
+
+ projects:[
+ /* ============ BUSCADOR ============ */
+ {
+ id:"buscador", tab:"Buscador Inteligente", name:"Buscador Inteligente",
+ sub:"V2 estável em produção · V3 em desenvolvimento (Conversational First, Query Expansion, RAG) · Especificação Funcional enviada em 16/07 para aprovação.",
+ status:"V2 ESTÁVEL EM PRODUÇÃO · V3 EM DESENVOLVIMENTO", statusColor:"var(--green)",
+ meta:"277 mil requisições MuleSoft · 99,99964% de sucesso · 33.391 interações · Especificação V3 aguardando aprovação",
+ progress:91,
+ gantt:{
+ cols:20,
+ weeks:["S1 23/03","S2 30/03","S3 06/04","S4 13/04","S5 20/04","S6 27/04","S7 04/05","S8 11/05","S9 18/05","S10 25/05","S11 01/06","S12 08/06","S13 15/06","S14 22/06","S15 29/06","S16 06/07","S17 13/07","S18 20/07","S19 27/07","S20 03/08"],
+ today:16.4,
+ rows:[
+ {l:"V2 — Produção / Sustentação", bars:[{s:11,e:20,c:"active"}]},
+ {l:"V3 — Arquitetura e desenho", bars:[{s:12,e:16,c:"done",check:true}]},
+ {l:"V3 — Especificação Funcional", bars:[{s:15.5,e:16.5,c:"done",check:true}], ms:[{date:"16/07"}]},
+ {l:"V3 — Aprovação funcional", bars:[{s:16.4,e:17,c:"wait"}], ms:[{date:"17/07"}]},
+ {l:"V3 — Query Expansion / MuleSoft", bars:[{s:15.8,e:16.3,c:"done",check:true},{s:16.3,e:17.2,c:"active"}]},
+ {l:"V3 — Conversational First / LWC", bars:[{s:16,e:17,c:"active"}]},
+ {l:"V3 — RAG Optimization", bars:[{s:16,e:17.7,c:"active"}]},
+ {l:"V3 — Testes internos", bars:[{s:17,e:18,c:"plan"}]},
+ {l:"Envio LWC à Prodesp", bars:[{s:17.6,e:18,c:"plan"}], ms:[{date:"24/07"}]},
+ {l:"Homologação externa", bars:[{s:18,e:19,c:"plan"}], ms:[{date:"27/07"}]},
+ ],
+ milestones:[
+ {date:"16/07", t:"Especificação Funcional V3 enviada para Laura e Karime"},
+ {date:"17/07", t:"Prazo solicitado para aprovação formal da Especificação"},
+ {date:"24/07", t:"Previsão de envio do pacote LWC à Prodesp"},
+ {date:"27/07", t:"Previsão de início da homologação externa"},
+ ]
+ },
+ kpis:[
+ {v:"99,99964%", l:"taxa de sucesso MuleSoft", c:"green"},
+ {v:"33.391", l:"interações do Buscador", c:"blue"},
+ {v:"5.704", l:"respostas corrigidas pelo Agentforce", c:"amber"},
+ ],
+ statusAtual:[
+ "<b>Buscador V2 em produção e sustentação:</b> solução estável, com monitoramento contínuo e sem indicação de indisponibilidade relevante durante a primeira quinzena de julho.",
+ "Entre <b>01 e 15/07/2026</b>, as integrações MuleSoft, Salesforce, Red Hat e Agentforce operaram regularmente, com os indicadores técnicos e conversacionais consolidados para acompanhamento executivo.",
+ "A aplicação <b>api-buscador-inteligente-indexado</b> processou aproximadamente <b>277 mil requisições HTTP</b>, com tempo médio de resposta de <b>1.139 ms</b>, latência P95 de <b>2.316 ms</b>, apenas <b>1 falha</b> e taxa de sucesso de <b>99,99964%</b>.",
+ "A única falha ocorreu no endpoint <b>/api/buscador-inteligente/v1/pesquisas</b>, de forma pontual e sem caracterizar padrão de instabilidade.",
+ "No período, o Buscador registrou <b>33.391 interações</b>, das quais <b>5.704</b> receberam correção do Agentforce, demonstrando a relevância da camada de IA na qualificação das respostas.",
+ "O <b>Buscador V3</b> segue em desenvolvimento nas frentes <b>Conversational First, Query Expansion e RAG Optimization</b>, conforme arquitetura definida com a Salesforce.",
+ "A <b>Especificação Funcional da V3 foi concluída e enviada em 16/07</b> para Laura e Karime, com validação formal solicitada até <b>17/07, ao final do dia</b>. O documento passa a ser a referência para formalização do escopo, testes e futura homologação.",
+ "A solicitação à <b>G&P</b> para criação dos campos Tags e Escopo permanece suspensa até a validação da geração automática dessas informações por IA na V3.",
+ "O retorno da <b>Red Hat</b> segue pendente. A arquitetura permite direcionar 100% das buscas ao Agentforce por configuração, sem alteração de código, portanto a dependência não bloqueia o desenvolvimento atual.",
+ ],
+ cronograma:[
+ {t:"Buscador V2 em produção", s:"Estável · monitoramento contínuo", cls:"s-done"},
+ {t:"Especificação Funcional V3", s:"Concluída e enviada · 16/07", cls:"s-done"},
+ {t:"Aprovação funcional Laura / Karime", s:"Aguardando retorno até 17/07", cls:"s-wait"},
+ {t:"Query Expansion / integração MuleSoft", s:"Implementação concluída · em testes", cls:"s-prog"},
+ {t:"Conversational First / LWC", s:"Em desenvolvimento", cls:"s-prog"},
+ {t:"RAG Optimization", s:"Em desenvolvimento", cls:"s-prog"},
+ {t:"V3 funcionando em SFDev", s:"Até 22/07", cls:"s-prev"},
+ {t:"Testes internos", s:"23 e 24/07", cls:"s-plan"},
+ {t:"Envio do pacote LWC à Prodesp", s:"24/07", cls:"s-plan"},
+ {t:"Homologação externa", s:"Semana de 27/07", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"V2 — Produção e sustentação", items:["Operação estável na primeira quinzena de julho","277 mil requisições MuleSoft","99,99964% de sucesso","33.391 interações conversacionais","5.704 respostas corrigidas pelo Agentforce"]},
+ {t:"V3 — Escopo funcional", items:["Conversational First","Query Expansion","RAG Optimization","Geração automática de Tags","Geração automática de Escopo"]},
+ {t:"Especificação Funcional", items:["Documento concluído","Enviado em 16/07 para Laura e Karime","Prazo de retorno solicitado para 17/07","Referência formal para testes e homologação"]},
+ {t:"Desenvolvimento e arquitetura", items:["Erik — Query Expansion e MuleSoft","Ighor — experiência conversacional e LWC","Guilherme Oliveira — arquitetura e desenho de solução","Arquitetura definida com a Salesforce"]},
+ {t:"Carta de Serviços / G&P", items:["Solicitação de novos campos suspensa","Primeiro validar geração automática por IA","Decisão posterior sobre Tags e Escopo","Alteração futura da API apenas se necessária"]},
+ {t:"Red Hat", items:["E-mail formal enviado","Capacidade, volume e distribuição em análise","Retorno não bloqueia desenvolvimento","Definição necessária antes da homologação externa"]},
+ ],
+ metricsSection:{
+ title:"Métricas consolidadas — produção, conversação e Salesforce",
+ summary:[
+ "<b>Período:</b> 01 a 15 de julho de 2026. O Buscador V2 manteve operação estável, alta disponibilidade e desempenho consistente.",
+ "Os indicadores conversacionais reforçam a relevância do Agentforce e sustentam as evoluções previstas na V3, especialmente para interpretação de intenção, expansão de consulta e melhoria da recuperação das respostas.",
+ "Os indicadores de Red Hat, Carta de Serviço e Agentforce podem representar etapas ou classificações sobrepostas dentro de uma mesma interação e não devem ser somados como categorias independentes."
+ ],
+ tiles:[
+ {label:"Requisições HTTP", value:"277.000"},
+ {label:"Tempo médio", value:"1.139 ms"},
+ {label:"Latência P95", value:"2.316 ms"},
+ {label:"Taxa de sucesso", value:"99,99964%"},
+ {label:"Interações do Buscador", value:"33.391"},
+ {label:"Validação Red Hat", value:"16.535"},
+ {label:"Carta sem validação Red Hat", value:"15.831"},
+ {label:"Corrigidas pelo Agentforce", value:"5.704"},
+ {label:"Perguntas ambíguas", value:"1.696", sub:"≈ 5,1% das interações"},
+ {label:"Fora do escopo", value:"256", sub:"≈ 0,8% das interações"},
+ {label:"Sessões de mensagens", value:"34.852"},
+ {label:"Processamento Carta", value:"12.180"},
+ {label:"Limpeza usuários mensageria", value:"8.630"},
+ {label:"Total de falhas", value:"1", sub:"0,00036%"},
+ ],
+ bars:[
+ {label:"Requisições HTTP", value:"277.000", h:100, color:"blue"},
+ {label:"Interações", value:"33.391", h:12.1, color:"green"},
+ {label:"Validação Red Hat", value:"16.535", h:6.0, color:"purple"},
+ {label:"Carta sem validação", value:"15.831", h:5.7, color:"orange"},
+ {label:"Correções Agentforce", value:"5.704", h:2.1, color:"green"},
+ {label:"Perguntas ambíguas", value:"1.696", h:0.61, color:"orange"},
+ {label:"Fora do escopo", value:"256", h:0.09, color:"red"},
+ ]
+ },
+ riscos:[
+ "<b>Aprovação funcional pendente:</b> alterações solicitadas na Especificação Funcional podem gerar retrabalho, pois o desenvolvimento foi iniciado com base nos alinhamentos e transcrições anteriores à formalização completa.",
+ "<b>Red Hat:</b> ausência de definição sobre capacidade, concorrência e distribuição definitiva das requisições.",
+ "<b>Carta de Serviços:</b> eventual necessidade futura de criação dos campos Tags e Escopo e exposição desses dados na API.",
+ "<b>Dependência Prodesp:</b> publicação e disponibilização do LWC para homologação externa.",
+ "<b>Cronograma:</b> proximidade entre aprovação funcional, conclusão do desenvolvimento, testes e início da homologação externa.",
+ ],
+ mitigacao:[
+ "Acompanhar o retorno de Laura e Karime até 17/07 e consolidar rapidamente eventuais ajustes da Especificação Funcional.",
+ "Manter o desenvolvimento das frentes MuleSoft, conversacional e RAG conforme a arquitetura já definida com a Salesforce.",
+ "Acompanhar a Red Hat em paralelo, sem bloquear o avanço técnico, e fechar o modelo definitivo de distribuição antes da homologação externa.",
+ "Manter suspensa a solicitação à G&P até a validação da geração automática de Tags e Escopo pela V3.",
+ "Preparar antecipadamente testes, pacote LWC e evidências para reduzir o impacto das dependências externas sobre o cronograma.",
+ ],
+ passos:[
+ "Acompanhar o retorno de Laura e Karime sobre a Especificação Funcional até 17/07.",
+ "Consolidar eventuais ajustes solicitados pelo Poupatempo.",
+ "Manter o desenvolvimento das frentes MuleSoft, conversacional e RAG Optimization.",
+ "Confirmar a V3 funcionando em SFDev até 22/07.",
+ "Preparar e executar os testes internos previstos para 23 e 24/07.",
+ "Acompanhar o posicionamento da Red Hat e validar a estratégia definitiva de distribuição das requisições.",
+ "Preparar o pacote LWC para envio à Prodesp em 24/07.",
+ "Organizar validação antecipada da solução com o Poupatempo, quando possível.",
+ "Manter suspensa a solicitação à G&P até a validação da geração automática de Tags e Escopo.",
+ "Preparar a homologação externa prevista para a semana de 27/07.",
+ ],
+ gp:"Caio Achcar",
+ commit:"Manter a V2 <b>estável e observável em produção</b> e conduzir a V3 com escopo formalizado, arquitetura validada, métricas consistentes e governança ativa sobre as dependências externas."
+ },
+
+ /* ============ CHECK-IN ============ */
+ {
+ id:"checkin", tab:"Check-in Online", name:"Check-in Online",
+ sub:"V1 tecnicamente liberada · aguardando publicação do LWC pela Prodesp · V2 API Fila em andamento.",
+ status:"V1 LIBERADA PARA GO-LIVE — DEPENDÊNCIA PRODESP", statusColor:"var(--green)",
+ meta:"V1 sem impedimentos internos · LWC Prodesp pendente · Ajustes seguem para análise evolutiva · API Fila V2 tecnicamente concluída",
+ progress:94,
+ gantt:{
+ cols:17,
+ weeks:["S1 06/04","S2 13/04","S3 20/04","S4 27/04","S5 04/05","S6 11/05","S7 18/05","S8 25/05","S9 01/06","S10 08/06","S11 16/06","S12 22/06","S13 29/06","S14 06/07","S15 13/07","S16 20/07","S17 27/07"],
+ today:14.4,
+ rows:[
+ {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+ {l:"Desenho solução V1", bars:[{s:0,e:2,c:"done",check:true},{s:2,e:7,c:"late",check:true}]},
+ {l:"Build V1", bars:[{s:2,e:8,c:"done",check:true},{s:8,e:12,c:"late",check:true}]},
+ {l:"Testes integrados / Orquestração", bars:[{s:4,e:10,c:"done",check:true},{s:10,e:14,c:"late",check:true}]},
+ {l:"Homologação assistida V1", bars:[{s:14,e:15,c:"late",check:true}]},
+ {l:"Publicação LWC — Prodesp", bars:[{s:14.4,e:15,c:"wait"}], ms:[{date:"17/07"}]},
+ {l:"Validação final ponta a ponta", bars:[{s:15,e:15.5,c:"plan"}], ms:[{date:"20/07"}]},
+ {l:"Plano de implantação / Go-Live V1", bars:[{s:15,e:16,c:"plan"}]},
+ {l:"V2 — API Fila: validação funcional", bars:[{s:13,e:15,c:"active"}]},
+ {l:"V2 — Fechamento de escopo e ciclo completo", bars:[{s:14.4,e:16.5,c:"plan"}]},
+ ],
+ milestones:[
+ {date:"17/07", t:"Previsão de publicação do LWC pela Prodesp · a confirmar"},
+ {date:"20/07", t:"Possível validação final ponta a ponta · condicionada ao LWC"},
+ {date:"27/07", t:"Janela de validação da API Fila · condicionada à especificação final e aprovação do Figma"},
+ ]
+ },
+ kpis:[
+ {v:"100%", l:"fluxos V1 executados sem impedimento técnico", c:"green"},
+ {v:"1", l:"dependência externa para validação final: LWC", c:"amber"},
+ {v:"V2", l:"API Fila com implementação técnica concluída", c:"blue"},
+ ],
+ statusAtual:[
+ "📅 <b>Homologação assistida realizada em 14 e 15/07:</b> os fluxos do Check-in Online V1 foram executados em conjunto com o time Poupatempo, permitindo a consolidação dos pontos observados e a revisão técnica do pacote atual.",
+ "Em <b>16/07</b>, foi enviado e-mail formal à Marina, à SGGD e ao time Poupatempo com o registro da homologação e o posicionamento conjunto da <b>OrangeDoor e da Salesforce</b> de que o Check-in Online V1 está tecnicamente liberado para avanço ao go-live.",
+ "<b>Não foram identificados bugs ou comportamentos impeditivos</b> que impeçam o cidadão de concluir a jornada ou inviabilizem a publicação da versão atual.",
+ "Os ajustes solicitados durante a homologação <b>não serão aplicados diretamente na V1</b>. Apesar de alguns parecerem simples, alterações nesta etapa exigiriam revalidação ampla e testes regressivos, elevando o risco de instabilidade e novo atraso.",
+ "As solicitações serão registradas e passarão primeiro por <b>análise de viabilidade técnica, impacto, esforço, dependências e prioridade</b>. Os itens aprovados deverão percorrer o ciclo completo de requisito, desenho, desenvolvimento, testes regressivos, validação integrada e homologação antes de eventual publicação.",
+ "Entre os pontos registrados estão ajustes de botões, textos, sequência de mensagens, redução de interações e refinamentos da experiência e da orquestração.",
+ "<b>Dependência atual:</b> publicação do componente LWC pela Prodesp no portal para execução do teste final ponta a ponta, incluindo localização e continuidade do Check-in.",
+ "Foi mencionada a possibilidade de validação final em <b>20/07</b>, caso o LWC seja disponibilizado em <b>17/07</b>. A data permanece condicionada à publicação efetiva do componente e ainda não representa agenda definitiva.",
+ "<b>API Fila V2:</b> permanece como frente independente. A implementação técnica está concluída. O avanço depende do envio da versão final da regra de negócio e especificação técnica, consolidando os disparos e as mensagens ao cidadão. Após o recebimento, o Figma será ajustado e submetido à aprovação formal; somente então será avaliada a necessidade de adequações no código já implementado.",
+ ],
+ cronograma:[
+ {t:"Regras de negócio e jornada V1", s:"Concluídas e validadas", cls:"s-done"},
+ {t:"Homologação assistida V1", s:"Concluída · 14 e 15/07", cls:"s-done"},
+ {t:"Formalização da homologação e posição técnica", s:"E-mail enviado em 16/07", cls:"s-done"},
+ {t:"Análise dos ajustes solicitados", s:"Concluída · não aplicar na V1", cls:"s-done"},
+ {t:"Publicação do LWC no portal", s:"Dependência Prodesp · previsão 17/07", cls:"s-wait"},
+ {t:"Validação final ponta a ponta", s:"Possível em 20/07 · condicionada ao LWC", cls:"s-prev"},
+ {t:"Plano de implantação e go-live V1", s:"A definir com SGGD / Poupatempo / Prodesp", cls:"s-plan"},
+ {t:"API Fila V2 — implementação técnica", s:"Concluída", cls:"s-done"},
+ {t:"API Fila V2 — especificação final", s:"Aguardando versão consolidada", cls:"s-wait"},
+ {t:"API Fila V2 — Figma, aprovação e avaliação de código", s:"Após documento final", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"V1 — Pacote tecnicamente liberado", items:["Homologação assistida realizada em 14 e 15/07","Fluxo ponta a ponta executado","Sem bugs impeditivos identificados","E-mail formal enviado em 16/07 à Marina, SGGD e time Poupatempo","Posição conjunta OrangeDoor e Salesforce favorável ao go-live"]},
+ {t:"Ajustes solicitados na homologação", items:["Não serão aplicados diretamente na V1","Passarão por análise de viabilidade e impacto","Itens aprovados seguirão ciclo completo de implementação","Prazo e versão serão definidos após avaliação"]},
+ {t:"Dependência para o Go-Live", items:["Publicação do LWC pela Prodesp","Validação dos cenários de localização","Teste final de continuidade do Check-in","Definição conjunta do plano de implantação"]},
+ {t:"V2 — API Fila", items:["Implementação técnica concluída","Aguardando versão final da regra de negócio e especificação técnica","Documento deverá consolidar disparos e mensagens ao cidadão","Figma será atualizado e aprovado formalmente antes da avaliação de ajustes no código"]},
+ ],
+ riscos:["A publicação do LWC pela Prodesp é a dependência crítica para a validação final e pode deslocar a data de go-live.","Aplicar ajustes de experiência diretamente na V1 nesta etapa exigiria testes regressivos amplos e poderia introduzir instabilidade em uma versão já validada.","A API Fila V2 está tecnicamente implementada, mas a ausência da versão final da regra de negócio e especificação técnica impede a validação funcional, a aprovação do Figma e a confirmação de eventuais ajustes no código."],
+ mitigacao:["Posicionamento formal de liberação técnica da V1 e solicitação objetiva de plano de implantação às áreas envolvidas.","Congelamento funcional da V1, mantendo os novos pedidos fora do pacote atual e submetendo-os à análise e ao ciclo completo de implementação.","Separação operacional entre V1 e API Fila V2, evitando que a evolução concorra com a prioridade de homologação e go-live.","Aguardar a especificação final, atualizar o Figma, obter aprovação formal e somente depois avaliar eventuais adequações no código já implementado."],
+ passos:["Acompanhar e confirmar a publicação do LWC pela Prodesp.","Executar a validação final ponta a ponta imediatamente após a disponibilização do componente.","Definir responsáveis, janela e atividades do plano de implantação com SGGD, Poupatempo e Prodesp.","Avançar com o go-live da V1 sem incorporar novos ajustes nesta etapa.","Registrar as solicitações da homologação para análise técnica e priorização evolutiva.","Receber a versão final da regra de negócio e especificação técnica da API Fila, atualizar e aprovar formalmente o Figma e avaliar eventuais ajustes no código antes dos testes e da homologação da V2."],
+ gp:"Caio Achcar",
+ commit:"Concluir o go-live do Check-in Online V1 com <b>segurança, estabilidade e responsabilidades claramente definidas</b>, preservando o pacote já validado e conduzindo as evoluções por meio do ciclo completo de análise e implementação."
+ },
+
+ /* ============ MAMOGRAFIA ============ */
+ {
+ id:"mamografia", tab:"Mamografia", name:"Jornada de Exames — Mamografia",
+ sub:"Desenvolvimento e testes concluídos · bloqueada aguardando fechamento do Check-in V1 e Jornada CIN V1.",
+ status:"BLOQUEADO — AGUARDANDO FECHAMENTO DO CHECK-IN V1 E JORNADA CIN V1", statusColor:"var(--red)",
+ meta:"Retomada condicionada ao fechamento do Check-in V1 e Jornada CIN V1 · Validação prevista para 20/07 · Pacote LWC Prodesp pendente",
+ progress:72,
+ gantt:{
+ cols:16,
+ weeks:["S1 27/04","S2 04/05","S3 11/05","S4 18/05","S5 25/05","S6 01/06","S7 08/06","S8 15/06","S9 22/06","S10 29/06","S11 06/07","S12 13/07","S13 20/07","S14 27/07","S15 03/08","S16 10/08"],
+ today:11.4,
+ rows:[
+ {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+ {l:"Desenho solução inicial", bars:[{s:0,e:5,c:"done",check:true}]},
+ {l:"Build inicial", bars:[{s:3,e:9,c:"done",check:true}]},
+ {l:"Testes E2E / QA iniciais", bars:[{s:4,e:10,c:"done",check:true}]},
+ {l:"Bloqueio — Check-in V1 + Jornada CIN V1", bars:[{s:10,e:12,c:"late"}]},
+ {l:"Retomada / revisão arquitetura SOMA", bars:[{s:12,e:13,c:"plan"}]},
+ {l:"Integração e testes integrados", bars:[{s:12,e:13,c:"plan"}]},
+ {l:"Homologação Mamografia", bars:[{s:13,e:14,c:"wait"}]},
+ ],
+ milestones:[
+ {w:12, t:"Retomada prevista na S13 após fechamento do Check-in V1 e Jornada CIN V1"},
+ {w:13, t:"Previsão de homologação da Mamografia na S14"},
+ ]
+ },
+ kpis:[
+ {v:"Bloqueado", l:"aguardando fechamento do Check-in V1 e Jornada CIN V1", c:"red"},
+ {v:"20/07", l:"possível fechamento de homologação, condicionado ao LWC", c:"amber"},
+ {v:"SOMA", l:"retomada com arquitetura integrada", c:"blue"},
+ ],
+ statusAtual:[
+ "📅 <b>Atualização de 16/07:</b> a Mamografia permanece temporariamente bloqueada até o fechamento da homologação do Check-in Online V1 e da Jornada CIN V1.",
+ "A condição objetiva para retomada é o <b>fechamento conjunto do Check-in Online V1 e da Jornada CIN V1</b>, com possível conclusão em <b>20/07</b>, condicionada à publicação do pacote LWC pela Prodesp.",
+ "O marco de desbloqueio exige: <b>homologação concluída das duas jornadas, ausência de bugs impeditivos, pacote LWC publicado e validação final realizada</b>.",
+ "A recomendação técnica é não iniciar a nova integração antes desse marco, evitando retrabalho e aumento de complexidade em uma arquitetura compartilhada.",
+ "A retomada deverá considerar a <b>integração com o SOMA do Poupatempo</b>, revisão arquitetural, planejamento técnico e nova rodada de testes integrados.",
+ "Com base no cenário atual, a retomada da Mamografia está prevista para a <b>S13 (semana de 20/07)</b> e sua homologação para a <b>S14 (semana de 27/07)</b>, sujeitas à conclusão das dependências anteriores.",
+ ],
+ cronograma:[
+ {t:"Discovery e desenho inicial", s:"Concluídos", cls:"s-done"},
+ {t:"Build e testes iniciais", s:"Concluídos", cls:"s-done"},
+ {t:"Retomada do desenvolvimento", s:"Prevista para S13 · semana de 20/07", cls:"s-prev"},
+ {t:"Condição de desbloqueio", s:"Fechamento Check-in V1 + Jornada CIN V1 e publicação do LWC", cls:"s-wait"},
+ {t:"Revisão da arquitetura SOMA", s:"S13 · semana de 20/07", cls:"s-plan"},
+ {t:"Integração e testes integrados", s:"S13 · semana de 20/07", cls:"s-plan"},
+ {t:"Homologação", s:"S14 · semana de 27/07", cls:"s-prev"},
+ ],
+ entregas:[
+ {t:"Base já concluída", items:["Discovery e refinamento realizados","Desenho inicial da solução concluído","Build inicial finalizado","Testes E2E e validações iniciais executados"]},
+ {t:"Condição para retomada", items:["Homologação do Check-in Online V1 concluída","Homologação da Jornada CIN V1 concluída","Pacote LWC publicado pela Prodesp","Validação final prevista para 20/07"]},
+ {t:"Retomada técnica", items:["Revisar arquitetura de integração com o SOMA","Confirmar componentes e dependências compartilhadas","Planejar implementação e testes integrados","Definir novo cronograma após desbloqueio"]},
+ {t:"Governança", items:["Não iniciar integração antes do marco de desbloqueio","Evitar concorrência com o fechamento do Check-in V1 e Jornada CIN V1","Confirmar retomada da S13 somente após publicação do LWC"]},
+ ],
+ riscos:["Iniciar a integração antes do fechamento do Check-in V1 e Jornada CIN V1 pode gerar retrabalho, conflitos em componentes compartilhados e aumento de complexidade técnica.","A não publicação do pacote LWC pela Prodesp pode impedir a validação final prevista para 20/07 e deslocar a retomada planejada para a S13.","A retomada poderá exigir ajustes adicionais após a revisão da arquitetura integrada ao SOMA."],
+ mitigacao:["Manter a frente bloqueada até o fechamento do Check-in V1 e Jornada CIN V1.","Acompanhar prioritariamente a publicação do pacote LWC pela Prodesp e a validação final prevista para 20/07.","Executar uma revisão técnica da arquitetura SOMA no início da retomada da S13.","Manter a homologação da Mamografia na S14 condicionada à conclusão das dependências anteriores."],
+ passos:["Acompanhar o fechamento da homologação do Check-in Online V1 e da Jornada CIN V1.","Confirmar a publicação do pacote LWC pela Prodesp e executar a validação final prevista para 20/07.","Retomar a Mamografia na S13 com revisão técnica da arquitetura de integração com o SOMA.","Executar integração e testes integrados ainda na S13, conforme viabilidade técnica.","Preparar e realizar a homologação da Mamografia na S14.","Reavaliar a previsão de go-live após o resultado da homologação."],
+ gp:"Caio Achcar",
+ commit:"Retomar a Jornada de Mamografia na <b>S13</b>, após o fechamento do Check-in V1 e Jornada CIN V1 e a publicação do pacote LWC, preparando a <b>homologação para a S14</b> com arquitetura SOMA validada."
+ },
+
+ /* ============ TABELA SUS ============ */
+ {
+ id:"sus", tab:"Tabela SUS", name:"Tabela SUS Paulista",
+ sub:"Meta aprovada ✓ · Dashboard em ajuste (entrega 24/Jul) · start dos disparos aguardando Alyne.",
+ status:"META APROVADA ✓ — AGUARDANDO START (ALYNE)", statusColor:"var(--green)",
+ meta:"Meta: documentação aprovada ✓ · Dashboard ajustado: entrega 24/07 · Start dos disparos: aguardando Alyne",
+ progress:97,
+ gantt:{
+ cols:12,
+ weeks:["S1 25/05","S2 01/06","S3 08/06","S4 15/06","S5 24/06","S6 29/06","S7 06/07","S8 13/07","S9 20/07","S10 27/07","S11 03/08","S12 10/08"],
+ today:7,
+ rows:[
+ {l:"Discovery / Refinamento", bars:[{s:0,e:2,c:"done",check:true}]},
+ {l:"Desenho solução", bars:[{s:1,e:3,c:"blue",check:true}]},
+ {l:"Build", bars:[{s:2,e:5,c:"done",check:true}]},
+ {l:"Testes", bars:[{date:"08/06",dateEnd:"22/06",c:"done",check:true}], ms:[{date:"22/06"}]},
+ {l:"UAT — Entregue ✓", bars:[{s:4,e:5,c:"done",check:true}]},
+ {l:"Dashboard Tableau — apresentado ✓", bars:[{s:5,e:7,c:"done",check:true}], ms:[{w:6}]},
+ {l:"Verificação Meta — aprovada ✓", bars:[{s:5,e:8,c:"done",check:true}], ms:[{w:7}]},
+ {l:"Ajuste Dashboard (todas as notas)", bars:[{s:7,e:8.7,c:"active"}], ms:[{w:8}]},
+ {l:"Aguardando start (Alyne)", bars:[{s:8.7,e:12,c:"wait"}]},
+ {l:"Aquecimento + Disparos", bars:[{s:11,e:12,c:"plan"}]},
+ ],
+ milestones:[
+ {date:"22/06", t:"UAT entregue — 22/06 ✓"},
+ {date:"02/07", t:"Apresentação Dashboard Tableau ao time Poupatempo ✓"},
+ {w:7, t:"Meta aprovou toda a documentação submetida pela Alyne e time ✓"},
+ {date:"24/07", t:"Entrega do Dashboard ajustado (todas as notas) → Tabela SUS pronta, aguardando start da Alyne"},
+ ]
+ },
+ kpis:[
+ {v:"✓ Meta", l:"toda a documentação submetida pela Alyne e time aprovada", c:"green"},
+ {v:"24/07", l:"entrega do Dashboard ajustado — todas as notas (não só nota 10)", c:"blue"},
+ {v:"Pronta", l:"após o ajuste — aguardando start por parte da Alyne", c:"amber"},
+ ],
+ statusAtual:[
+ "📅 <b>Semana 10/07–16/07:</b> a <b>Meta aprovou toda a documentação</b> de verificação do WhatsApp Business submetida pela Alyne e time. ✓",
+ "📊 <b>Dashboard Tabela SUS em ajuste</b>, com base no pedido do time da Alyne: visualizar não só as pessoas que deram nota 10, mas também as que deram outras notas. <b>Entrega prevista: 24/07</b>.",
+ "Após o ajuste do dashboard, <b>Tabela SUS pronta — aguardando o start por parte da Alyne</b>.",
+ "🏆 <b>Destaque de entrega</b>: UAT realizado em <b>22/06</b> em tempo recorde — demonstração do potencial de agilidade do Marketing Cloud para soluções de saúde pública.",
+ "Dashboard Tableau apresentado em <b>02/07</b> ao time Poupatempo. Será alimentado com dados reais após o start dos disparos.",
+ "Estratégia de disparos com <b>crescimento exponencial</b> preparada e pronta para ativação imediata após o start.",
+ ],
+ cronograma:[
+ {t:"Setup no Marketing Cloud", s:"Concluído", cls:"s-done"},
+ {t:"Build e Testes", s:"Concluído", cls:"s-done"},
+ {t:"UAT com time técnico Poupatempo", s:"Concluído · 22/06 ✓", cls:"s-done"},
+ {t:"Apresentação Dashboard Tableau (time Poupatempo)", s:"Realizada · 02/07 ✓", cls:"s-done"},
+ {t:"Verificação WhatsApp Business — Meta", s:"Aprovada ✓ · Alyne e time", cls:"s-done"},
+ {t:"Ajuste do Dashboard — todas as notas", s:"Entrega prevista · 24/07", cls:"s-prog"},
+ {t:"Tabela SUS pronta", s:"Após entrega de 24/07", cls:"s-prev"},
+ {t:"Start dos disparos", s:"Aguardando Alyne", cls:"s-wait"},
+ ],
+ entregas:[
+ {t:"✅ Verificação Meta Aprovada", items:["Toda a documentação submetida pela Alyne e time aprovada pela Meta","Canal WhatsApp Business desbloqueado para a operação de disparos"]},
+ {t:"📊 Dashboard Tabela SUS", items:["Apresentado em 02/07 ao time Poupatempo","Em ajuste a pedido do time da Alyne: visualização de todas as notas, não apenas nota 10","Entrega prevista para 24/07","Alimentado com dados reais após o start"]},
+ {t:"✅ UAT Entregue em Tempo Recorde", items:["Realizado em 22/06 — dentro do prazo","Demonstração da agilidade do Marketing Cloud","Solução pronta para disparo imediato"]},
+ {t:"Estratégia de Disparos (pronta)", items:["Crescimento exponencial de volume","Configurada e aguardando ativação","Primeira campanha focada em mamografia"]},
+ ],
+ riscos:["Start dos disparos dependente da decisão da Alyne — sem data definida.","Janela de aquecimento antes do período eleitoral deve ser monitorada.","Eficácia da campanha depende de tempo de aquecimento adequado."],
+ mitigacao:["Projeto tecnicamente entregue, homologado e com verificação Meta aprovada — dependência restante é apenas o start da Alyne.","Ajuste do dashboard executado imediatamente após o pedido do time da Alyne, sem impacto na prontidão da solução.","Estratégia de disparos exponenciais pronta para execução imediata após o start."],
+ passos:["Concluir o ajuste do Dashboard até 24/07: visualização de todas as notas (não só nota 10).","Validar o dashboard ajustado com o time da Alyne.","Aguardar o start por parte da Alyne para iniciar os disparos.","Após o start: iniciar disparos com crescimento exponencial, monitorando a janela antes do período eleitoral."],
+ gp:"Leopoldo Donaire",
+ commit:"Entregar soluções que geram valor para a <b>saúde pública</b>, com foco no cidadão, dados de qualidade e evolução contínua."
+ },
+
+ /* ============ JORNADA CIN ============ */
+ {
+ id:"cin", tab:"Jornada CIN", name:"Jornada CIN — Carteira de Identificação Nacional",
+ sub:"V1 liberada para go-live (16/07) · HML assistida realizada 14–15/07 · aguardando publicação LWC pela Prodesp.",
+ status:"V1 LIBERADA PARA GO-LIVE", statusColor:"var(--green)",
+ meta:"HML assistida concluída em 14–15/07 · Posicionamento formal enviado em 16/07 · Plano de implantação a definir",
+ progress:94,
+ gantt:{
+ cols:15,
+ weeks:["S1 18/05","S2 25/05","S3 01/06","S4 08/06","S5 15/06","S6 22/06","S7 29/06","S8 06/07","S9 13/07","S10 20/07","S11 27/07","S12 03/08","S13 10/08","S14 17/08","S15 24/08"],
+ today:7,
+ rows:[
+ {l:"Discovery / Refinamento", bars:[{s:0,e:1,c:"blue"},{s:1,e:4,c:"late",check:true}]},
+ {l:"Desenho solução", bars:[{s:1,e:3,c:"blue"},{s:3,e:5,c:"dark",check:true}]},
+ {l:"Build (SOMA sub-agente)", bars:[{s:2,e:4,c:"blue"},{s:4,e:6,c:"done",check:true}]},
+ {l:"Testes Orquestração / Cenários Borda", bars:[{s:5,e:7,c:"active"},{s:7,e:9,c:"late",check:true}], ms:[{w:8}]},
+ {l:"Homologação assistida V1", bars:[{s:8,e:9,c:"done",check:true}], ms:[{date:"15/07"}]},
+ {l:"Deploy e Scale (Go-Live)", bars:[{s:9,e:10,c:"plan"}], ms:[{date:"20/07"}]},
+ ],
+ milestones:[
+ {date:"15/07", t:"HML Conjunta · 15/Jul"},
+ {date:"20/07", t:"Go-Live CIN · sem. 20/Jul"},
+ ]
+ },
+ kpis:[
+ {v:"100%", l:"regras de negócio validadas", c:"green"},
+ {v:"14–15/07", l:"homologação assistida concluída", c:"green"},
+ {v:"SOMA ✓", l:"arquitetura multiagentes consolidada — plano único", c:"green"},
+ ],
+ statusAtual:[
+ "📅 <b>Homologação assistida realizada em 14 e 15/07:</b> a Jornada CIN V1 foi validada em conjunto com o time Poupatempo, com execução dos fluxos e consolidação dos pontos observados durante as sessões.",
+ "Em <b>16/07</b>, foi enviado e-mail formal à Marina, à SGGD e ao time Poupatempo contendo o registro da homologação e o posicionamento conjunto da <b>OrangeDoor e da Salesforce</b> de que a Jornada CIN V1 está tecnicamente liberada para avanço ao go-live.",
+         "<b>Jornada CIN rodando como sub-agente SOMA</b> com regras de negócio 100% implementadas e validadas.",
+ "Os fluxos foram executados durante a homologação assistida sem identificação de comportamento impeditivo para a conclusão da jornada pelo cidadão.",
+ "As mensagens de indisponibilidade para eventuais intermitências dos endpoints do Poupatempo permanecem implementadas, protegendo a experiência do cidadão.",
+ "A <b>arquitetura multiagentes baseada no SOMA permanece consolidada</b>, com a Jornada CIN operando como subagente e preparada para implantação.",
+ "Os pontos adicionais levantados durante a homologação serão registrados para análise de viabilidade técnica, impacto e priorização, sem bloqueio da versão atual. O próximo movimento é a definição conjunta do plano de implantação e da janela de go-live.",
+ ],
+ cronograma:[
+ {t:"Jornada CIN como sub-agente no SOMA", s:"Concluído", cls:"s-done"},
+ {t:"Mensagens de indisponibilidade amigáveis", s:"Implementado", cls:"s-done"},
+ {t:"Testes integrados e cenários de borda", s:"Concluídos na HML assistida", cls:"s-done"},
+ {t:"Arquitetura multiagentes consolidada (plano único)", s:"Concluído ✓", cls:"s-done"},
+ {t:"Homologação assistida V1", s:"Concluída · 14 e 15/07", cls:"s-done"},
+ {t:"Formalização da homologação e posição técnica", s:"E-mail enviado em 16/07", cls:"s-done"},
+ {t:"Plano de implantação / Go-Live CIN", s:"Próximo passo com SGGD / Poupatempo / Prodesp", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"SOMA como fundação arquitetural", items:["CIN rodando como sub-agente","Padrão reutilizável para próximas jornadas"]},
+ {t:"Funcionalidades implementadas", items:["Mensagens de indisponibilidade amigáveis","Operação como subagente do SOMA","Fluxos validados na homologação assistida"]},
+ {t:"Homologação e posicionamento técnico", items:["Homologação assistida realizada em 14 e 15/07","Fluxos executados sem impedimento técnico para conclusão","E-mail formal enviado em 16/07 à Marina, SGGD e time Poupatempo","Posição conjunta OrangeDoor e Salesforce favorável ao go-live"]},
+ {t:"Próxima etapa", items:["Definir responsáveis e janela de implantação","Registrar ajustes adicionais para análise evolutiva","Planejar validação final e go-live com as áreas envolvidas"]},
+ ],
+ riscos:["Ausência de definição formal da janela e dos responsáveis pelo plano de implantação pode postergar o go-live, apesar da liberação técnica.","Eventuais intermitências dos endpoints do Poupatempo podem impactar a validação final e a operação da jornada.","Solicitações adicionais de experiência, se tratadas antes do go-live, exigiriam nova análise de impacto e testes regressivos."],
+ mitigacao:["Formalizar com SGGD, Poupatempo e Prodesp os responsáveis, a janela e as atividades do plano de implantação.","Manter as mensagens amigáveis de indisponibilidade já implementadas para proteger a experiência do cidadão.","Registrar solicitações adicionais para análise técnica e ciclo evolutivo, sem alterar a V1 nesta etapa final."],
+ passos:["Confirmar o recebimento e o entendimento do posicionamento formal enviado em 16/07.","Definir com SGGD, Poupatempo e Prodesp os responsáveis e a janela do plano de implantação.","Planejar a validação final da Jornada CIN V1 dentro da janela acordada.","Registrar os ajustes adicionais levantados na homologação para análise de viabilidade técnica e priorização.","Executar o go-live após a conclusão das dependências e aprovações do plano de implantação."],
+ gp:"Caio Achcar",
+ commit:"Entregar jornadas digitais <b>inteligentes, escaláveis e centradas no cidadão</b>, com agilidade e colaboração entre times."
+ },
+
+ /* ============ POUPINHA & ZELADORIA ============ */
+ {
+ id:"poupinha", tab:"Poupinha & Zeladoria", name:"Poupinha & Zeladoria",
+ sub:"V1 em produção · V1.8 com Voice pronta para HML conjunta · V2 em especificação funcional.",
+ status:"V1 EM PRODUÇÃO · V1.8 PRONTA PARA HML · V2 EM ESPECIFICAÇÃO", statusColor:"var(--green)",
+ meta:"Produção estável · Métricas semanais executivas ativas · HML V1.8 possível a partir de 20/07 · V2 com cronograma mantido",
+ progress:64,
+ twin:true,
+ gantt:{
+ cols:9,
+ weeks:["S1 02/07","S2 09/07","S3 16/07","S4 23/07","S5 30/07","S6 06/08","S7 13/08","S8 20/08","S9 27/08"],
+ today:2,
+ rows:[
+ {l:"V1 Produção / Sustentação", bars:[{s:0,e:9,c:"active"}]},
+ {l:"V1.8 — Voice + ajustes", bars:[{s:0,e:2.5,c:"done",check:true}]},
+ {l:"V1.8 — HML conjunta", bars:[{s:2.5,e:3.7,c:"late"}], ms:[{w:3}]},
+ {l:"V1.8 — Ajustes / aprovação", bars:[{s:3.5,e:4.8,c:"plan"}]},
+ {l:"V2 — Especificação funcional", bars:[{s:1.5,e:3.5,c:"active"}]},
+ {l:"V2 — Aprovação e fechamento escopo", bars:[{s:3.4,e:4.5,c:"plan"}], ms:[{w:4}]},
+ {l:"V2 — Build / Test / UAT", bars:[{s:4.4,e:6.7,c:"plan"}]},
+ {l:"V2 — Go-Live", bars:[{s:6.7,e:8,c:"plan"}], ms:[{w:7}]},
+ ],
+ milestones:[
+ {date:"16/07", t:"Voice testado e validado internamente na V1.8"},
+ {date:"20/07", t:"Possível início da homologação conjunta da V1.8, após fechamento de Check-in e Jornada CIN"},
+ {w:4, t:"V2 — envio da especificação funcional para aprovação e fechamento do escopo"},
+ {w:7, t:"V2 — cronograma de entrega mantido, com possibilidade de antecipação"},
+ ]
+ },
+ kpis:[
+ {v:"221.760", l:"Interações na 1ª quinzena de julho", c:"green"},
+ {v:"V1.8", l:"Voice validado e pronta para HML", c:"blue"},
+ {v:"V2", l:"Especificação funcional em fechamento", c:"amber"},
+ ],
+ twinA:{
+ name:"Poupinha V1 / V1.8 / V2", status:"PRODUÇÃO ESTÁVEL · V1.8 PRONTA PARA HML · V2 EM ESPECIFICAÇÃO", cls:"s-prog",
+ meta:"V1 em produção · V1.8 com Voice validado · HML possível a partir de 20/07 · V2 com cronograma preservado",
+ statusAtual:[
+ "O <b>Poupinha V1 permanece em produção</b>, com acompanhamento contínuo de estabilidade, incidentes, chamados e correções de sustentação.",
+ "A gestão está organizada em três frentes relacionadas: <b>V1 em produção e sustentação</b>, <b>V1.8 pronta para homologação</b> e <b>V2 em fechamento da especificação funcional</b>.",
+"As <b>métricas operacionais do Poupinha</b> passam a ser consolidadas e enviadas <b>toda quinta-feira</b>, a pedido do <b>Sr. Subsecretário</b>, com acompanhamento executivo da operação em produção.",
+ "O módulo <b>Voice já foi disponibilizado, testado e validado internamente</b>, não havendo pendência técnica interna para o início da homologação da V1.8.",
+ "Assim que forem concluídas as homologações do <b>Check-in Online V1</b> e da <b>Jornada CIN V1</b>, possivelmente em <b>20/07</b> e condicionadas à publicação do pacote LWC pela Prodesp, poderá ser iniciada a homologação conjunta da V1.8 com os times Poupatempo e Prodesp.",
+ "A V1.8 contempla ajustes identificados anteriormente, incluindo correções relacionadas a bugs informados por meio do <b>Portal de Demandas Digital</b>.",
+ "A <b>V2 já ultrapassou a fase de ideação</b> e está agora na etapa de fechamento do documento de especificação funcional.",
+ "Após a conclusão do documento, ele será encaminhado para aprovação formal, permitindo o fechamento do escopo da V2 e o avanço para implementação, testes e homologação.",
+ "Com o andamento atual, o cronograma da V2 permanece preservado, com possibilidade de entrega antecipada caso as aprovações e etapas seguintes ocorram sem impedimentos.",
+ ],
+ cronograma:[
+ {t:"Poupinha V1 em produção", s:"Operação contínua", cls:"s-done"},
+ {t:"Sustentação, incidentes e Portal de Demandas", s:"Em acompanhamento", cls:"s-prog"},
+ {t:"V1.8 — módulo Voice", s:"Testado e validado internamente ✓", cls:"s-done"},
+ {t:"V1.8 — ajustes e correções de bugs", s:"Pacote preparado para homologação", cls:"s-done"},
+ {t:"V1.8 — homologação conjunta", s:"Possível início em 20/07 · após Check-in/CIN", cls:"s-plan"},
+ {t:"V1.8 — ajustes finais e aprovação", s:"Após homologação conjunta", cls:"s-plan"},
+ {t:"V2 — ideação", s:"Concluída ✓", cls:"s-done"},
+ {t:"V2 — especificação funcional", s:"Em fechamento", cls:"s-prog"},
+ {t:"V2 — aprovação e fechamento do escopo", s:"Próxima etapa", cls:"s-plan"},
+ {t:"V2 — implementação, testes e UAT", s:"Cronograma mantido", cls:"s-plan"},
+ {t:"V2 — entrega / go-live", s:"Previsão mantida · possível antecipação", cls:"s-plan"},
+ ],
+ riscos:["O início da homologação da V1.8 depende do fechamento das homologações do Check-in Online V1 e Jornada CIN V1 e da publicação do pacote LWC pela Prodesp.","A homologação da V1.8 poderá identificar necessidade de ajustes adicionais nos itens e bugs consolidados a partir do Portal de Demandas Digital.","A manutenção do cronograma da V2 depende da conclusão e aprovação tempestiva da especificação funcional e do fechamento formal do escopo."],
+ mitigacao:["Manter a V1.8 tecnicamente pronta e organizar antecipadamente os artefatos e cenários para iniciar a homologação assim que as dependências anteriores forem concluídas.","Executar a homologação conjunta com Poupatempo e Prodesp, registrando evidências, ajustes e aprovações de forma controlada.","Concluir a especificação funcional da V2, submetê-la rapidamente à aprovação e preservar o ciclo completo de implementação, testes e homologação."],
+ },
+ twinB:{
+ name:"Zeladoria", status:"BAIXA PRIORIDADE", cls:"s-wait",
+ meta:"Retomada condicionada à priorização e à disponibilidade de capacidade",
+ statusAtual:[
+ "Projeto mantido em <b>baixa prioridade</b> neste momento.",
+ "Não há ações relevantes ou desenvolvimento ativo no período.",
+ "A capacidade do time está concentrada nas entregas prioritárias de Buscador, Check-in Online, Jornada CIN, Mamografia e evolução do Poupinha.",
+ "A arquitetura <b>multiagente — SOMA e Agentforce</b> permanece válida como referência para uma futura retomada.",
+ ],
+ cronograma:[
+ {t:"Conceito da V2 definido", s:"Concluído", cls:"s-done"},
+ {t:"Estratégia multiagente validada", s:"Concluído", cls:"s-done"},
+ {t:"Retomada do desenvolvimento", s:"Aguardando priorização", cls:"s-wait"},
+ {t:"Cronograma e Go-Live", s:"A definir após retomada", cls:"s-plan"},
+ ],
+ riscos:["Dependência de priorização frente aos projetos atualmente críticos.","Ausência de capacidade dedicada para retomada imediata."],
+ mitigacao:["Manter os conceitos e a arquitetura já definidos para reduzir o tempo de retomada.","Reavaliar prioridade e capacidade após o fechamento das entregas críticas em andamento."],
+ },
+ metricsSection:{
+ title:"Métricas operacionais do Poupinha V1 — 1ª quinzena de julho",
+ summary:[
+ "<b>Resumo Executivo.</b> Durante o período de <b>01 a 15 de julho de 2026</b>, o <b>Poupinha V1</b> manteve operação estável, registrando <b>221.760 interações</b> com os cidadãos e preservando a disponibilidade da solução ao longo do período.",
+ "As atividades concentraram-se no <b>monitoramento contínuo da operação em produção</b>, acompanhamento dos indicadores de desempenho, tratamento das ocorrências identificadas e sustentação da plataforma.",
+ "As ocorrências registradas permaneceram predominantemente relacionadas às <b>integrações da API de Agendamento da Prodesp</b>, comportamento já conhecido e monitorado pela equipe técnica, sem impacto significativo na continuidade do serviço.",
+ "O período também apresentou <b>elevado índice de satisfação dos usuários</b>, refletido nas avaliações registradas pelo NPS, além da manutenção dos principais indicadores operacionais dentro do comportamento esperado para a solução."
+ ],
+ tiles:[
+ {label:"Sessões / Interações", value:"221.760"},
+ {label:"Autenticações", value:"79.385", sub:"35,80% do total"},
+ {label:"Abandono de Autenticação", value:"50.288", sub:"22,68% do total"},
+ {label:"Carta de Serviço", value:"105.742"},
+ {label:"Agendamentos com Sucesso", value:"31.485"},
+ {label:"Reagendamentos com Sucesso", value:"3.536"},
+ {label:"Cancelamentos com Sucesso", value:"2.588"},
+ {label:"Manifestações", value:"15.590"},
+ {label:"NPS (Respostas)", value:"16.047"},
+ {label:"Total de Erros", value:"1.324", sub:"0,60% do total"},
+ ],
+ bars:[
+ {label:"Interações", value:"221.760", h:100, color:"blue"},
+ {label:"Autenticações", value:"79.385", h:35.8, color:"green"},
+ {label:"Aband. Autent.", value:"50.288", h:22.68, color:"orange"},
+ {label:"Carta de Serviço", value:"105.742", h:47.7, color:"purple"},
+ {label:"Agendamentos", value:"31.485", h:14.2, color:"green"},
+ {label:"Reagendamentos", value:"3.536", h:1.6, color:"blue"},
+ {label:"Cancelamentos", value:"2.588", h:1.2, color:"orange"},
+ {label:"Manifestações", value:"15.590", h:7.0, color:"purple"},
+ {label:"NPS", value:"16.047", h:7.2, color:"green"},
+ {label:"Erros", value:"1.324", h:0.6, color:"red"},
+ ]
+ },
+ gp:"Laura",
+ commit:"Manter o Poupinha <b>estável em produção</b>, homologar a V1.8 com segurança, reportar semanalmente os indicadores executivos solicitados e concluir o escopo da V2 preservando o cronograma e a qualidade das entregas."
+ },
+
+ /* ============ DETRAN ============ */
+ {
+ id:"detran", tab:"Detran SP", name:"Detran SP",
+ sub:"Projeto pausado · aguardando alinhamento SGGD e Prodesp · Detran possui canal WhatsApp próprio.",
+ status:"PROJETO PAUSADO — AGUARDANDO ALINHAMENTO SGGD/PRODESP", statusColor:"var(--red)",
+ meta:"Pausado · Aguardando alinhamento com SGGD e Prodesp para definição de atuação",
+ progress:20,
+ gantt:{
+   cols:8,
+   weeks:["S1 22/Jun","S2 29/Jun","S3 06/Jul","S4 13/Jul","S5 20/Jul","S6 27/Jul","S7 03/Ago","S8 10/Ago"],
+   today:3,
+   rows:[
+     {l:"Discovery — PAUSADO", bars:[{s:0,e:2,c:"wait"}]},
+     {l:"Desenho de Solução (suspenso)", bars:[{s:1,e:3,c:"wait"}]},
+     {l:"Desenvolvimento (suspenso)", bars:[{s:3,e:5,c:"wait"}]},
+     {l:"Testes (suspenso)", bars:[{s:4,e:6,c:"wait"}]},
+     {l:"UAT / Homologação (suspenso)", bars:[{s:6,e:7,c:"wait"}]},
+     {l:"Go-Live (a redefinir)", bars:[{s:7,e:8,c:"wait"}]},
+   ],
+   milestones:[
+     {w:3, t:"⚠ Projeto pausado — cronograma será redefinido após alinhamento com SGGD e Prodesp"},
+   ]
+ },
+ kpis:[
+ {v:"Pausado", l:"aguardando alinhamento com time SGGD e Prodesp para definição de atuação", c:"red"},
+ {v:"Discovery", l:"agenda informal com Denis (SGGD) e Salesforce", c:"blue"},
+ {v:"Workshop", l:"executivo previamente realizado", c:"green"},
+ ],
+ statusAtual:[
+ "📅 <b>Semana 10/07–16/07:</b> projeto <b>pausado</b> — aguardando alinhamento com o time SGGD e Prodesp para definição de atuação. Ponto de atenção: Detran possui canal de WhatsApp próprio e demonstrou resistência — escopo de apoio a ser alinhado.",
+         "Projeto em <b>standby aguardando alinhamento com SGGD e Prodesp</b>.",
+ "Cronograma e escopo do projeto <b>dependentes do alinhamento com SGGD/Prodesp</b> — sem datas confirmadas.",
+ "<b>Reunião com SGGD e Prodesp</b> em agendamento para definir itens de apoio viáveis considerando o contexto do Detran.",
+ "Material executivo e casos de uso do workshop anterior disponíveis para retomada.",
+ "Objetivo: sistema simples de interface WhatsApp para <b>lembretes de agendamento</b>.",
+ ],
+ cronograma:[
+ {t:"Workshop Executivo realizado", s:"Concluído", cls:"s-done"},
+ {t:"Casos de uso iniciais identificados", s:"Concluído", cls:"s-done"},
+ {t:"Projeto pausado — aguardando alinhamento SGGD/Prodesp", s:"Pausado", cls:"s-wait"},
+ {t:"Reunião com SGGD e Prodesp (definir escopo)", s:"Em agendamento", cls:"s-wait"},
+ {t:"Definição de escopo detalhado", s:"Aguardando", cls:"s-wait"},
+ {t:"Planejamento da próxima fase", s:"Aguardando", cls:"s-wait"},
+ ],
+ entregas:[
+ {t:"Workshop Executivo", items:["Conduzido com Detran, Poupatempo, Prodesp e SGGD","Levantamento inicial realizado"]},
+ {t:"Casos de uso", items:["Oportunidades já identificadas","Priorização preliminar construída"]},
+ {t:"Discovery Informal", items:["Em agendamento com Denis (SGGD) e Salesforce","Retomada da estruturação do projeto"]},
+ {t:"Próximos passos", items:["Validação dos casos de uso prioritários","Refinamento do escopo detalhado"]},
+ ],
+ riscos:["Agenda de Discovery ainda não confirmada.","Indefinição do escopo da próxima fase."],
+ mitigacao:["Material executivo já consolidado para retomada rápida.","Casos de uso previamente identificados e priorizados.","Prontidão para início imediato após Discovery."],
+ passos:["Confirmar e realizar Discovery informal com Denis (SGGD) e Salesforce.","Validar casos de uso prioritários.","Refinar escopo detalhado.","Construir roadmap executivo.","Iniciar fase de detalhamento técnico."],
+ gp:"Leopoldo Donaire",
+ commit:"Apoiar a <b>transformação digital dos serviços públicos</b> com foco em eficiência, inovação e melhor experiência para o cidadão."
+ },
+
+ /* ============ OBSERVABILIDADE ============ */
+ {
+ id:"observabilidade", tab:"Observabilidade", name:"Observabilidade Global",
+ sub:"Levantamento de indicadores concluído · reunião Discovery com Poupatempo 17/Jul · construção do painel a partir de 23/Jul.",
+ status:"EM DISCOVERY", statusColor:"var(--amber)",
+ meta:"Discovery em andamento desde Jun/2026 — aguardando acesso ao BI do Poupatempo para avançar",
+ progress:25,
+ gantt:{
+   cols:9,
+   weeks:["S1 15/Jun","S2 22/Jun","S3 29/Jun","S4 06/Jul","S5 13/Jul","S6 20/Jul","S7 27/Jul","S8 03/Ago","S9 10/Ago"],
+   today:4,
+   rows:[
+     {l:"Discovery / Estruturação", bars:[{s:0,e:4,c:"active"}]},
+     {l:"① Aguardando acesso BI Poupatempo ⚠", bars:[{s:2,e:6,c:"wait"}]},
+     {l:"② KPIs estratégicos (paralelo — libera construção)", bars:[{s:4,e:6,c:"active"}]},
+     {l:"③.1 Desenvolvimento — Construção painel", bars:[{s:6,e:7,c:"plan"}]},
+     {l:"③.2 Testes — Construção painel", bars:[{s:7.14,e:7.8,c:"plan"}]},
+     {l:"③.3 OAT — Aceite Operacional", bars:[{s:7.8,e:8.14,c:"plan"}]},
+     {l:"④ Go-Live painel (estimado)", bars:[{s:8.14,e:8.6,c:"plan"}], ms:[{date:"07/08"}]},
+   ],
+   milestones:[
+     {date:"30/Jun", t:"Pedido de acesso BI formalizado (SGGD) ✓"},
+     {date:"17/07", t:"Reunião de Discovery com o Poupatempo · 17/Jul"},
+     {date:"23/07", t:"Convergência ①+② · início da Construção · 23/Jul"},
+     {date:"07/08", t:"Go-Live Painel · 07/Ago"},
+   ]
+ },
+ kpis:[
+ {v:"Estratégica", l:"foco em valor ao cidadão e sucesso do cliente", c:"blue"},
+ {v:"Tamiris", l:"GP de Observabilidade — OrangeDoor", c:"green"},
+ {v:"07/Jul✓", l:"reunião Prodesp realizada · SGGD atuando pela liberação do BI", c:"amber"},
+ ],
+ statusAtual:[
+ "Observabilidade estruturada em <b>três frentes complementares</b>: <b>estratégica</b> (valor e sucesso do cliente), <b>de negócio</b> (indicadores por jornada) e <b>técnica</b> (por projeto — gerida separadamente). A Observabilidade Global foca nas duas primeiras.",
+ "📅 <b>Semana 09/07–16/Jul:</b> levantamento e cruzamento com os indicadores priorizados pelo Poupatempo <b>concluídos</b> — já é possível cobrir parte deles com dados disponíveis hoje, na cadência D-1, suficiente para iniciar o MVP. <b>Reunião de Discovery com o Poupatempo agendada para 17/Jul</b>, para apresentar resultados e alinhar indicadores pendentes. SGGD continua atuando junto à Prodesp para liberação dos acessos ao BI.",
+         "<b>Tamiris (OrangeDoor)</b> — GP responsável por todas as frentes de observabilidade, garantindo visão integrada entre os projetos.",
+ "<b>⏳ Aguardando acesso ao BI do Poupatempo</b>: SGGD formalizou os pedidos em 30/06. No aguardo da liberação para início da construção do painel executivo.",
+ "<b>Análise da API de Eventos em andamento</b>: time mapeando e identificando os eventos disponíveis de forma a manter progresso da frente enquanto os acessos ao BI são aguardados.",
+ "Observabilidade técnica específica de cada projeto (ex: Buscador) tratada como <b>iniciativa segmentada própria</b>, fora do escopo desta frente global.",
+ ],
+ cronograma:[
+ {t:"Alinhamento com GP de Observabilidade (OrangeDoor)", s:"Concluído ✓", cls:"s-done"},
+ {t:"Segmentação das frentes (estratégica, negócio, técnica)", s:"Definido", cls:"s-done"},
+ {t:"Formalização dos pedidos de acesso ao BI (SGGD)", s:"Concluído · 30/06", cls:"s-done"},
+ {t:"Levantamento e cruzamento de indicadores com Poupatempo", s:"Concluído ✓", cls:"s-done"},
+ {t:"Reunião de Discovery — Observabilidade Global", s:"17/Jul", cls:"s-prev"},
+ {t:"② Definição KPIs estratégicos (paralelo ao item ①)", s:"Converge em 22–23/Jul", cls:"s-plan"},
+ {t:"① + ② Convergência — início da Construção", s:"23/Jul", cls:"s-plan"},
+ {t:"③.1 Desenvolvimento — Construção painel", s:"23/Jul – 30/Jul", cls:"s-plan"},
+ {t:"③.2 Testes — Construção painel", s:"31/Jul – 04/Ago", cls:"s-plan"},
+ {t:"③.3 OAT — Aceite Operacional", s:"05/Ago – 06/Ago", cls:"s-plan"},
+ {t:"④ Go-Live painel executivo", s:"07/Ago (estimado)", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"Estruturação e Governança", items:["GP de Observabilidade definida (OrangeDoor)","Três frentes segmentadas: estratégica, negócio, técnica","Observabilidade global focada em valor e sucesso do cliente"]},
+ {t:"Pendências Críticas", items:["Acesso ao BI do Poupatempo (formalizado 30/06 — aguardando)","Ampliação do payload da API de Eventos","Definição de KPIs estratégicos com SGGD"]},
+ {t:"Cronograma em Cascata", items:["① Acesso BI + ② KPIs em paralelo → convergem 23/Jul","③.1 Dev: 23/Jul–30/Jul  ③.2 Testes: 31/Jul–04/Ago","③.3 OAT: 05–06/Ago → ④ Go-Live: 07/Ago","Datas sujeitas a revisão conforme retorno da Prodesp"]},
+ {t:"Observabilidade Técnica", items:["Gerida por projeto — fora do escopo global","Iniciativa dedicada ao Buscador em estruturação (ver Ideação)","Cada projeto responsável por sua camada técnica"]},
+ ],
+ riscos:["Liberação do acesso ao BI do Poupatempo com prazo indefinido — bloqueia construção do painel executivo.","API de Eventos com payload insuficiente para indicadores estratégicos completos."],
+ mitigacao:["SGGD atuando ativamente junto à Prodesp — apoio formal para liberação dos acessos.","Análise da API de Eventos mantém progresso da frente enquanto acesso ao BI é aguardado."],
+ passos:["Acompanhar junto à Prodesp, com apoio da SGGD, a liberação dos acessos ao BI do Poupatempo.","Dar continuidade ao mapeamento da API de Eventos em paralelo (mantém progresso da frente).","Definir KPIs estratégicos e de sucesso do cliente (paralelo ao item ① — converge em 22–23/Jul).","Iniciar construção do painel em 23/Jul: Dev (23–30/Jul) → Testes (31/Jul–04/Ago) → OAT (05–06/Ago) → Go-Live 07/Ago."],
+ gp:"Tamiris Ferreira",
+ commit:"Demonstrar o <b>valor e impacto das iniciativas de IA</b> para o cidadão e para os gestores públicos, com visibilidade estratégica e dados de sucesso."
+ },
+
+ /* ============ AGENTE DE SATISFAÇÃO ============ */
+ {
+ id:"satisfacao", tab:"Agente de Satisfação", name:"Agente de Satisfação do Cliente",
+ sub:"4 cenários de NPS definidos · arquitetura com Salesforce 20/Jul · apresentação ao cliente 23–24/Jul.",
+ status:"IDEAÇÃO FECHADA — ARQUITETURA EM FECHAMENTO", statusColor:"var(--blue)",
+ meta:"Nova ideação fechada (4 cenários) · Arquitetura: 20/07 · Apresentação Denis e time: 23 ou 24/07",
+ progress:30,
+ gantt:{
+   cols:9,
+   weeks:["S1 22/Jun","S2 29/Jun","S3 06/Jul","S4 13/Jul","S5 20/Jul","S6 27/Jul","S7 03/Ago","S8 10/Ago","S9 17/Ago"],
+   today:3,
+   rows:[
+     {l:"Discovery / Refinamento de Escopo", bars:[{s:0,e:3,c:"done",check:true}]},
+     {l:"Fechamento nova ideação (4 cenários)", bars:[{s:2,e:4,c:"done",check:true}]},
+     {l:"Fechamento arquitetura (SF) · 20/07", bars:[{s:4,e:4.5,c:"active"}], ms:[{w:4}]},
+     {l:"Apresentação Denis e time · 23–24/07", bars:[{s:4.4,e:5,c:"plan"}]},
+     {l:"Desenvolvimento (estimado)", bars:[{s:5,e:7,c:"plan"}]},
+     {l:"Testes / UAT (estimado)", bars:[{s:6,e:8,c:"plan"}]},
+     {l:"Go-Live (estimado)", bars:[{s:8,e:9,c:"plan"}], ms:[{w:8}]},
+   ],
+   milestones:[
+     {date:"30/Jun", t:"Apresentação stakeholders · 30/Jun ✓"},
+     {w:3, t:"Fechamento da nova ideação — 4 cenários de disparo ✓"},
+     {date:"20/07", t:"Fechamento da arquitetura com o time Salesforce (Agentforce + MC + Automação + Tableau)"},
+     {date:"23–24/07", t:"Apresentação para Denis e time (conforme disponibilidade de agendas)"},
+     {w:8, t:"Go-Live estimado (~17/Ago)"},
+   ]
+ },
+ kpis:[
+ {v:"4", l:"cenários de disparo fechados na nova ideação ✓", c:"green"},
+ {v:"20/07", l:"fechamento da arquitetura com o time Salesforce", c:"blue"},
+ {v:"23–24/07", l:"apresentação para Denis e time (conforme agendas)", c:"amber"},
+ ],
+ statusAtual:[
+ "📅 <b>Semana 10/07–16/07:</b> fechamento da nova ideação contemplando os <b>4 cenários de disparo</b>: falha na autenticação Gov.BR · abandono no fluxo de agendamento · falha no check-in (compartilhamento de localização) · NPS geral para conclusões bem-sucedidas.",
+ "<b>20/07</b>: fechamento da arquitetura com o time Salesforce, utilizando <b>Agentforce, Marketing Cloud, Automação e Tableau</b> — com dashboard de cada ação.",
+ "<b>Apresentação para Denis e time</b>: previsão <b>23 ou 24/07</b>, conforme disponibilidade de agendas.",
+ "Base consolidada anteriormente: escopo em 3 etapas (NPS otimizado, Orientação Gov.BR, Dashboard), apresentação e prototipagem realizadas em <b>30/Jun</b> com todos os stakeholders e <b>modelo híbrido aprovado</b> (numeração + texto livre).",
+ "Três trilhas de pesquisa apresentadas: <b>Autenticação</b> (abandono pré-login), <b>Carta de Serviço</b> (quem consulta mas não agenda) e <b>Agendamento</b> (abandono durante o processo).",
+ "Evidência relevante: <b>90% dos usuários que iniciam o agendamento conseguem concluir</b> — principal barreira é a autenticação Gov.BR.",
+ "<b>Ponto de atenção técnico</b>: gatilho de inatividade de 5 minutos não disponível no WhatsApp (apenas no web) — a validar no fechamento de arquitetura de 20/07.",
+ ],
+ cronograma:[
+ {t:"Prototipagem em Figma concluída", s:"Concluído", cls:"s-done"},
+ {t:"Apresentação com todos os stakeholders", s:"Concluído · 30/06", cls:"s-done"},
+ {t:"Modelo híbrido aprovado", s:"Concluído · 30/06", cls:"s-done"},
+ {t:"Escopo em 3 etapas definido", s:"Concluído ✓", cls:"s-done"},
+ {t:"Fechamento da nova ideação — 4 cenários", s:"Concluído ✓", cls:"s-done"},
+ {t:"Fechamento da arquitetura com o time Salesforce", s:"20/07", cls:"s-prev"},
+ {t:"Apresentação para Denis e time", s:"23 ou 24/07 · conforme agendas", cls:"s-prev"},
+ {t:"Início do desenvolvimento", s:"Após apresentação", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"Nova Ideação — 4 Cenários de Disparo", items:["Falha na autenticação Gov.BR","Abandono no fluxo de agendamento","Falha no check-in (compartilhamento de localização)","NPS geral para conclusões bem-sucedidas"]},
+ {t:"Arquitetura — Fechamento 20/07", items:["Agentforce — orquestração do agente","Marketing Cloud — disparos das pesquisas","Automação — fluxos de acionamento por cenário","Tableau — dashboard de cada ação"]},
+ {t:"Definições Aprovadas", items:["Modelo híbrido: numeração + texto livre","Pesquisas contextuais (não genéricas)","3 trilhas: Autenticação, Carta de Serviço, Agendamento"]},
+ {t:"Próximos Marcos", items:["20/07 — fechamento da arquitetura com o time Salesforce","23 ou 24/07 — apresentação para Denis e time (conforme agendas)","Início do desenvolvimento na sequência"]},
+ ],
+ riscos:["Pesquisa muito extensa pode gerar baixa taxa de resposta e insatisfação do cidadão.","API de Eventos não retorna nome do usuário — apenas e-mail e telefone.","Disponibilidade de agendas de Denis e time pode deslocar a apresentação (prevista para 23 ou 24/07)."],
+ mitigacao:["Refinamento do modelo com possível amostragem e mescla entre pesquisa e oferta de soluções contextuais.","Avaliar viabilidade técnica de expor nome na API de Eventos (arquiteto Salesforce) — pauta do fechamento de 20/07.","Duas datas propostas (23 e 24/07) para acomodar as agendas de Denis e time."],
+ passos:["Fechar a arquitetura com o time Salesforce em 20/07 — Agentforce, Marketing Cloud, Automação e Tableau (dashboard de cada ação).","Confirmar a agenda da apresentação para Denis e time (23 ou 24/07).","Preparar o material da apresentação com os 4 cenários e os dashboards por ação.","Definir o roadmap de desenvolvimento após a apresentação."],
+ commit:"Entregar um <b>agente de satisfação centrado no cidadão</b>, que transforma o feedback em inteligência para melhoria contínua dos serviços públicos."
+ },
+
+ /* ============ CONTINGÊNCIA ============ */
+ {
+ id:"contingencia", tab:"Contingência", name:"Mensagens de Contingência",
+ sub:"MVP V1 definido (2 cenários via WhatsApp) · arquitetura Salesforce fecha 16/Jul · documentação para aprovação até 17/Jul.",
+ status:"MVP V1 DEFINIDO — ARQUITETURA EM FECHAMENTO", statusColor:"var(--blue)",
+ meta:"Fechamento arquitetura: 16/07 16h · Envio MVP p/ aprovação: 17/07 · Start dev: sem. 20/07 (pós-aprovação)",
+ progress:15,
+ gantt:{
+   cols:8,
+   weeks:["S1 29/Jun","S2 06/Jul","S3 13/Jul","S4 20/Jul","S5 27/Jul","S6 03/Ago","S7 10/Ago","S8 17/Ago"],
+   today:2,
+   rows:[
+     {l:"Discovery / Desenho de Solução", bars:[{s:0,e:2,c:"done",check:true}]},
+     {l:"Apresentação ideação à Karine · 13/07", bars:[{s:2,e:2.5,c:"done",check:true}]},
+     {l:"Fechamento arq. + cronograma V1 · 16/07", bars:[{s:2.4,e:2.9,c:"active"}]},
+     {l:"Envio MVP V1 (17/07) + aprovação", bars:[{s:2.6,e:3.4,c:"plan"}], ms:[{w:2}]},
+     {l:"Desenvolvimento (start sem. 20/07)", bars:[{s:3,e:5,c:"plan"}]},
+     {l:"Testes (estimado)", bars:[{s:4,e:6,c:"plan"}]},
+     {l:"UAT / Homologação (estimado)", bars:[{s:6,e:7.5,c:"plan"}]},
+     {l:"Go-Live (estimado)", bars:[{s:7.5,e:8,c:"plan"}], ms:[{w:7}]},
+   ],
+   milestones:[
+     {w:2, date:"13/07", t:"Apresentação da ideação à Karine e time ✓"},
+     {w:2, date:"16/07", t:"Fechamento da arquitetura Salesforce + cronograma V1 (16h)"},
+     {w:2, date:"17/07", t:"Envio do MVP + arquitetura + documentação da V1 para aprovação"},
+     {w:3, t:"Start do desenvolvimento · sem. 20/07 (pós-aprovação da Karine)"},
+     {w:7, date:"~17/Ago", t:"Go-Live estimado — a revisar após cronograma de 16/07"},
+   ]
+ },
+ kpis:[
+ {v:"13/07", l:"ideação apresentada à Karine e time ✓", c:"green"},
+ {v:"2", l:"cenários de disparo no MVP V1 (com e sem previsão de retorno)", c:"blue"},
+ {v:"17/07", l:"envio do MVP + arquitetura + documentação p/ aprovação", c:"amber"},
+ ],
+ statusAtual:[
+ "📅 <b>Semana 10/07–16/07:</b> apresentação da ideação para a Karine e time realizada em <b>13/07</b>. ✓",
+ "<b>Hoje (16/07), às 16h</b>: fechamento da arquitetura Salesforce + definição de cronograma com base na V1. Decisão técnica API de Eventos vs API de Agenda a ser consolidada nesta sessão.",
+ "<b>MVP da V1 definido</b> — 2 cenários de disparo de mensagens: <b>1️⃣ Indisponibilidade COM previsão de retorno</b> (manutenção programada com início e fim definidos) e <b>2️⃣ Indisponibilidade SEM previsão de retorno</b> (problemas inesperados: queda de energia, inundação, falha de sistema).",
+ "Cenário 1 (COM previsão): mensagem com serviço(s) afetado(s), unidade e endereço, data/horário do agendamento, motivo da manutenção, início e previsão de retorno. Cidadão escolhe <b>✅ manter o atendimento</b> ou <b>🔄 fazer novo agendamento</b> (cancelamento + novo). Inclui <b>mensagem pós-estabilização</b> confirmando normalização e manutenção do agendamento.",
+ "Cenário 2 (SEM previsão): mesmas informações, sem previsão de retorno e com <b>tom mais empático</b> para mitigar a frustração. <b>Sem opção de manter</b> — apenas reagendamento obrigatório. Público-alvo: <b>apenas cidadãos com agendamentos dentro do período de indisponibilidade</b>.",
+ "Canais de envio: <b>📱 WhatsApp (principal)</b> + <b>📧 e-mail (secundário)</b>. 🔔 Push notification prototipado, mas fora da V1.",
+ "<b>Objetivo 17/07</b>: envio de todo o MVP, arquitetura e documentação da V1 para aprovação da Karine e time.",
+ "<b>Objetivo semana de 20/07</b>: após aprovação da Karine, start do desenvolvimento.",
+ "<b>Risco técnico conhecido</b>: mesmo número oficial de WhatsApp compartilhado com outras jornadas (ex: Mamografia) — fluxo em andamento do cidadão pode ser interrompido. Responsabilidade do Embedded Component entre times Orange e Damares a esclarecer.",
+ ],
+ cronograma:[
+ {t:"Kickoff e brainstorm", s:"Concluído · 30/06", cls:"s-done"},
+ {t:"Arquitetura e design do sistema definidos", s:"Concluído ✓", cls:"s-done"},
+ {t:"Apresentação da ideação à Karine e time", s:"Concluído · 13/07", cls:"s-done"},
+ {t:"Fechamento arquitetura Salesforce + cronograma V1", s:"Hoje · 16/07 16h", cls:"s-prog"},
+ {t:"Envio MVP + arquitetura + documentação V1", s:"17/07", cls:"s-prev"},
+ {t:"Aprovação da Karine e time", s:"Após envio de 17/07", cls:"s-wait"},
+ {t:"Start do desenvolvimento", s:"Sem. 20/07 · pós-aprovação", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"MVP V1 — Cenário 1️⃣: Indisponibilidade COM Previsão de Retorno", items:["Disparo: manutenção programada com horário de início e fim definidos","Mensagem: serviço(s) afetado(s), unidade e endereço, data/horário do agendamento, motivo, início e previsão de retorno","Opções ao cidadão: ✅ manter o atendimento ou 🔄 fazer novo agendamento (cancelamento + novo)","Mensagem pós-estabilização: serviço normalizado e agendamento mantido"]},
+ {t:"MVP V1 — Cenário 2️⃣: Indisponibilidade SEM Previsão de Retorno", items:["Disparo: problemas inesperados (queda de energia, inundação, falha de sistema)","Mesmas informações, sem previsão de retorno — tom mais empático","Sem opção de manter — apenas reagendamento obrigatório","Público-alvo: apenas cidadãos com agendamentos no período de indisponibilidade"]},
+ {t:"Canais de Envio", items:["📱 WhatsApp — canal principal","📧 E-mail — canal secundário","🔔 Push notification — prototipado, fora da V1"]},
+ {t:"Próximos Marcos", items:["16/07 16h — fechamento arquitetura Salesforce + cronograma V1","17/07 — envio do MVP, arquitetura e documentação para aprovação da Karine e time","Sem. 20/07 — start do desenvolvimento (pós-aprovação)"]},
+ ],
+ riscos:["Aprovação da Karine e time (pós-envio de 17/07) condiciona o start do desenvolvimento na semana de 20/07 — atraso na aprovação desloca todo o cronograma.","Restrições de customização dos templates WhatsApp (Meta) — necessidade de pré-aprovação.","Qualidade dos dados de contato dos cidadãos (e-mails e telefones desatualizados).","Número oficial de WhatsApp compartilhado com outras jornadas (ex: Mamografia) — fluxo em andamento do cidadão pode ser interrompido."],
+ mitigacao:["Envio antecipado e completo em 17/07 (MVP + arquitetura + documentação) para acelerar a aprovação da Karine e time.","Templates com variáveis pré-aprovadas como solução de contorno para restrições Meta.","Escopo do MVP delimitado — 2 cenários e 2 canais (push fora da V1) — para não atrasar a entrega.","Segmentação restrita a cidadãos com agendamento no período de indisponibilidade — reduz volume e ruído."],
+ passos:["Hoje (16/07, 16h): fechar a arquitetura Salesforce e definir o cronograma com base na V1.","17/07: enviar todo o MVP, arquitetura e documentação da V1 para aprovação da Karine e time.","Obter a aprovação da Karine e time.","Semana de 20/07: iniciar o desenvolvimento (pós-aprovação)."],
+ gp:"Leopoldo Donaire",
+ commit:"Comunicar proativamente o cidadão em momentos críticos, <b>reduzindo deslocamentos desnecessários</b> e fortalecendo a confiança nos serviços digitais do Poupatempo."
+ },
+ /* ============ MONITORAMENTO DE CANAIS DIGITAIS ============ */
+ {
+ id:"monitoramento", tab:"Monitoramento de Canais Digitais", name:"Monitoramento de Canais Digitais — Sala de Situação",
+ sub:"2 cenários arquitetônicos em desenho com Salesforce · esclarecimentos técnicos 17/Jul · apresentação ao cliente na semana de 16/Jul.",
+ status:"DISCOVERY — DESENHO DE SOLUÇÃO EM ANDAMENTO", statusColor:"var(--blue)",
+ meta:"Esclarecimento dúvidas técnicas com Roberto: 17/07 · Desenho de Cenário: sem. 16/07 · Apresentação ao Denis e time na sequência",
+ progress:10,
+ gantt:{
+   cols:8,
+   weeks:["S1 02/07","S2 09/07","S3 16/07","S4 23/07","S5 30/07","S6 06/08","S7 13/08","S8 20/08"],
+   today:2,
+   rows:[
+     {l:"Desenho do projeto (time Salesforce)", bars:[{s:0,e:2,c:"done",check:true}]},
+     {l:"Esclarecimento dúvidas técnicas (Roberto) · 17/07", bars:[{s:2,e:3,c:"active"}], ms:[{w:2}]},
+     {l:"Desenho de Cenário (Robusto + Reativo)", bars:[{s:2,e:4,c:"plan"}]},
+     {l:"Apresentação ao Denis e todo o time", bars:[{s:2,e:4,c:"wait"}], ms:[{w:3}]},
+     {l:"Próximas fases (a definir)", bars:[{s:4,e:8,c:"wait"}]},
+   ],
+   milestones:[
+     {w:2, date:"17/07", t:"Esclarecimento das dúvidas técnicas com Roberto · 17/07"},
+     {w:2, t:"Start da fase de Desenho de Cenário · sem. 16/07"},
+     {w:3, t:"Apresentação ao Denis e todo o time (após esclarecimentos de 17/07)"},
+   ]
+ },
+ kpis:[
+ {v:"✓", l:"desenho do projeto criado junto ao time Salesforce", c:"green"},
+ {v:"2", l:"cenários arquitetônicos em desenho (Robusto + Reativo)", c:"blue"},
+ {v:"16/07", l:"start da fase de Desenho de Cenário (semana)", c:"amber"},
+ ],
+ statusAtual:[
+ "📅 <b>Semana 03/07–09/07:</b> desenho do projeto criado junto ao time Salesforce — iniciativa evolui da ideação para o desenho de solução, com <b>2 cenários arquitetônicos em desenho (Robusto + Reativo)</b>.",
+ "Painel centralizado de monitoramento em tempo real dos canais digitais do Poupatempo (apps, portais, WhatsApp, totens). Quando uma ocorrência é detectada — indisponibilidade, degradação de performance ou anomalia (ex: APPs fora do ar) —, o sistema aciona automaticamente os responsáveis corretos via Marketing Cloud, com contexto da ocorrência, severidade e histórico.",
+ "Stack em avaliação: <b>Tableau</b> (painel / sala de situação) + <b>Marketing Cloud</b> (acionamento dos responsáveis).",
+ "<b>Próximo passo</b>: reunião rápida com Roberto para esclarecer dúvidas técnicas que surgiram por parte do time Salesforce.",
+ "Fase de <b>Desenho de Cenário</b>: após os esclarecimentos técnicos, <b>apresentação para o Denis e todo o time</b> — na semana de <b>16/07</b>.",
+ "Esclarecimento das dúvidas técnicas com Roberto agendado para <b>17/07</b>.",
+ ],
+ cronograma:[
+ {t:"Ideação e definição do conceito", s:"Concluído", cls:"s-done"},
+ {t:"Desenho do projeto junto ao time Salesforce", s:"Concluído ✓", cls:"s-done"},
+ {t:"Esclarecimento dúvidas técnicas com Roberto", s:"17/07", cls:"s-prev"},
+ {t:"Desenho de Cenário (Robusto + Reativo)", s:"Start sem. 16/07", cls:"s-prev"},
+ {t:"Apresentação ao Denis e todo o time", s:"Sem. 16/07 · após esclarecimentos", cls:"s-wait"},
+ {t:"Próximas fases", s:"A definir", cls:"s-plan"},
+ ],
+ entregas:[
+ {t:"Valor Esperado", items:["Redução do MTTR (tempo de resolução de incidentes)","Visibilidade executiva em tempo real de todos os canais","Acionamento dirigido elimina ruído e acelera resposta","Base para SLA/SLO e governança de canais digitais"]},
+ {t:"Perguntas para Validação", items:["Quais canais e sistemas devem ser monitorados na V1?","Quem são os responsáveis por categoria de ocorrência?","Integração com ferramentas de monitoração já existentes no ambiente?","Existe base de dados histórica de incidentes para treino?"]},
+ {t:"Stack em Avaliação", items:["Tableau — painel centralizado / sala de situação","Marketing Cloud — acionamento automático dos responsáveis"]},
+ {t:"Próximos Passos", items:["Esclarecimento dúvidas técnicas com Roberto — 17/07","Desenho de Cenário — sem. 16/07","Apresentação ao Denis e todo o time — após esclarecimentos"]},
+ ],
+ riscos:["Dúvidas técnicas levantadas pelo time Salesforce ainda em aberto — podem impactar o desenho da solução.","Integração com ferramentas de monitoração já existentes no ambiente ainda não mapeada.","Responsáveis por categoria de ocorrência e escopo de canais da V1 ainda não definidos."],
+ mitigacao:["Reunião rápida com Roberto em 17/07 para esclarecer as dúvidas técnicas antes de avançar o desenho.","Fase de Desenho de Cenário estruturada (start sem. 16/07) para validar os 2 cenários antes de qualquer decisão de implementação.","Apresentação ao Denis e todo o time somente após os esclarecimentos técnicos — evita retrabalho e alinha expectativas."],
+ passos:["Esclarecer as dúvidas técnicas do time Salesforce com Roberto em 17/07.","Iniciar a fase de Desenho de Cenário na semana de 16/07.","Consolidar os 2 cenários arquitetônicos (Robusto + Reativo).","Apresentar o desenho para o Denis e todo o time após os esclarecimentos."],
+ gp:"Leopoldo Donaire",
+ commit:"Dar visibilidade em tempo real da saúde dos canais digitais do Poupatempo, <b>reduzindo o tempo de resposta a incidentes (MTTR)</b> e estabelecendo a base para SLA/SLO e governança dos canais."
+ },
+ ]
+};
+
+
+
+const IDEACAO = {
+ id:"ideacao", tab:"💡 Ideação",
+ title:"Novas Iniciativas em Ideação",
+ sub:"Conceitos em exploração para evolução do Hub Digital Poupatempo — ainda sem escopo ou cronograma definidos. Próximos passos: apresentar ao cliente, validar viabilidade e priorizar.",
+ items:[
+ {
+ id:"observabilidade-buscador",
+ icon:"🔍",
+ name:"Observabilidade e Monitoramento Técnico do Buscador",
+ tagline:"Painel técnico dedicado — latência, motores, status de resposta e telemetria",
+ stack:["Tableau","Data Cloud","MuleSoft","Red Hat"],
+ exemplo:"Tratativa realizada em 01/07 com gestores técnicos Prodesp",
+ descricao:"Frente específica de observabilidade técnica do Buscador Inteligente, discutida em 01/07 com gestores técnicos Prodesp. O objetivo é criar um painel dedicado que vá além das métricas de usuário hoje disponíveis via API de Eventos — cobrindo latência por motor (Red Hat vs Salesforce), divisão de tráfego entre motores, status de resposta por tipo de busca, telemetria das interações conversacionais e detecção de anomalias. Diferente da observabilidade global, esta frente é técnica e operacional, focada na saúde e performance do Buscador especificamente.",
+ valor:[
+ "Visibilidade real da performance dos motores de busca (Red Hat e Salesforce)",
+ "Detecção antecipada de degradação de performance antes de impactar o cidadão",
+ "Dados técnicos para embasar decisões de arquitetura da V3",
+ "Subsídio para a discussão de custos e viabilidade com a Red Hat",
+ ],
+ perguntas:[
+ "Quais métricas adicionais a API de Eventos pode expor? (latência, status, motor utilizado)",
+ "MuleSoft como camada de chaveamento — qual o esforço de instrumentação?",
+ "Data Cloud como repositório de telemetria — viável para o volume atual?",
+ "Integrar ao Tableau existente ou criar painel standalone?",
+ ],
+ },
+ ]
+};
+
+/* ============ RENDER HELPERS ============ */
+const pct = (n,cols)=> (n/cols*100);
+const esc = s=>s;
+
+function ganttHTML(g){
+ const cols=g.cols;
+ let weeks = g.weeks.map((w,i)=>{
+ const [s,d]=w.split(" ");
+ return `<div class="g-week${i===g.today?' is-today':''}"><b>${s}</b><span>${d||''}</span></div>`;
+ }).join("");
+
+ // A data de cada semana é o CENTRO do período de 7 dias
+ // Para posicionar a linha de hoje corretamente:
+ // - Parsear a data da semana 0 (centro da col 0) e da semana 1 (centro da col 1)
+ // - Interpolar a posição de hoje dentro do eixo
+ function parseWeekDate(str){
+ // suporta "S1 06/04" (dd/mm) e "S1 15/Jun" (dd/MonText)
+ const parts = str.split(" ");
+ const datePart = parts[1] || parts[0];
+ if(!datePart || !datePart.includes('/')) return null;
+ const [d,m] = datePart.split('/');
+ if(!isNaN(parseInt(m))){
+   return new Date(2026, parseInt(m)-1, parseInt(d));
+ }
+ const mmap={'Jan':0,'Fev':1,'Feb':1,'Mar':2,'Abr':3,'Apr':3,'Mai':4,'May':4,'Jun':5,'Jul':6,'Ago':7,'Aug':7,'Set':8,'Sep':8,'Out':9,'Oct':9,'Nov':10,'Dez':11,'Dec':11};
+ const mi = mmap[m];
+ if(mi === undefined) return null;
+ return new Date(2026, mi, parseInt(d));
+ }
+ const col0date = parseWeekDate(g.weeks[0]);
+ const col1date = g.weeks[1] ? parseWeekDate(g.weeks[1]) : null;
+ const intervalDays = col0date && col1date ? (col1date - col0date)/(1000*60*60*24) : 7;
+ // início real do eixo = centro da col0 - metade do intervalo
+ const axisStart = col0date ? new Date(col0date.getTime() - (intervalDays/2)*24*60*60*1000) : null;
+ const axisEnd = axisStart ? new Date(axisStart.getTime() + cols*intervalDays*24*60*60*1000) : null;
+ const now = new Date(2026, 6, 16); // 16/Jul/2026 — data de referência do relatório
+ let todayPctGantt = g.today + 0.5; // fallback: centro da coluna today
+ if(axisStart && axisEnd){
+ const totalMs = axisEnd - axisStart;
+ const diffMs = now - axisStart;
+ todayPctGantt = (diffMs / totalMs) * cols; // em unidades de colunas
+ }
+
+ // Converte uma data "dd/mm" para posição em colunas (float) no eixo
+ function dateToCol(dateStr){
+ if(!axisStart || !intervalDays) return null;
+ const [d,m] = dateStr.split('/');
+ const date = new Date(2026, parseInt(m)-1, parseInt(d));
+ return (date - axisStart) / (intervalDays * 24*60*60*1000);
+ }
+
+ let rows = g.rows.map(r=>{
+ let bars=(r.bars||[]).map(b=>{
+ // suporte a b.date (início exato) e b.dateEnd (fim exato)
+ const s = b.date ? dateToCol(b.date) : b.s;
+ const e = b.dateEnd ? dateToCol(b.dateEnd) : b.e;
+ const left=pct(s,cols), width=pct(e-s,cols);
+ return `<div class="bar ${b.c}" style="left:${left}%;width:${width}%">${b.check?'<span class="check">✓</span>':''}</div>`;
+ }).join("");
+ let ms=(r.ms||[]).map(m=>{
+ // suporte a m.date para posição exata, fallback para m.w+0.5
+ const pos = m.date ? dateToCol(m.date) : (m.w + 0.5);
+ return `<span class="ms" style="left:${pct(pos,cols)}%"></span>`;
+ }).join("");
+ let pin = (r.pin!=null)?`<span class="ms pin" style="left:${pct(r.pin+0.5,cols)}%"></span>`:'';
+ let today=`<span class="today" style="left:${pct(todayPctGantt,cols)}%"></span>`;
+ return `<div class="g-row"><div class="g-label">${r.l}</div><div class="g-track">${bars}${ms}${pin}${today}</div></div>`;
+ }).join("");
+
+ let legend = g.milestones.map(m=>{
+ // suporte a m.date na legenda
+ const pos = m.date ? dateToCol(m.date) : null;
+ const wk = m.date ? m.date : (g.weeks[m.w]?g.weeks[m.w].split(" ")[0]:'');
+ return `<div class="mscard"><span class="d"></span><div>${m.t}<small>${wk}</small></div></div>`;
+ }).join("");
+
+ return `
+ <div class="panel">
+ <div class="panel-h"><span class="ic">📊</span><h3>Cronograma por semanas (Gantt)</h3><span class="h-note">Marco ◆ · Hoje ${TODAY}</span></div>
+ <div class="panel-b">
+ <div class="gantt" style="--cols:${cols}">
+ <div class="gantt-scroll"><div class="gantt-inner">
+ <div class="g-head"><div class="spacer"></div><div class="g-weeks">${weeks}</div></div>
+ ${rows}
+ </div></div>
+ <div class="swatches">
+ <span><i style="background:linear-gradient(180deg,#74c2ec,var(--blue))"></i>Concluído</span>
+ <span><i style="background:linear-gradient(180deg,#5a39c9,var(--purple))"></i>Em execução</span>
+ <span><i style="background:linear-gradient(180deg,#e2596d,var(--red))"></i>Replanejado</span>
+ <span><i style="background:repeating-linear-gradient(45deg,var(--lilac),var(--lilac) 5px,#d8cef5 5px,#d8cef5 10px)"></i>Planejado</span>
+ <span><i style="background:var(--amber);transform:rotate(45deg);width:11px;height:11px"></i>Marco</span>
+ </div>
+ <div class="g-legend">${legend}</div>
+ </div>
+ </div>
+ </div>`;
+}
+
+function leadList(arr,cls=""){return `<ul class="lead ${cls}">${arr.map(x=>`<li>${x}</li>`).join("")}</ul>`;}
+function cronoList(arr){return `<div class="timeline-list">${arr.map(c=>`<div class="tl-item"><span class="tl-ic">●</span><div class="tl-txt">${c.t}</div><span class="statetag ${c.cls}">${c.s}</span></div>`).join("")}</div>`;}
+function delivGrid(arr){return `<div class="deliv">${arr.map(d=>`<div class="d-item"><div class="d-t"><span class="di">★</span>${d.t}</div><ul>${d.items.map(i=>`<li>${i}</li>`).join("")}</ul></div>`).join("")}</div>`;}
+function kpiRow(arr){return `<div class="kpis">${arr.map(k=>`<div class="kpi"><div class="v ${k.c||''}">${k.v}</div><div class="l">${k.l}</div></div>`).join("")}</div>`;}
+function steps(arr){return `<div class="steps">${arr.map(s=>`<div class="step">${s}</div>`).join("")}</div>`;}
+
+function infoCards(p){
+ return `
+ <div class="info-grid">
+ <div class="card">
+ <div class="card-h h-indigo"><span class="ci">📋</span>Status atual</div>
+ <div class="card-b">${leadList(p.statusAtual)}</div>
+ </div>
+ <div class="card">
+ <div class="card-h h-blue"><span class="ci">🗓️</span>Cronograma e marcos</div>
+ <div class="card-b">${cronoList(p.cronograma)}</div>
+ </div>
+ <div class="card" style="grid-column:1/-1">
+ <div class="card-h h-indigo"><span class="ci">⭐</span>Principais entregas e evoluções</div>
+ <div class="card-b">${delivGrid(p.entregas)}</div>
+ </div>
+ <div class="card">
+ <div class="card-h h-red"><span class="ci">⚠️</span>Riscos / pontos de atenção</div>
+ <div class="card-b">
+ <div class="two-col">
+ <div><div class="subhead">Riscos</div>${leadList(p.riscos,'red')}</div>
+ <div><div class="subhead green">Mitigação</div>${leadList(p.mitigacao,'green')}</div>
+ </div>
+ </div>
+ </div>
+ <div class="card">
+ <div class="card-h h-amber"><span class="ci">🚀</span>Próximos passos</div>
+ <div class="card-b">${steps(p.passos)}</div>
+ </div>
+ </div>`;
+}
+
+function infoCards_metricsCard(p){
+ if(!p.metricsSection) return '';
+ const ms = p.metricsSection;
+ const tiles = (ms.tiles||[]).map(m=>`<div class="metric-tile"><div class="mt-l">${m.label}</div><div class="mt-v">${m.value}</div>${m.sub?`<div class="mt-s">${m.sub}</div>`:''}</div>`).join('');
+ const bars = (ms.bars||[]).map(b=>`<div class="bar-col"><div class="bar-val">${b.value}</div><div class="bar-box"><div class="bar-fill ${b.color||''}" style="height:${Math.max(b.h||1,1.5)}%"></div></div><div class="bar-lab">${b.label}</div></div>`).join('');
+ return `<div class="card" style="grid-column:1/-1"><div class="card-h h-blue"><span class="ci">📊</span>${ms.title||'Indicadores Operacionais'}</div><div class="card-b"><div class="metric-board"><div class="metric-summary">${(ms.summary||[]).map(x=>`<p>${x}</p>`).join('')}</div><div class="metric-table">${tiles}</div>${bars?`<div><div class="subhead" style="margin-bottom:12px">Indicadores — volume comparativo</div><div class="bar-wrap">${bars}</div></div>`:''}</div></div></div>`;
+}
+
+function twinCards(p){
+ const block=(t)=>`
+ <div class="card">
+ <div class="card-h h-indigo"><span class="ci">🤖</span>${t.name}
+ <span class="statetag ${t.cls}" style="margin-left:auto">${t.status}</span></div>
+ <div class="card-b">
+ <div class="metapill" style="background:var(--indigo-soft);color:var(--indigo);border:none;margin-bottom:12px"><b>Meta:</b> ${t.meta}</div>
+ <div class="subhead">Status atual</div>${leadList(t.statusAtual)}
+ <div class="subhead" style="margin-top:16px">Cronograma e marcos</div>${cronoList(t.cronograma)}
+ <div class="two-col" style="margin-top:16px">
+ <div><div class="subhead">Riscos</div>${leadList(t.riscos,'red')}</div>
+ <div><div class="subhead green">Mitigação</div>${leadList(t.mitigacao,'green')}</div>
+ </div>
+ </div>
+ </div>`;
+ return `<div class="info-grid">${block(p.twinA)}${block(p.twinB)}</div>`;
+}
+
+function projectPage(p){
+ return `
+ <section class="page" id="page-${p.id}" data-page="${p.id}">
+ <div class="phero">
+ <div class="eyebrow">Status Executivo · ${TODAY.split('/')[1] === '06' ? 'Junho' : TODAY.split('/')[1] === '07' ? 'Julho' : TODAY.split('/')[1] === '08' ? 'Agosto' : TODAY.split('/')[1] === '09' ? 'Setembro' : 'Outubro'}/2026</div>
+ <h2>${p.name}</h2>
+ <p class="sub">${p.sub}</p>
+ <div class="pills">
+ <span class="statuspill" style="background:${p.statusColor}"><span class="b"></span>${p.status}</span>
+ <span class="metapill"><b>Meta:</b> ${p.meta}</span>
+ </div>
+ ${p.gp?`<div class="gp-pill"><span class="gp-ic">👤</span><span>GP Responsável: <b>${p.gp}</b></span></div>`:''}
+ </div>
+ <div class="panel" style="margin-bottom:22px">
+ <div class="panel-b">${kpiRow(p.kpis)}</div>
+ </div>
+ ${p.gantt?ganttHTML(p.gantt):''}
+ ${p.twin?twinCards(p):infoCards(p)}
+ ${infoCards_metricsCard(p)}
+ ${p.medicao?medicaoHTML(p.medicao):''}
+ <div class="commit"><b>Nosso compromisso:</b> ${p.commit}</div>
+ </section>`;
+}
+
+
+function medicaoHTML(med){
+  const kpis=(med.kpis||[]).map(k=>`
+    <div class="med-kpi">
+      <div class="med-v ${k.c||''}">${k.v}</div>
+      <div class="med-l">${k.l}</div>
+    </div>`).join('');
+  let body=`<div class="med-kpis">${kpis}</div>`;
+  if(med.diario&&med.diario.length){
+    const mx=Math.max(...med.diario.map(d=>d.raw));
+    const bars=med.diario.map(d=>{
+      const h=Math.round((d.raw/mx)*72);
+      return `<div class="med-bar-col">
+        <div class="med-bv">${d.v}</div>
+        <div class="med-bar" style="height:${h}px"></div>
+        <div class="med-bd">${d.d}</div>
+      </div>`;
+    }).join('');
+    body+=`<p class="med-sec-title">Volume de interações por dia</p><div class="med-bars">${bars}</div>`;
+  }
+  if(med.tabelas&&med.tabelas.length){
+    const gridCols=med.tabelas.length===2?'grid-template-columns:1fr 1fr;':'';
+    const tabs=med.tabelas.map(t=>{
+      const rows=t.rows.map(r=>`<tr>
+        <td>${r.l}</td>
+        <td class="med-tv">${r.v}</td>
+        ${r.pct?`<td class="med-tp">${r.pct}</td>`:''}
+      </tr>`).join('');
+      return `<div><p class="med-sec-title">${t.titulo}</p>
+        <table class="med-table">${rows}</table></div>`;
+    }).join('');
+    body+=`<div style="display:grid;${gridCols}gap:16px;margin-top:4px">${tabs}</div>`;
+  }
+  return `<div class="panel med">
+    <div class="panel-h">
+      <span class="ic">📊</span><h3>Indicadores Operacionais</h3>
+      <span class="h-note">Período: ${med.periodo} &nbsp;·&nbsp; ${med.fonte}</span>
+    </div>
+    <div class="panel-b">${body}</div>
+  </div>`;
+}
+
+/* ----- overview / macro ----- */
+function macroHTML(m){
+ const months=m.months.map(x=>`<div class="m">${x}</div>`).join("");
+ const N=m.months.length;
+ const colW=`grid-template-columns:repeat(${N},1fr)`;
+
+ // Calcular todayPct dinamicamente a partir da data real
+ // O grid tem N colunas: coluna i começa em (i/N)*100% e termina em ((i+1)/N)*100%
+ // O label de cada coluna fica no centro, então a coluna 0 representa a semana de months[0]
+ // Cada coluna = 14 dias; coluna i cobre [i*14, (i+1)*14) dias desde o início
+ function parseDate(str){ // "dd/Mmm" -> Date
+ const [d,mon]=str.split('/');
+ const months3={'Jan':0,'Fev':1,'Mar':2,'Abr':3,'Mai':4,'Jun':5,'Jul':6,'Ago':7,'Set':8,'Out':9,'Nov':10,'Dez':11};
+ return new Date(2026, months3[mon], parseInt(d));
+ }
+ // A data exibida é o CENTRO de cada intervalo de 14 dias
+ // Portanto o início real da timeline é months[0] - 7 dias
+ const startDate=parseDate(m.months[0]); startDate.setDate(startDate.getDate()-7);
+ const endDate=new Date(startDate); endDate.setDate(endDate.getDate()+N*14);
+ const totalDays=(endDate-startDate)/(1000*60*60*24);
+ const now=new Date(2026, 6, 16); // 16/Jul/2026 — data de referência do relatório
+ const diffDays=(now-startDate)/(1000*60*60*24);
+ // O grid: coluna 0 começa em left=0%, cada coluna = (1/N)*100%
+ // O centro da coluna i está em ((i+0.5)/N)*100%
+ // Para alinhar corretamente: left = (diffDays/totalDays)*100%
+ const todayPct=Math.min(100,Math.max(0,Math.round(diffDays/totalDays*100)));
+
+ const rows=m.rows.map(r=>{
+ const bars=r.bars.map(b=>`<div class="macro-bar ${b.c||''}" style="left:${b.s}%;width:${b.e-b.s}%"></div>`).join("");
+ const ms=(r.ms||[]).map(x=>`<div class="macro-ms" style="left:${x.p}%"></div>${x.t?`<div style="position:absolute;left:${x.p}%;top:-16px;transform:translateX(-50%);font:800 9px/1 'Plus Jakarta Sans';color:var(--indigo)">${x.t}</div>`:''}`).join("");
+ return `<div class="macro-row"><div class="ml">${r.l}</div><div class="macro-track">${bars}${ms}<div class="macro-today" style="left:${todayPct}%"></div></div></div>`;
+ }).join("");
+ const gl=m.golives.map(g=>{
+ return `<div class="gl" style="left:${g.p}%;top:8px"><span class="diamond"></span><span class="gl-tip">◆ ${g.t}</span></div>`;
+ }).join("");
+ return `
+ <div class="panel macro">
+ <div class="panel-h"><span class="ic">🗺️</span><h3>Macro plano de Go-Live</h3><span class="h-note">linha tracejada = hoje &nbsp;·&nbsp; ◆ = previsão de go-live (passe o mouse)</span></div>
+ <div class="panel-b"><div class="macro-inner">
+ <div class="macro-axis"><div></div><div class="macro-months" style="${colW}">${months}</div></div>
+ ${rows}
+ <div class="macro-golives"><div></div><div class="macro-gl">${gl}</div></div>
+ </div></div>
+ </div>`;
+}
+
+function overviewPage(){
+ const o=DATA.overview;
+ const stats=o.stats.map(s=>`<div class="ov-stat"><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`).join("");
+ const cards=DATA.projects.map(p=>`
+ <div class="pc" data-goto="${p.id}">
+ <div class="pc-top"><div class="pc-n">${p.name}</div>
+ <span class="pc-status" style="background:${p.statusColor}22;color:${p.statusColor}">${p.status}</span></div>
+ <div class="pc-meta">${p.meta}</div>
+ <div class="pc-bar"><i style="width:${p.progress}%"></i></div>
+ <div class="pc-go">Abrir página →</div>
+ </div>`).join("");
+ const ideaCard=`
+ <div class="pc" data-goto="ideacao" style="background:linear-gradient(110deg,var(--ink-2),var(--indigo));cursor:pointer">
+ <div class="pc-top">
+ <div class="pc-n" style="color:#fff">💡 Novas Iniciativas em Ideação</div>
+ <span class="pc-status" style="background:rgba(255,215,102,.2);color:#ffd766">Em Exploração</span>
+ </div>
+ <div class="pc-meta" style="color:rgba(255,255,255,.7)">${IDEACAO.items.length} conceito · Observabilidade Buscador</div>
+ <div class="pc-bar"><i style="width:0%;background:var(--amber)"></i></div>
+ <div class="pc-go" style="color:#ffd766">Ver iniciativas →</div>
+ </div>`;
+ return `
+ <section class="page" id="page-overview" data-page="overview">
+ <div class="ov-hero">
+ <div class="eyebrow">Status Report Poupatempo · Weekly Meeting</div>
+ <h1>Squad de IA — Transformação de Jornadas Públicas</h1>
+ <p>Acompanhamento executivo das iniciativas de IA e Hub Digital da SGGD (Poupatempo e Secretarias). Selecione um projeto na navegação para ver o cronograma por semanas e o painel de status. <b>Data de referência: 16/Jul/2026 · Período de atualização: 10/Jul – 16/Jul/2026.</b></p>
+ <div class="ov-stats">${stats}</div>
+ </div>
+ ${macroHTML(o.macro)}
+ <div class="panel" style="background:transparent;border:none;box-shadow:none;margin-bottom:14px">
+ <div class="panel-h" style="padding-left:0;border:none"><span class="ic">🧭</span><h3>Frentes em acompanhamento</h3></div>
+ </div>
+ <div class="proj-cards">${cards}${ideaCard}</div>
+ <div class="panel" style="margin-top:32px">
+ <div class="panel-h">
+ <span class="ic" style="background:linear-gradient(135deg,#1a6b3c,#22a06b)">📋</span>
+ <h3>Marcos &amp; Avisos Gerais</h3>
+ <span class="h-note">Comunicados e marcos transversais do projeto · ${TODAY}</span>
+ </div>
+ <div class="panel-b" style="display:flex;flex-direction:column;gap:18px">
+ <div style="border:1px solid var(--hair);border-radius:12px;padding:18px 20px;background:linear-gradient(135deg,#eef3ff 0%,#f5f8ff 100%)">
+  <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+   <div style="flex:1;min-width:260px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+     <span style="font:800 11px/1 'Plus Jakarta Sans';letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:#dde8ff;color:#1e40af">🆕 A PARTIR DESTE STATUS</span>
+     <span style="font:600 11px/1 'Inter';color:var(--muted)">Novidade estrutural · 09/Jul/2026</span>
+    </div>
+    <h4 style="font:800 15px/1.2 'Plus Jakarta Sans';color:var(--ink-2);margin:0 0 8px">Métricas Operacionais integradas ao Status Report</h4>
+    <p style="font:400 13px/1.6 'Inter';color:var(--txt);margin:0 0 12px">A partir deste status report, os projetos com soluções <b>em produção</b> passarão a apresentar ao final de cada aba uma seção de <b>Indicadores Operacionais</b> com as métricas capturadas no período — consolidando em um único documento a visão de progresso do projeto e o desempenho real em produção.</p>
+    <p style="font:400 13px/1.6 'Inter';color:var(--txt);margin:0 0 12px">O objetivo é proporcionar uma <b>visão integrada e contínua</b> do valor gerado pelas iniciativas de IA, combinando acompanhamento de cronograma com evidências operacionais mensuráveis semana a semana.</p>
+    <div style="font:700 12px/1.4 'Inter';color:var(--indigo);margin-top:10px">Projetos com métricas neste status</div>
+    <ul style="font:400 13px/1.7 'Inter';color:var(--txt);margin:6px 0 0;padding-left:18px">
+     <li><b>Buscador Inteligente</b> — 15.905 interações · API MuleSoft 100% de sucesso · 2.788 correções automáticas Agentforce (01–07/Jul)</li>
+     <li><b>Poupinha — Indicadores Operacionais</b> — 91.842 sessões · NPS 82,24% · 15.686 agendamentos com sucesso (01–07/Jul)</li>
+    </ul>
+   </div>
+   <div style="display:flex;flex-direction:column;gap:8px;min-width:180px">
+    <div style="background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;text-align:center">
+     <div style="font:800 28px/1 'Plus Jakarta Sans'">📊</div>
+     <div style="font:500 11px/1.4 'Inter';color:var(--muted);margin-top:6px">Indicadores operacionais</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;text-align:center">
+     <div style="font:800 18px/1 'Plus Jakarta Sans';color:var(--green)">2 projetos</div>
+     <div style="font:500 11px/1.4 'Inter';color:var(--muted);margin-top:4px">com métricas neste status</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;text-align:center">
+     <div style="font:800 14px/1 'Plus Jakarta Sans';color:var(--blue)">Semanal</div>
+     <div style="font:500 11px/1.4 'Inter';color:var(--muted);margin-top:4px">cadência de atualização</div>
+    </div>
+   </div>
+  </div>
+ </div>
+ 
+ <div style="border:1px solid var(--hair);border-radius:12px;padding:18px 20px;background:linear-gradient(135deg,#f0faf5 0%,#f7fff9 100%)">
+ <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+ <div style="flex:1;min-width:260px">
+ <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+ <span style="font:800 11px/1 'Plus Jakarta Sans';letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:#d4f5e4;color:#14663a">✅ ATIVO DESDE JUNHO/2026</span>
+ <span style="font:600 11px/1 'Inter';color:var(--muted)">Comunicado formalmente em 02/Jul/2026</span>
+ </div>
+ <h4 style="font:800 15px/1.2 'Plus Jakarta Sans';color:var(--ink-2);margin:0 0 8px">Portal de Demandas Digitais — Canal Oficial de Sustentação (JIRA)</h4>
+ <p style="font:400 13px/1.6 'Inter';color:var(--txt);margin:0 0 12px">O Portal de Demandas Digitais está oficialmente disponibilizado às equipes da Prodesp e do Poupatempo como <b>canal oficial para registro, acompanhamento e gestão das demandas</b> relacionadas às iniciativas digitais conduzidas pela OrangeDoor. Comunicação formal enviada aos stakeholders em 02/Jul/2026, contemplando orientações de acesso, utilização da plataforma e boas práticas para abertura de chamados.</p>
+ <p style="font:400 13px/1.6 'Inter';color:var(--txt);margin:0 0 12px">O processo garante maior <b>rastreabilidade, transparência, priorização e acompanhamento</b> das solicitações durante todo o ciclo de atendimento — incluindo gestão de SLA e governança das tratativas em soluções produtivas.</p>
+ <div style="font:700 12px/1.4 'Inter';color:var(--indigo);margin-top:10px">Próximos passos</div>
+ <ul style="font:400 13px/1.7 'Inter';color:var(--txt);margin:6px 0 0;padding-left:18px">
+ <li>Iniciar a utilização do Portal como canal oficial para novas demandas</li>
+ <li>Prestar suporte às equipes durante o período inicial de adoção</li>
+ <li>Realizar sessões de esclarecimento e treinamento conforme necessidade</li>
+ </ul>
+ </div>
+ <div style="display:flex;flex-direction:column;gap:8px;min-width:180px">
+ <div style="background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;text-align:center">
+ <div style="font:800 22px/1 'Plus Jakarta Sans';color:var(--green)">JIRA</div>
+ <div style="font:500 11px/1.4 'Inter';color:var(--muted);margin-top:4px">Plataforma de gestão</div>
+ </div>
+ <div style="background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;text-align:center">
+ <div style="font:800 14px/1 'Plus Jakarta Sans';color:var(--indigo)">Jun/2026</div>
+ <div style="font:500 11px/1.4 'Inter';color:var(--muted);margin-top:4px">Ativo desde</div>
+ </div>
+ <div style="background:#fff;border:1px solid var(--hair);border-radius:10px;padding:12px 16px;text-align:center">
+ <div style="font:800 14px/1 'Plus Jakarta Sans';color:var(--blue)">SLA</div>
+ <div style="font:500 11px/1.4 'Inter';color:var(--muted);margin-top:4px">Gestão de acordos</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </section>`;
+}
+
+function ideacaoPage(){
+ const items = IDEACAO.items.map(it=>`
+ <div class="card idea-card">
+ <div class="idea-header">
+ <span class="idea-icon">${it.icon}</span>
+ <div class="idea-title-block">
+ <div class="idea-name">${it.name}</div>
+ <div class="idea-tagline">${it.tagline}</div>
+ <div class="idea-stack">${it.stack.map(s=>`<span class="idea-chip">${s}</span>`).join("")}<span class="idea-ex">${it.exemplo}</span></div>
+ </div>
+ <span class="idea-badge">Em Ideação</span>
+ </div>
+ <div class="idea-body">
+ <p class="idea-desc">${it.descricao}</p>
+ <div class="idea-cols">
+ <div>
+ <div class="idea-section-title">💎 Valor esperado</div>
+ <ul class="lead">${it.valor.map(v=>`<li>${v}</li>`).join("")}</ul>
+ </div>
+ <div>
+ <div class="idea-section-title">❓ Perguntas para validação</div>
+ <ul class="lead">${it.perguntas.map(q=>`<li>${q}</li>`).join("")}</ul>
+ </div>
+ </div>
+ </div>
+ </div>`).join("");
+
+ return `
+ <section class="page" id="page-ideacao" data-page="ideacao">
+ <div class="ov-hero" style="background:linear-gradient(110deg,#1b1450,#3a1f9e 60%,#1798d6)">
+ <div class="eyebrow" style="color:rgba(255,255,255,.7)">Novas Iniciativas · Em exploração</div>
+ <h1 style="color:#fff">💡 Ideação — Próximas Frentes</h1>
+ <p style="color:rgba(255,255,255,.82)">Conceitos em exploração para evolução do Hub Digital Poupatempo. Ainda sem escopo ou cronograma definidos — próximos passos: apresentar ao cliente, validar viabilidade e priorizar.</p>
+ <div class="ov-stats">
+ <div class="ov-stat" style="background:rgba(255,255,255,.12);color:#fff"><div class="v" style="color:#ffd766">${IDEACAO.items.length}</div><div class="l" style="color:rgba(255,255,255,.75)">iniciativas em ideação</div></div>
+ <div class="ov-stat" style="background:rgba(255,255,255,.12);color:#fff"><div class="v" style="color:#ffd766">3</div><div class="l" style="color:rgba(255,255,255,.75)">tecnologias envolvidas</div></div>
+ <div class="ov-stat" style="background:rgba(255,255,255,.12);color:#fff"><div class="v" style="color:#ffd766">0%</div><div class="l" style="color:rgba(255,255,255,.75)">escopo definido — em exploração</div></div>
+ </div>
+ </div>
+ <div class="info-grid" style="margin-top:24px">${items}</div>
+ </section>`;
+}
+
+/* ============ MOUNT ============ */
+const app=document.getElementById("app");
+const tabsEl=document.getElementById("tabs");
+
+app.innerHTML = overviewPage() + DATA.projects.map(projectPage).join("") + ideacaoPage();
+
+const tabs=[{id:"overview",tab:"Visão Geral"}, ...DATA.projects.map(p=>({id:p.id,tab:p.tab})), {id:"ideacao",tab:"💡 Ideação"}];
+tabsEl.innerHTML=tabs.map(t=>`<button data-tab="${t.id}"><span class="ledge"></span>${t.tab}</button>`).join("");
+
+function show(id){
+ document.querySelectorAll(".page").forEach(s=>s.classList.toggle("active", s.dataset.page===id));
+ document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+ window.scrollTo({top:0,behavior:"instant"in window?"instant":"auto"});
+ if(location.hash.slice(1)!==id) history.replaceState(null,"","#"+id);
+}
+tabsEl.addEventListener("click",e=>{const b=e.target.closest("button");if(b)show(b.dataset.tab);});
+app.addEventListener("click",e=>{const c=e.target.closest("[data-goto]");if(c)show(c.dataset.goto);});
+
+const init=location.hash.slice(1);
+show(tabs.some(t=>t.id===init)?init:"overview");
+</script>
+</body>
+</html>
